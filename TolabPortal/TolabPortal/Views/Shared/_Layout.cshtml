@@ -136,11 +136,18 @@
         <div class="container">
             <div class="breadcrumb-content d-flex flex-wrap align-items-center justify-content-between">
                 <div class="section-heading">
-                    <h2 class="section__title text-white">تسجيل الدخول</h2>
+                    <h2 class="section__title text-white">@ViewBag.CurrentPageTitle</h2>
                 </div>
                 <ul class="generic-list-item generic-list-item-white generic-list-item-arrow d-flex flex-wrap align-items-center">
-                    <li><a href="#">الرئيسية</a></li>
-                    <li>تسجيل الدخول</li>
+                    @{
+                        var items = @ViewBag.MenuItems as string[];
+                        foreach (var item in items)
+                        {
+                            <li>
+                                <a href="#">@item</a>
+                            </li>
+                        }
+                    }
                 </ul>
             </div><!-- end breadcrumb-content -->
         </div><!-- end container -->
