@@ -10201,6 +10201,15 @@ div.datedropper .picker .pick-lg-b li {
     left: auto;
     right: 0;
 }
+.iti--allow-dropdown .iti__flag-container,
+.iti--separate-dial-code .iti__flag-container{
+    right: auto;
+    left: 0;
+	direction:ltr;
+}
+.iti__country{
+	text-align:left;
+}
 .main-menu {
     margin-right: 0;
     margin-left: 25px;
@@ -10986,11 +10995,44 @@ div.datedropper .picker .pick-lg-b li {
 
 
 
+.iti--allow-dropdown input[type=text],
+.iti--separate-dial-code input {
+    padding-left: 110px !important;
+}
 
 
 
+.iti--separate-dial-code .iti__selected-flag {
+	width: 94px;
+}
 
 
+
+@media (max-width:479px){	
+	.dsmblock {
+		display: block !important;
+}
+}
+
+
+.notehead {
+	font-size: 20px;
+	margin-bottom: 33px;
+}
+
+.alert-danger2 {
+	color: #fff;
+	background-color: #d7303f;
+	border-color: #d7303f;
+}
+
+.alert-danger2  .close{
+	opacity: 1;
+}
+
+.alert-danger2  .close:hover{
+	color: #fff;
+}
 
 
 

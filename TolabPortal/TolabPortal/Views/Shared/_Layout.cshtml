@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="author" content="Tollab">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
     <title>طلاب</title>
 
     <!-- Google fonts -->
@@ -63,7 +63,7 @@
                                 </nav><!-- end main-menu -->
                                 <div class="nav-right-button border-right border-right-gray pl-4 mr-3">
                                     <ul class="generic-list-item">
-                                        <li><a href="#">تسجيل الدخول</a></li>
+                                        <li><a href="~/login">تسجيل الدخول</a></li>
                                         <li>أو</li>
                                         <li><a href="#" class="btn theme-btn theme-btn-sm text-white"><i class="la la-user-plus mr-1"></i> اشتراك</a></li>
                                     </ul>
@@ -257,6 +257,6 @@
 
     <script src="/js/commonBundle.js"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
+    @RenderSection("scripts", required: false);
 </body>
 </html>

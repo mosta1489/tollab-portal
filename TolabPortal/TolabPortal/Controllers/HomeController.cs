@@ -21,7 +21,7 @@ namespace TolabPortal.Controllers
         [Route("~/login")]
         public IActionResult Login()
         {
-            return View();
+            return View("Login");
         }
     }
 }
