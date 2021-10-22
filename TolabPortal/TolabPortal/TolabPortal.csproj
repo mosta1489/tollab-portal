@@ -6,9 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.319" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Tolab.Common\Tolab.Common.csproj" />
     <ProjectReference Include="..\TolabPortal.DataAccess\TolabPortal.DataAccess.csproj" />
   </ItemGroup>
 

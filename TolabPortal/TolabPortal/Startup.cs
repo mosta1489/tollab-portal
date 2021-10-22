@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Tolab.Common;
 using TolabPortal.Infrastructure;
 
 namespace TolabPortal
@@ -21,6 +22,7 @@ namespace TolabPortal
         {
             services.ConfigureBundles();
             services.ConfigureDependencyInjection();
+            services.Configure<ApplicationConfig>(Configuration.GetSection("ApplicationConfig"));
             services.AddControllersWithViews();
         }
 

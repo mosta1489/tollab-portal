@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TolabPortal", "TolabPortal\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TolabPortal.DataAccess", "TolabPortal.DataAccess\TolabPortal.DataAccess.csproj", "{B44ADF16-2CC0-4678-A1D6-B44229C3301A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tolab.Common", "Tolab.Common\Tolab.Common.csproj", "{DD7DE00A-C891-4384-B8A8-4AA3628130DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B44ADF16-2CC0-4678-A1D6-B44229C3301A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B44ADF16-2CC0-4678-A1D6-B44229C3301A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B44ADF16-2CC0-4678-A1D6-B44229C3301A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD7DE00A-C891-4384-B8A8-4AA3628130DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD7DE00A-C891-4384-B8A8-4AA3628130DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD7DE00A-C891-4384-B8A8-4AA3628130DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD7DE00A-C891-4384-B8A8-4AA3628130DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

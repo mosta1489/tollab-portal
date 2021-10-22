@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Net.Http;
+using Tolab.Common;
 
 namespace TolabPortal.DataAccess.Login
 {
@@ -11,9 +13,10 @@ namespace TolabPortal.DataAccess.Login
     {
         private readonly HttpClient _httpClient;
 
-        public LoginService()
+        public LoginService(IOptions<ApplicationConfig> options)
         {
-            _httpClient = new HttpClient();
+            var config = options.Value;
+            _httpClient = new HttpClient { BaseAddress = new Uri(config.ApiUrl) };
         }
 
         public void Dispose()
