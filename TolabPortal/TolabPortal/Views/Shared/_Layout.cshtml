@@ -1,48 +1,255 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TolabPortal</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="author" content="Tollab">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>طلاب</title>
+
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com/">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" sizes="16x16" href="images/favicon.png">
+
+    <link rel="stylesheet" href="/css/commonBundle.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+
+    <!-- start cssload-loader -->
+    <div class="preloader">
+        <div class="loader">
+            <svg class="spinner" viewBox="0 0 50 50">
+                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+            </svg>
+        </div>
+    </div>
+    <!-- end cssload-loader -->
+    <!--======================================
+            START HEADER AREA
+        ======================================-->
+    <header class="header-menu-area">
+        <div class="header-menu-content bg-white">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TolabPortal</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                <div class="main-menu-content">
+                    <div class="row align-items-center">
+                        <div class="col-lg-2">
+                            <div class="logo-box">
+                                <a href="#" class="logo"><img src="images/logo.png" class="logoimg"></a>
+                                <div class="user-btn-action">
+                                    <div class="off-canvas-menu-toggle main-menu-toggle icon-element icon-element-sm shadow-sm" data-toggle="tooltip" data-placement="top">
+                                        <i class="la la-bars"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end col-lg-2 -->
+                        <div class="col-lg-10">
+                            <div class="menu-wrapper">
+                                <nav class="main-menu">
+                                    <ul>
+                                        <li>
+                                            <a href="#">الرئيسية</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">الأقسام</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">اتصل بنا</a>
+                                        </li>
+                                    </ul><!-- end ul -->
+                                </nav><!-- end main-menu -->
+                                <div class="nav-right-button border-right border-right-gray pl-4 mr-3">
+                                    <ul class="generic-list-item">
+                                        <li><a href="#">تسجيل الدخول</a></li>
+                                        <li>أو</li>
+                                        <li><a href="#" class="btn theme-btn theme-btn-sm text-white"><i class="la la-user-plus mr-1"></i> اشتراك</a></li>
+                                    </ul>
+                                </div><!-- end nav-right-button -->
+                                <div class="shop-cart">
+                                    <ul>
+                                        <li>
+                                            <p class="shop-cart-btn d-flex">
+                                                <img src="images/sa.png" class="countflag">
+                                            </p>
+                                            <ul class="cart-dropdown-menu drorpflagmen">
+                                                <li>
+                                                    <a href="#">
+                                                        <img src="images/eg.png" class="countflag">
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <img src="images/ae.png" class="countflag">
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div><!-- end shop-cart -->
+                            </div><!-- end menu-wrapper -->
+                        </div><!-- end col-lg-10 -->
+                    </div><!-- end row -->
+                </div>
+            </div><!-- end container -->
+        </div><!-- end header-menu-content -->
+        <div class="off-canvas-menu custom-scrollbar-styled main-off-canvas-menu">
+            <div class="off-canvas-menu-close main-menu-close icon-element icon-element-sm shadow-sm" data-toggle="tooltip" data-placement="left">
+                <i class="la la-times"></i>
+            </div><!-- end off-canvas-menu-close -->
+            <ul class="generic-list-item off-canvas-menu-list pt-90px">
+                <li>
+                    <a href="#">الرئيسية</a>
+                </li>
+                <li>
+                    <a href="#">الأقسام</a>
+                </li>
+                <li>
+                    <a href="#">اتصل بنا</a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/sa.png" class="countflag"></a>
+                    <ul class="sub-menu">
+                        <li><a href="#"><img src="images/eg.png" class="countflag"></a></li>
+                        <li><a href="#"><img src="images/ae.png" class="countflag"></a></li>
                     </ul>
+                </li>
+            </ul>
+            <div class="btn-box px-4 pt-5 text-center">
+                <a href="#" class="btn theme-btn theme-btn-sm theme-btn-transparent"><i class="la la-sign-in mr-1"></i> تسجيل الدخول</a>
+                <span class="fs-15 font-weight-medium d-inline-block mx-2">أو</span>
+                <a href="#" class="btn theme-btn theme-btn-sm shadow-none"><i class="la la-user-plus mr-1"></i> اشتراك</a>
+            </div>
+        </div><!-- end off-canvas-menu -->
+        <div class="body-overlay"></div>
+    </header><!-- end header-menu-area -->
+    <!--======================================
+    END HEADER AREA
+    ======================================-->
+    <!-- ================================
+    START BREADCRUMB AREA
+    ================================= -->
+    <section class="breadcrumb-area section-padding img-bg-4">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="breadcrumb-content d-flex flex-wrap align-items-center justify-content-between">
+                <div class="section-heading">
+                    <h2 class="section__title text-white">تسجيل الدخول</h2>
+                </div>
+                <ul class="generic-list-item generic-list-item-white generic-list-item-arrow d-flex flex-wrap align-items-center">
+                    <li><a href="#">الرئيسية</a></li>
+                    <li>تسجيل الدخول</li>
+                </ul>
+            </div><!-- end breadcrumb-content -->
+        </div><!-- end container -->
+    </section><!-- end breadcrumb-area -->
+    <!-- ================================
+    END BREADCRUMB AREA
+    ================================= -->
+    <!-- ================================
+    START CONTACT AREA
+    ================================= -->
+    <section class="contact-area section--padding position-relative  pt-60px pb-40px bg-grligh">
+        <span class="ring-shape ring-shape-1"></span>
+        <span class="ring-shape ring-shape-2"></span>
+        <span class="ring-shape ring-shape-3"></span>
+        <span class="ring-shape ring-shape-4"></span>
+        <span class="ring-shape ring-shape-5"></span>
+        <span class="ring-shape ring-shape-6"></span>
+        <span class="ring-shape ring-shape-7"></span>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 mx-auto">
+                    @RenderBody()
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
+        </div><!-- end container -->
+    </section><!-- end contact-area -->
+    <!-- ================================
+    END CONTACT AREA
+    ================================= -->
+    <!-- ================================
+             END FOOTER AREA
+    ================================= -->
+    <section class="footer-area pt-100px">
         <div class="container">
-            &copy; 2021 - TolabPortal - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+            <div class="row">
+                <div class="col-lg-3 responsive-column-half">
+                    <div class="footer-item">
+                        <a href="#">
+                            <img src="images/logo.png" class="footer__logo logoimg">
+                        </a>
+                        <ul class="generic-list-item pt-4">
+                            <li><a href="#" class="direlang">+123 456 789</a></li>
+                            <li><a href="#">inof@tollab.com</a></li>
+                        </ul>
+                        <h3 class="fs-20 font-weight-semi-bold pt-4 pb-3">تابعنا على</h3>
+                        <ul class="social-icons social-icons-styled">
+                            <li class="mr-1"><a href="#" class="facebook-bg"><i class="la la-facebook"></i></a></li>
+                            <li class="mr-1"><a href="#" class="twitter-bg"><i class="la la-twitter"></i></a></li>
+                            <li class="mr-1"><a href="#" class="instagram-bg"><i class="la la-instagram"></i></a></li>
+                            <li class="mr-1"><a href="#" class="linkedin-bg"><i class="la la-linkedin"></i></a></li>
+                        </ul>
+                    </div><!-- end footer-item -->
+                </div><!-- end col-lg-3 -->
+                <div class="col-lg-3 responsive-column-half">
+                    <div class="footer-item">
+                        <h3 class="fs-20 font-weight-semi-bold pb-2">روابط</h3>
+                        <div class="divider border-bottom-0"><span></span></div>
+                        <ul class="generic-list-item">
+                            <li><a href="#">الرئيسية</a></li>
+                            <li><a href="#">الأقسام</a></li>
+                            <li><a href="#">اتصل بنا</a></li>
+                        </ul>
+                    </div><!-- end footer-item -->
+                </div><!-- end col-lg-3 -->
+                <div class="col-lg-3 responsive-column-half">
+                    <div class="footer-item">
+                        <h3 class="fs-20 font-weight-semi-bold pb-2">البنود</h3>
+                        <div class="divider border-bottom-0"><span></span></div>
+                        <ul class="generic-list-item">
+                            <li><a href="#">بنود الخصوصية</a></li>
+                            <li><a href="#">الشروط والأحكام</a></li>
+                        </ul>
+                    </div><!-- end footer-item -->
+                </div><!-- end col-lg-3 -->
+                <div class="col-lg-3 responsive-column-half">
+                    <div class="footer-item">
+                        <h3 class="fs-20 font-weight-semi-bold pb-2">تحميل التطبيق</h3>
+                        <div class="divider border-bottom-0"><span></span></div>
+                        <div class="mobile-app">
+                            <p class="pb-3 lh-24">حمل التطبيق الخاص بنا على </p>
+                            <a href="#" class="d-block mb-2 hover-s"><img src="images/appstore.png" alt="App store" class="img-fluid"></a>
+                            <a href="#" class="d-block hover-s"><img src="images/googleplay.png" alt="Google play store" class="img-fluid"></a>
+                        </div>
+                    </div><!-- end footer-item -->
+                </div><!-- end col-lg-3 -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+        <div class="section-block"></div>
+        <div class="copyright-content py-4">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-12">
+                        <p class="copy-desc text-center">&copy; جميع الحقوق محفوظة ل<a href="#">طلاب</a> 2021</p>
+                    </div><!-- end col-lg-6 -->
+                </div><!-- end row -->
+            </div><!-- end container -->
+        </div><!-- end copyright-content -->
+    </section><!-- end footer-area -->
+    <!-- ================================
+              END FOOTER AREA
+    ================================= -->
+    <!-- start scroll top -->
+    <div id="scroll-top">
+        <i class="la la-arrow-up" title="Go top"></i>
+    </div>
+    <!-- end scroll top -->
+
+    <script src="/js/commonBundle.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
