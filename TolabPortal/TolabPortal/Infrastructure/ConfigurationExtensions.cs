@@ -24,6 +24,7 @@ namespace TolabPortal.Infrastructure
                      "css/owl.theme.default.min.css",
                      "css/fancybox.css",
                      "css/tooltipster.bundle.css",
+                     "css/intlTelInput.min.css",
                      "css/leaflet.css",
                      "css/style-rtl.css",
                      "css/site.css");
@@ -35,6 +36,7 @@ namespace TolabPortal.Infrastructure
                    "js/owl.carousel.min.js",
                    "js/waypoint.min.js",
                    "js/jquery.counterup.min.js",
+                   "js/intlTelInput-jquery.min.js",
                    "js/main-rtl.js",
                    "js/site.js");
             });
