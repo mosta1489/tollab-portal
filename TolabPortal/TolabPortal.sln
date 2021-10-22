@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31515.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TolabPortal", "TolabPortal\TolabPortal.csproj", "{7B71F872-8AAF-484F-873C-FE35A893A724}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TolabPortal.DataAccess", "TolabPortal.DataAccess\TolabPortal.DataAccess.csproj", "{B44ADF16-2CC0-4678-A1D6-B44229C3301A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B71F872-8AAF-484F-873C-FE35A893A724}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B71F872-8AAF-484F-873C-FE35A893A724}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B71F872-8AAF-484F-873C-FE35A893A724}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B71F872-8AAF-484F-873C-FE35A893A724}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B44ADF16-2CC0-4678-A1D6-B44229C3301A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B44ADF16-2CC0-4678-A1D6-B44229C3301A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B44ADF16-2CC0-4678-A1D6-B44229C3301A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B44ADF16-2CC0-4678-A1D6-B44229C3301A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5AF2EFA-E059-441F-8D49-ECE5F036B39D}
+	EndGlobalSection
+EndGlobal
