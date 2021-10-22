@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TolabPortal.DataAccess.Login;
+using TolabPortal.DataAccess.Login.Models;
+using TolabPortal.DataAccess;
+using TolabPortal.Models;
 
 namespace TolabPortal.Controllers
 {
@@ -19,9 +22,35 @@ namespace TolabPortal.Controllers
         }
 
         [Route("~/login")]
-        public IActionResult Login()
+        public IActionResult LoginPhone()
         {
-            return View("Login");
+            return View("LoginPhone");
         }
+
+        [HttpPost]
+        public IActionResult LoginPhone(LoginPhone loginModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var loginResponse = _loginService.StudentLogin(loginModel.PhoneNumber);
+
+            }
+            return View(loginModel);
+        }
+
+        [Route("~/login/ActivationCode")]
+        public IActionResult LoginCode()
+        {
+            return View("LoginCode");
+        }
+
+        [HttpPost]
+        public IActionResult LoginCode(LoginCode loginCode)
+        {
+            return View();
+        }
+
+
+
     }
 }

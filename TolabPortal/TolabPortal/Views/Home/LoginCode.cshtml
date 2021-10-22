@@ -1,0 +1,34 @@
+﻿@model TolabPortal.Models.LoginCode
+
+@{
+    ViewBag.CurrentPageTitle = "تفعيل الحساب";
+    var items = new string[] { "الرئيسية", "تفعيل الحساب" };
+    ViewBag.MenuItems = items;
+}
+
+
+<div class="register-heading-content-wrap text-left">
+    <div class="section-heading">
+        <h2 class="notehead mb-2">ادخل كود التفعيل</h2>
+        <p class="mb-4">تم ارسال رسالة نصية بها كود التفعيل الى تليفونك المحمول</p>
+    </div><!-- end section-heading -->
+</div>
+<div class="card card-item">
+    <div class="card-body">
+        <form method="post" asp-action="LoginCode" asp-controller="Home" class="pt-2">
+            <div class="input-box">
+                <label asp-for="ActivationCode" class="label-text txtbold">اكتب كود التفعيل</label>
+                <div class="form-group">
+                    <input asp-for="ActivationCode" class="form-control form--control" type="text">
+                    <span class="la la-comment input-icon"></span>
+                </div>
+            </div><!-- end input-box -->
+            <div class="btn-box">
+                <div class="d-flex align-items-center justify-content-between dsmblock">
+                    <p>لم يصلك الكود ! <a href="#" class="btn-text linkunder">ارسل مجدداً</a></p>
+                    <button class="btn theme-btn pullone">تم <i class="la la-arrow-right icon ml-1"></i></button>
+                </div>
+            </div><!-- end btn-box -->
+        </form>
+    </div><!-- end card-body -->
+</div><!-- end card -->
