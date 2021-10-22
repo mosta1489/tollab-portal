@@ -19,19 +19,19 @@
             <div class="input-box">
                 <label asp-for="PhoneNumber" class="label-text txtbold">رقم الموبايل</label>
                 <div class="form-group">
-                    <input asp-for="PhoneNumber" id="phone" class="form-control form--control" type="text" dir="ltr">
+                    <input required asp-for="PhoneNumber" id="phone" class="form-control form--control" type="text" dir="ltr">
                 </div>
             </div><!-- end input-box -->
             <div class="btn-box">
                 <div class="d-flex align-items-center justify-content-between dsmblock">
                     <div class="custom-control custom-checkbox mb-2 fs-15">
-                        <input asp-for="ConditionsAgree" type="checkbox" class="custom-control-input" id="agreeCheckbox">
+                        <input asp-for="ConditionsAgree" type="checkbox" class="custom-control-input" id="agreeCheckbox" required>
                         <label asp-for="ConditionsAgree" class="custom-control-label custom--control-label">
                             لقد قرأت ووافقت على
                             <a href="#" class="text-color hover-underline">الشروط والأحكام</a>
                         </label>
                     </div><!-- end custom-control -->
-                    <button class="btn theme-btn pullone">ارسل <i class="la la-arrow-right icon ml-1"></i></button>
+                    <button type="submit" class="btn theme-btn pullone">ارسل <i class="la la-arrow-right icon ml-1"></i></button>
                 </div>
             </div><!-- end btn-box -->
         </form>

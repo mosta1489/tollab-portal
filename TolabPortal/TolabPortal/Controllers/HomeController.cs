@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using TolabPortal.DataAccess.Login;
-using TolabPortal.DataAccess.Login.Models;
-using TolabPortal.DataAccess;
 using TolabPortal.Models;
 
 namespace TolabPortal.Controllers
@@ -15,7 +14,7 @@ namespace TolabPortal.Controllers
             _loginService = loginService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             //Landing Page waiting for design
             return View();
@@ -28,12 +27,12 @@ namespace TolabPortal.Controllers
         }
 
         [HttpPost]
-        public IActionResult LoginPhone(LoginPhone loginModel)
+        [Route("~/LoginPhone")]
+        public async Task<IActionResult> LoginPhone(LoginPhone loginModel)
         {
             if (ModelState.IsValid)
             {
-                var loginResponse = _loginService.StudentLogin(loginModel.PhoneNumber);
-
+                var loginResponse = await _loginService.StudentLogin(loginModel.PhoneNumber);
             }
             return View(loginModel);
         }
@@ -49,8 +48,5 @@ namespace TolabPortal.Controllers
         {
             return View();
         }
-
-
-
     }
 }

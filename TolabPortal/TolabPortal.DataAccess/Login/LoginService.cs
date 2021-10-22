@@ -30,14 +30,11 @@ namespace TolabPortal.DataAccess.Login
 
         public async Task<HttpResponseMessage> StudentLogin(string loginPhone)
         {
-            var studentLoginResponse = await _httpClient.GetAsync($"/api/StudentLogin?{loginPhone}");
-
+            var studentLoginResponse = await _httpClient.GetAsync($"/api/StudentLogin?PhoneNumberWithKey={loginPhone}");
+            var responseString = await studentLoginResponse.Content.ReadAsStringAsync();
             if (studentLoginResponse.IsSuccessStatusCode)
             {
-                var responseString = await studentLoginResponse.Content.ReadAsStringAsync();
                 var studentLoginResult = JsonConvert.DeserializeObject<Student>(responseString);
-
-
             }
 
             throw new NotImplementedException();
