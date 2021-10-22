@@ -1,9 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using TolabPortal.DataAccess.Login;
 
 namespace TolabPortal.Infrastructure
 {
     public static class ConfigurationExtensions
     {
+        public static IServiceCollection ConfigureDependencyInjection(this IServiceCollection services)
+        {
+            services.AddScoped<ILoginService, LoginService>();
+
+            return services;
+        }
+
         public static IServiceCollection ConfigureBundles(this IServiceCollection services)
         {
             services.AddWebOptimizer(pipeline =>

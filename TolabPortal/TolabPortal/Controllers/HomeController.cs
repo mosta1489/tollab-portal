@@ -1,19 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using TolabPortal.DataAccess.Login;
 
 namespace TolabPortal.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILoginService _loginService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILoginService loginService)
         {
-            _logger = logger;
+            _loginService = loginService;
         }
 
         public IActionResult Index()
         {
+            //Landing Page waiting for design
             return View();
         }
 

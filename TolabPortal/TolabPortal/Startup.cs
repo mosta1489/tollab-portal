@@ -20,6 +20,7 @@ namespace TolabPortal
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureBundles();
+            services.ConfigureDependencyInjection();
             services.AddControllersWithViews();
         }
 
@@ -40,7 +41,6 @@ namespace TolabPortal
             app.UseStaticFiles();
 
             app.UseWebOptimizer();
-
 
             app.UseRouting();
 
