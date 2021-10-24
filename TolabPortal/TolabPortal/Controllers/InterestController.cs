@@ -12,10 +12,13 @@ namespace TolabPortal.Controllers
     public class InterestController : Controller
     {
         private readonly IInterestService _interestService;
+        private readonly ISessionManager _sessionManager;
 
-        public InterestController(IInterestService interestService)
+        public InterestController(IInterestService interestService,
+            ISessionManager sessionManager)
         {
             _interestService = interestService;
+            _sessionManager = sessionManager;
         }
 
         public IActionResult Index()
@@ -28,7 +31,7 @@ namespace TolabPortal.Controllers
         {
             ViewBag.HasError = hasError;
 
-            long sampleCountryId = 20011;  // In real scenario, we should get country id from logged in users
+            long sampleCountryId = _sessionManager.CountryId;
 
             var SectionsResponse = await _interestService.GetSectionsByCountryId(sampleCountryId);
 

@@ -1,10 +1,8 @@
-﻿
-@{
+﻿@{
     ViewBag.CurrentPageTitle = "تفعيل الحساب";
     var items = new string[] { "الرئيسية", "تفعيل الحساب" };
     ViewBag.MenuItems = items;
 }
-
 
 <div class="card card-item">
     <div class="card-body text-center">
@@ -17,6 +15,6 @@
             <br>
             قم الان بتخصيص حسابك واختيار اهتمامتك
         </p>
-        <button type="submit" class="btn theme-btn mb-2">اختر نشاطاتك  <i class="la la-arrow-right icon ml-1"></i></button>
+        <a href="/Interest/RegisterSection" class="btn theme-btn mb-2">اختر نشاطاتك  <i class="la la-arrow-right icon ml-1"></i></a>
     </div><!-- end card-body -->
 </div><!-- end card -->
