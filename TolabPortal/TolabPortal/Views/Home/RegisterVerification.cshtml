@@ -6,7 +6,6 @@
     ViewBag.MenuItems = items;
 }
 
-
 <div class="register-heading-content-wrap text-left">
     <div class="section-heading">
         <h2 class="notehead mb-2">ادخل كود التفعيل</h2>
@@ -14,11 +13,11 @@
     </div><!-- end section-heading -->
 </div>
 
-@if (ViewBag.HasError != null && ViewBag.HasError == true)
+@if (ViewBag.ErrorMessage != null)
 {
     <div class="alert alert-danger2 alert-dismissible fade show course-alert-info">
         <div class="d-flex align-items-center">
-            <i class="la la-info-circle fs-30 mr-2"></i> كود التفعيل غير صحيح
+            <i class="la la-info-circle fs-30 mr-2"></i> @ViewBag.ErrorMessage
         </div>
         <button type="button" class="close fs-20 pd-16" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true" class="la la-times"></span>
@@ -29,6 +28,7 @@
 <div class="card card-item">
     <div class="card-body">
         <form method="post" asp-action="RegisterVerification" asp-controller="Home" class="pt-2">
+
             <div class="input-box">
                 <label asp-for="VerificationCode" class="label-text txtbold">اكتب كود التفعيل</label>
                 <div class="form-group">

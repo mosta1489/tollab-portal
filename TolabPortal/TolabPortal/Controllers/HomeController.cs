@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -113,7 +112,7 @@ namespace TolabPortal.Controllers
                     var responseString = await loginVerificationResponse.Content.ReadAsStringAsync();
                     var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
 
-                    await LoginAdminUser(studentInfo);
+                    await LoginUser(studentInfo);
                     return RedirectToAction("LoginVerificationSuccess");
                 }
                 else
@@ -173,26 +172,45 @@ namespace TolabPortal.Controllers
 
         [HttpPost]
         [Route("~/RegisterInfo")]
-        public IActionResult RegisterInfo(RegisterInfo registerInfo)
+        public async Task<IActionResult> RegisterInfo(RegisterInfo registerInfo)
         {
             if (ModelState.IsValid)
             {
-                RegisterVerification registerVerification = new RegisterVerification();
-                registerVerification.PhoneKey = registerInfo.PhoneKey;
-                registerVerification.PhoneNumber = registerInfo.PhoneNumber;
-                registerVerification.ConditionsAgree = registerInfo.ConditionsAgree;
-                registerVerification.Name = registerInfo.Name;
-                registerVerification.Email = registerInfo.Email;
-                registerVerification.Gender = bool.Parse(registerInfo?.Gender ?? "false");
-                registerVerification.Bio = registerInfo.Bio;
+                var registerVerification = new RegisterVerification
+                {
+                    PhoneKey = registerInfo.PhoneKey,
+                    PhoneNumber = registerInfo.PhoneNumber,
+                    ConditionsAgree = registerInfo.ConditionsAgree,
+                    Name = registerInfo.Name,
+                    Email = registerInfo.Email,
+                    Gender = bool.Parse(registerInfo?.Gender ?? "false"),
+                    Bio = registerInfo.Bio,
+                    CountryId = GetCountryIdByCode(registerInfo.PhoneKey)
+                };
 
-                return View("RegisterVerification", registerVerification);
+                var student = new Student(registerVerification.PhoneKey, registerVerification.PhoneNumber, registerVerification.Name, registerVerification.Email,
+                    registerVerification.Gender, registerVerification.Bio, registerVerification.CountryId);
+
+                var registerVerificationResponse = await _accountService.RegisterStudent(student);
+                if (registerVerificationResponse.IsSuccessStatusCode)
+                {
+                    var studentInfo = CommonUtilities.GetResponseModelFromJson<LoginVerificationSuccessResponseModel>(registerVerificationResponse);
+                    return View("RegisterVerification", registerVerification);
+                }
+                else
+                {
+                    var responseString = await registerVerificationResponse.Content.ReadAsStringAsync();
+                    var errorModel = JsonConvert.DeserializeObject<ApiErrorModel>(responseString);
+                    ViewBag.ErrorMessage = errorModel.errors.message;
+
+                    return View(registerInfo);
+                }
             }
             else
             {
-                ViewBag.InvalidInfo = true;
+                ViewBag.ErrorMessage = "من فضلك ادخل البيانات المطلوبه";
+                return View(registerInfo);
             }
-            return View(registerInfo);
         }
 
         [HttpPost]
@@ -201,29 +219,30 @@ namespace TolabPortal.Controllers
         {
             if (ModelState.IsValid)
             {
-                Student student = new Student(registerVerification.PhoneKey, registerVerification.PhoneNumber, registerVerification.Name, registerVerification.Email,
-                    registerVerification.Gender, registerVerification.Bio, Int32.Parse(registerVerification.VerificationCode));
+                var loginVerificationResponse = await _accountService.VerifyStudentLogin(registerVerification.PhoneKey, registerVerification.PhoneNumber, registerVerification.VerificationCode);
 
-                var registerVerificationResponse = await _accountService.RegisterStudent(student);
-                if (registerVerificationResponse.IsSuccessStatusCode)
+                if (loginVerificationResponse.IsSuccessStatusCode)
                 {
-                    var studentInfo = CommonUtilities.GetResponseModelFromJson<Student>(registerVerificationResponse);
-                    return View("VerificationSuccess");
+                    var responseString = await loginVerificationResponse.Content.ReadAsStringAsync();
+                    var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
+
+                    await LoginUser(studentInfo);
+                    return RedirectToAction("LoginVerificationSuccess");
                 }
                 else
                 {
-                    return View("VerificationSuccess");
-                    //ViewBag.HasError = true;
+                    ViewBag.ErrorMessage = "كود التفعيل غير صحيح";
+                    return View("RegisterVerification", registerVerification);
                 }
             }
             else
             {
-                ViewBag.HasError = true;
+                ViewBag.ErrorMessage = "حدث خطا اثناء العمليه ";
             }
-            return View(registerVerification);
+            return View();
         }
 
-        private async Task LoginAdminUser(LoginVerificationSuccessResponseModel user)
+        private async Task LoginUser(LoginVerificationSuccessResponseModel user)
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsIdentity identity = new ClaimsIdentity(await GetUserClaims(user), CookieAuthenticationDefaults.AuthenticationScheme);
@@ -243,6 +262,21 @@ namespace TolabPortal.Controllers
             };
 
             return claims;
+        }
+
+        public int GetCountryIdByCode(string code)
+        {
+            //kuwait
+            if (code == "+965")
+                return 3;
+            //Egypt
+            else if (code == "+20")
+                return 20011;
+            //jordan
+            else if (code == "+962")
+                return 20012;
+
+            return 0;
         }
 
         #endregion Register

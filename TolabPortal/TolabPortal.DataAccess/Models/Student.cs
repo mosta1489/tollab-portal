@@ -1,11 +1,7 @@
-﻿using Dapper.Contrib.Extensions;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace TolabPortal.DataAccess.Models
 {
@@ -27,8 +23,10 @@ namespace TolabPortal.DataAccess.Models
         public string IdentityId { get; set; }
         public long CountryId { get; set; }
         public bool? Enabled { get; set; }
+
         [JsonIgnore]
         public int Vcode { get; set; }
+
         public DateTime? ExpirationVCodeDate { get; set; }
         public bool Verified { get; set; }
         public string PaymentLink { get; set; }
@@ -47,7 +45,7 @@ namespace TolabPortal.DataAccess.Models
         public string CountryCode { get; set; }
         public string UserType { get; set; }
 
-        public Student(string phoneKey, string phone, string name, string email, bool? gender, string bio, int vcode)
+        public Student(string phoneKey, string phone, string name, string email, bool? gender, string bio, int countryId)
         {
             this.PhoneKey = phoneKey;
             this.Phone = phone;
@@ -55,7 +53,7 @@ namespace TolabPortal.DataAccess.Models
             this.Email = email;
             this.Gender = gender;
             this.Bio = bio;
-            this.Vcode = vcode;
+            CountryId = countryId;
         }
     }
 }
