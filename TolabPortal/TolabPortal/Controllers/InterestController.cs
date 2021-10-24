@@ -31,9 +31,9 @@ namespace TolabPortal.Controllers
         {
             ViewBag.HasError = hasError;
 
-            long sampleCountryId = _sessionManager.CountryId;
+            //long sampleCountryId = _sessionManager.CountryId;
 
-            var SectionsResponse = await _interestService.GetSectionsByCountryId(sampleCountryId);
+            var SectionsResponse = await _interestService.GetSections();
 
             if (SectionsResponse.IsSuccessStatusCode)
             {

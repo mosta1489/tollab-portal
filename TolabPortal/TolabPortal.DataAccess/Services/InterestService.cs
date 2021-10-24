@@ -9,7 +9,7 @@ namespace TolabPortal.DataAccess.Services
 {
     public interface IInterestService
     {
-        Task<HttpResponseMessage> GetSectionsByCountryId(long countryId);
+        Task<HttpResponseMessage> GetSections();
 
         Task<HttpResponseMessage> GetCategoriesBySectionId(long sectionId);
 
@@ -41,7 +41,7 @@ namespace TolabPortal.DataAccess.Services
             _httpClient?.Dispose();
         }
 
-        public async Task<HttpResponseMessage> GetSectionsByCountryId(long countryId)
+        public async Task<HttpResponseMessage> GetSections()
         {
             try
             {
