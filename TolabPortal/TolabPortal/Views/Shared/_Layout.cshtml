@@ -87,7 +87,8 @@
                                             </ul>
                                         </li>
                                     </ul>
-                                </div>--><!-- end shop-cart -->
+                                </div>-->
+                                <!-- end shop-cart -->
                             </div><!-- end menu-wrapper -->
                         </div><!-- end col-lg-10 -->
                     </div><!-- end row -->
@@ -109,12 +110,12 @@
                     <a href="#">اتصل بنا</a>
                 </li>
                 @*<li>
-                    <a href="#"><img src="images/sa.png" class="countflag"></a>
-                    <ul class="sub-menu">
-                        <li><a href="#"><img src="images/eg.png" class="countflag"></a></li>
-                        <li><a href="#"><img src="images/ae.png" class="countflag"></a></li>
-                    </ul>
-                </li>*@
+                        <a href="#"><img src="images/sa.png" class="countflag"></a>
+                        <ul class="sub-menu">
+                            <li><a href="#"><img src="images/eg.png" class="countflag"></a></li>
+                            <li><a href="#"><img src="images/ae.png" class="countflag"></a></li>
+                        </ul>
+                    </li>*@
             </ul>
             <div class="btn-box px-4 pt-5 text-center">
                 <a href="~/login" class="btn theme-btn theme-btn-sm theme-btn-transparent"><i class="la la-sign-in mr-1"></i> تسجيل الدخول</a>
@@ -140,6 +141,7 @@
                 <ul class="generic-list-item generic-list-item-white generic-list-item-arrow d-flex flex-wrap align-items-center">
                     @{
                         var items = @ViewBag.MenuItems as string[];
+
                         foreach (var item in items)
                         {
                             <li>

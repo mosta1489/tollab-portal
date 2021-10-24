@@ -2,10 +2,10 @@
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
+using Tolab.Common;
 using TolabPortal.DataAccess.Models;
 using TolabPortal.DataAccess.Services;
 using TolabPortal.Models;
-using Tolab.Common;
 
 namespace TolabPortal.Controllers
 {
@@ -19,12 +19,7 @@ namespace TolabPortal.Controllers
         }
 
         #region Home and Terms
-        public async Task<IActionResult> Home()
-        {
-            return View();
-        }
 
-        [Route("~/Index")]
         public async Task<IActionResult> Index()
         {
             return View();
@@ -36,7 +31,7 @@ namespace TolabPortal.Controllers
             return View("Terms");
         }
 
-        #endregion
+        #endregion Home and Terms
 
         #region Login
 
@@ -50,35 +45,37 @@ namespace TolabPortal.Controllers
         [Route("~/Login")]
         public async Task<IActionResult> Login(Login loginModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(loginModel);
+
+            var phoneNumberWithKey = $"{loginModel.PhoneKey}{loginModel.PhoneNumber}";
+            var loginResponse = await _accountService.StudentLogin(phoneNumberWithKey);
+            if (loginResponse.IsSuccessStatusCode)
             {
-                var phoneNumberWithKey = $"{loginModel.PhoneKey}{loginModel.PhoneNumber}";
-                var loginResponse = await _accountService.StudentLogin(phoneNumberWithKey);
-                if (loginResponse.IsSuccessStatusCode)
+                var responseString = await loginResponse.Content.ReadAsStringAsync();
+                var studentInfo = JsonConvert.DeserializeObject<Student>(responseString);
+
+                var loginVerification = new LoginVerification
                 {
-                    var responseString = await loginResponse.Content.ReadAsStringAsync();
-                    var studentInfo = JsonConvert.DeserializeObject<Student>(responseString);
-
-                    LoginVerification loginVerification = new LoginVerification();
-                    loginVerification.PhoneKey = loginModel.PhoneKey;
-                    loginVerification.PhoneNumber = loginModel.PhoneNumber;
-                    return View("LoginVerification", loginVerification);
-                }
-                else
-                {
-                    // added temporarily to redirect to verification page even phone number is invalid (should be removed later)
-
-                    LoginVerification loginVerification = new LoginVerification();
-                    loginVerification.PhoneKey = loginModel.PhoneKey;
-                    loginVerification.PhoneNumber = loginModel.PhoneNumber;
-                    return View("LoginVerification", loginVerification);
-
-                    // error occured in login page using phone
-                    //ViewBag.HasError = true;
-                    //return View(loginModel);
-                }
+                    PhoneKey = loginModel.PhoneKey,
+                    PhoneNumber = loginModel.PhoneNumber
+                };
+                return View("LoginVerification", loginVerification);
             }
-            return View(loginModel);
+            else
+            {
+                // added temporarily to redirect to verification page even phone number is invalid (should be removed later)
+
+                var loginVerification = new LoginVerification
+                {
+                    PhoneKey = loginModel.PhoneKey,
+                    PhoneNumber = loginModel.PhoneNumber
+                };
+                return View("LoginVerification", loginVerification);
+
+                // error occured in login page using phone
+                //ViewBag.HasError = true;
+                //return View(loginModel);
+            }
         }
 
         [Route("~/login/Verification")]
@@ -104,7 +101,6 @@ namespace TolabPortal.Controllers
                 }
                 else
                 {
-
                     return View("VerificationSuccess");
                     //ViewBag.HasError = true;
                 }
@@ -116,7 +112,7 @@ namespace TolabPortal.Controllers
             return View();
         }
 
-        #endregion
+        #endregion Login
 
         #region Register
 
@@ -144,7 +140,6 @@ namespace TolabPortal.Controllers
             }
             return View(registerPhone);
         }
-
 
         [Route("~/RegisterInfo")]
         public IActionResult RegisterInfo()
@@ -204,6 +199,6 @@ namespace TolabPortal.Controllers
             return View(registerVerification);
         }
 
-        #endregion
+        #endregion Register
     }
 }
