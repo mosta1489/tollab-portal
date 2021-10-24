@@ -1,6 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Tolab.Common;
 using TolabPortal.DataAccess.Models;
@@ -63,18 +69,10 @@ namespace TolabPortal.Controllers
             }
             else
             {
-                // added temporarily to redirect to verification page even phone number is invalid (should be removed later)
-
-                var loginVerification = new LoginVerification
-                {
-                    PhoneKey = loginModel.PhoneKey,
-                    PhoneNumber = loginModel.PhoneNumber
-                };
-                return View("LoginVerification", loginVerification);
-
-                // error occured in login page using phone
-                //ViewBag.HasError = true;
-                //return View(loginModel);
+                var responseString = await loginResponse.Content.ReadAsStringAsync();
+                var errorModel = JsonConvert.DeserializeObject<ApiErrorModel>(responseString);
+                ViewBag.ErrorMessage = errorModel.errors.message;
+                return View(loginModel);
             }
         }
 
@@ -95,21 +93,29 @@ namespace TolabPortal.Controllers
                 if (loginVerificationResponse.IsSuccessStatusCode)
                 {
                     var responseString = await loginVerificationResponse.Content.ReadAsStringAsync();
-                    var studentInfo = JsonConvert.DeserializeObject<Student>(responseString);
+                    var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
 
-                    return View("VerificationSuccess");
+                    await LoginAdminUser(studentInfo);
+                    return RedirectToAction("LoginVerificationSuccess");
                 }
                 else
                 {
-                    return View("VerificationSuccess");
-                    //ViewBag.HasError = true;
+                    ViewBag.ErrorMessage = "كود التفعيل غير صحيح";
+                    return View("LoginVerification", loginVerification);
                 }
             }
             else
             {
-                ViewBag.HasError = true;
+                ViewBag.ErrorMessage = "حدث خطا اثناء العمليه ";
             }
             return View();
+        }
+
+        [Authorize]
+        [Route("~/login/Verification/Success")]
+        public IActionResult LoginVerificationSuccess()
+        {
+            return View("LoginVerificationSuccess");
         }
 
         #endregion Login
@@ -197,6 +203,28 @@ namespace TolabPortal.Controllers
                 ViewBag.HasError = true;
             }
             return View(registerVerification);
+        }
+
+        private async Task LoginAdminUser(LoginVerificationSuccessResponseModel user)
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsIdentity identity = new ClaimsIdentity(await GetUserClaims(user), CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
+        }
+
+        private async Task<IEnumerable<Claim>> GetUserClaims(LoginVerificationSuccessResponseModel user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.model.Id.ToString()),
+                new Claim("AccessToken", user.model.Token.First().access_token),
+                new Claim("CountryId", user.model.CountryId.ToString()),
+                new Claim("CountryCode", user.model.CountryCode)
+            };
+
+            return claims;
         }
 
         #endregion Register

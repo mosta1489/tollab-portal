@@ -12,11 +12,11 @@
     </div><!-- end section-heading -->
 </div>
 
-@if (ViewBag.HasError != null && ViewBag.HasError == true)
+@if (ViewBag.ErrorMessage != null)
 {
     <div class="alert alert-danger2 alert-dismissible fade show course-alert-info">
         <div class="d-flex align-items-center">
-            <i class="la la-info-circle fs-30 mr-2"></i> رقم الهاتف غير صحيح
+            <i class="la la-info-circle fs-30 mr-2"></i> @ViewBag.ErrorMessage
         </div>
         <button type="button" class="close fs-20 pd-16" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true" class="la la-times"></span>
@@ -41,7 +41,7 @@
                             لقد قرأت ووافقت على
                             <a href="~/Terms" class="text-color hover-underline">الشروط والأحكام</a>
                         </label>
-                        <input hidden id="phoneKey" asp-for="PhoneKey"/>
+                        <input hidden id="phoneKey" asp-for="PhoneKey" />
                     </div><!-- end custom-control -->
                     <button type="submit" class="btn theme-btn pullone">ارسل <i class="la la-arrow-right icon ml-1"></i></button>
                 </div>
@@ -51,9 +51,9 @@
 </div><!-- end card -->
 
 @section Scripts
-{   
+{
     <script>
-        // custom script used to send the country code along with phone number to the model 
+        // custom script used to send the country code along with phone number to the model
         $(function () {
             $("body").on('DOMSubtreeModified', ".iti__flag-container .iti__selected-flag", function () {
                 var countryCode = $('.iti__flag-container .iti__selected-flag').text();

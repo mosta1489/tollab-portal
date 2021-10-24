@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Tolab.Common;
 using TolabPortal.DataAccess.Services;
 
 namespace TolabPortal.Infrastructure
@@ -9,6 +10,7 @@ namespace TolabPortal.Infrastructure
         {
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IInterestService, InterestService>();
+            services.AddScoped<ISessionManager, SessionManager>();
 
             return services;
         }

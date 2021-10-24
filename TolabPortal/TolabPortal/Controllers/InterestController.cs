@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Tolab.Common;
 using TolabPortal.DataAccess.Models;
 using TolabPortal.DataAccess.Services;
-using TolabPortal.Models;
-using Tolab.Common;
 
 namespace TolabPortal.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     public class InterestController : Controller
     {
@@ -31,7 +28,7 @@ namespace TolabPortal.Controllers
         {
             ViewBag.HasError = hasError;
 
-            long sampleCountryId = 20011;  // In real scenario, we should get country id from logged in users 
+            long sampleCountryId = 20011;  // In real scenario, we should get country id from logged in users
 
             var SectionsResponse = await _interestService.GetSectionsByCountryId(sampleCountryId);
 
@@ -42,7 +39,6 @@ namespace TolabPortal.Controllers
             }
             else
             {
-
             }
             return View("RegisterSection");
         }
@@ -71,7 +67,6 @@ namespace TolabPortal.Controllers
             return View("RegisterCategory");
         }
 
-
         [HttpPost]
         [Route("RegisterCategory")]
         public async Task<IActionResult> RegisterCategory(string categoryId)
@@ -84,18 +79,15 @@ namespace TolabPortal.Controllers
             }
             else
             {
-
             }
             return View();
         }
-
 
         [Route("RegisterSubCategory")]
         public IActionResult RegisterSubCategory()
         {
             return View();
         }
-
 
         [HttpPost]
         [Route("RegisterSubCategory")]
@@ -110,7 +102,6 @@ namespace TolabPortal.Controllers
             return View();
         }
 
-
         [HttpPost]
         [Route("RegisterDepartment")]
         public async Task<IActionResult> RegisterDepartment(string subCategoryId)
@@ -123,6 +114,5 @@ namespace TolabPortal.Controllers
         {
             return View();
         }
-
     }
 }

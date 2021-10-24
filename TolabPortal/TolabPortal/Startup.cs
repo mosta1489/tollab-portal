@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using Tolab.Common;
 using TolabPortal.Infrastructure;
 
@@ -23,6 +25,13 @@ namespace TolabPortal
             services.ConfigureBundles();
             services.ConfigureDependencyInjection();
             services.Configure<ApplicationConfig>(Configuration.GetSection("ApplicationConfig"));
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromDays(30);
+            });
             services.AddControllersWithViews();
         }
 
@@ -46,6 +55,7 @@ namespace TolabPortal
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

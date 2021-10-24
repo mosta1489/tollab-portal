@@ -14,11 +14,11 @@
     </div><!-- end section-heading -->
 </div>
 
-@if (ViewBag.HasError != null && ViewBag.HasError == true)
+@if (ViewBag.ErrorMessage != null)
 {
     <div class="alert alert-danger2 alert-dismissible fade show course-alert-info">
         <div class="d-flex align-items-center">
-            <i class="la la-info-circle fs-30 mr-2"></i> كود التفعيل غير صحيح
+            <i class="la la-info-circle fs-30 mr-2"></i> @ViewBag.ErrorMessage
         </div>
         <button type="button" class="close fs-20 pd-16" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true" class="la la-times"></span>
@@ -35,8 +35,8 @@
                     <input asp-for="ActivationCode" class="form-control form--control" type="text" required>
                     <span class="la la-comment input-icon"></span>
                 </div>
-                <input hidden asp-for="PhoneKey" value="@Model.PhoneKey"/>
-                <input hidden asp-for="PhoneNumber" value="@Model.PhoneNumber"/>
+                <input hidden asp-for="PhoneKey" value="@Model.PhoneKey" />
+                <input hidden asp-for="PhoneNumber" value="@Model.PhoneNumber" />
             </div><!-- end input-box -->
             <div class="btn-box">
                 <div class="d-flex align-items-center justify-content-between dsmblock">
