@@ -82,6 +82,24 @@ namespace TolabPortal.Controllers
             return View("LoginVerification");
         }
 
+        [Route("~/login/SendCode")]
+        public async Task<IActionResult> LoginSendCode(string phoneKey, string phoneNumber)
+        {
+            Login login = new Login()
+            {
+                ConditionsAgree = true,
+                PhoneKey = phoneKey,
+                PhoneNumber = phoneNumber
+            };
+            await Login(login);
+            var loginVerification = new LoginVerification
+            {
+                PhoneKey = phoneKey,
+                PhoneNumber = phoneNumber
+            };
+            return View("LoginVerification", loginVerification);
+        }
+
         [HttpPost]
         [Route("~/login/Verification")]
         public async Task<IActionResult> LoginVerification(LoginVerification loginVerification)
