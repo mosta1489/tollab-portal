@@ -2,13 +2,10 @@
 
 namespace TolabPortal.Models
 {
-    public class LoginPhone
+    public class Login
     {
-        [Required]
-        [Phone]
+        public string PhoneKey { get; set; }
         public string PhoneNumber { get; set; }
-
-        [Required]
         public bool ConditionsAgree { get; set; }
     }
 }

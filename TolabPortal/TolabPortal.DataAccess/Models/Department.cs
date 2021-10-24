@@ -4,16 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TolabPortal.DataAccess.Login.Models
+namespace TolabPortal.DataAccess.Models
 {
-    public class Section
+    public class Department
     {
         public long Id { get; set; }
         public string Name { get; set; }
         public string NameLT { get; set; }
-        public string Image { get; set; }
-        public long? CountryId { get; set; }
-       
-        //public IEnumerable<Category> Categories { get; set; }
+        public long? SubCategoryId { get; set; }
     }
 }

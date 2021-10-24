@@ -1,4 +1,4 @@
-﻿@model TolabPortal.Models.LoginCode
+﻿@model TolabPortal.Models.LoginVerification
 
 @{
     ViewBag.CurrentPageTitle = "تفعيل الحساب";
@@ -13,20 +13,35 @@
         <p class="mb-4">تم ارسال رسالة نصية بها كود التفعيل الى تليفونك المحمول</p>
     </div><!-- end section-heading -->
 </div>
+
+@if (ViewBag.HasError != null && ViewBag.HasError == true)
+{
+    <div class="alert alert-danger2 alert-dismissible fade show course-alert-info">
+        <div class="d-flex align-items-center">
+            <i class="la la-info-circle fs-30 mr-2"></i> كود التفعيل غير صحيح
+        </div>
+        <button type="button" class="close fs-20 pd-16" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true" class="la la-times"></span>
+        </button>
+    </div>
+}
+
 <div class="card card-item">
     <div class="card-body">
-        <form method="post" asp-action="LoginCode" asp-controller="Home" class="pt-2">
+        <form method="post" asp-action="LoginVerification" asp-controller="Home" class="pt-2">
             <div class="input-box">
                 <label asp-for="ActivationCode" class="label-text txtbold">اكتب كود التفعيل</label>
                 <div class="form-group">
                     <input asp-for="ActivationCode" class="form-control form--control" type="text">
                     <span class="la la-comment input-icon"></span>
                 </div>
+                <input hidden asp-for="PhoneKey" value="@ViewBag.PhoneKey"/>
+                <input hidden asp-for="PhoneNumber" value="@ViewBag.PhoneNumber"/>
             </div><!-- end input-box -->
             <div class="btn-box">
                 <div class="d-flex align-items-center justify-content-between dsmblock">
                     <p>لم يصلك الكود ! <a href="#" class="btn-text linkunder">ارسل مجدداً</a></p>
-                    <button class="btn theme-btn pullone">تم <i class="la la-arrow-right icon ml-1"></i></button>
+                    <button type="submit" class="btn theme-btn pullone">تم <i class="la la-arrow-right icon ml-1"></i></button>
                 </div>
             </div><!-- end btn-box -->
         </form>

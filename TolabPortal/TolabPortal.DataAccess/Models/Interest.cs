@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TolabPortal.DataAccess.Login.Models
+namespace TolabPortal.DataAccess.Models
 {
     public class Interest
     {

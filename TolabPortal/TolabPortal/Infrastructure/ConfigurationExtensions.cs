@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TolabPortal.DataAccess.Login;
+using TolabPortal.DataAccess.Services;
 
 namespace TolabPortal.Infrastructure
 {
@@ -7,7 +7,8 @@ namespace TolabPortal.Infrastructure
     {
         public static IServiceCollection ConfigureDependencyInjection(this IServiceCollection services)
         {
-            services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IInterestService, InterestService>();
 
             return services;
         }

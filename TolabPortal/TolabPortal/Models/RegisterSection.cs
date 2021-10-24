@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TolabPortal.Models
 {
-    public class LoginCode
+    public class RegisterSection
     {
-        [Required]
-        public string ActivationCode { get; set; }
+
+        public string Section { get; set; }
     }
 }
