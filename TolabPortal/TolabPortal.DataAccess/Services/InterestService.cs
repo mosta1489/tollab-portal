@@ -60,7 +60,7 @@ namespace TolabPortal.DataAccess.Services
         {
             try
             {
-                var sectionsResponse = await _httpClient.GetAsync($"/api/GetCategoriesBySectionId?sectionId={sectionId}");
+                var sectionsResponse = await _httpClient.GetAsync($"/api/GetCategoriesWithSubCategoriesBySectionId?sectionId={sectionId}");
                 return sectionsResponse;
             }
             catch (Exception ex)
@@ -131,8 +131,5 @@ namespace TolabPortal.DataAccess.Services
             }
         }
 
-        //public async string GetSectionNameBySectionId(long sectionId)
-        //{
-        //}
     }
 }
