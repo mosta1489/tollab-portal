@@ -27,6 +27,8 @@ namespace TolabPortal.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Courses");
             return View();
         }
 
@@ -258,7 +260,8 @@ namespace TolabPortal.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.model.Id.ToString()),
                 new Claim("AccessToken", user.model.Token.First().access_token),
                 new Claim("CountryId", user.model.CountryId.ToString()),
-                new Claim("CountryCode", user.model.CountryCode)
+                new Claim("CountryCode", user.model.CountryCode),
+                new Claim("HasInterests", user.model.Interests.Any().ToString())
             };
 
             return claims;

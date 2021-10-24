@@ -28,9 +28,11 @@ namespace TolabPortal
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             }).AddCookie(options =>
             {
                 options.ExpireTimeSpan = TimeSpan.FromDays(30);
+                options.LoginPath = "/login";
             });
             services.AddControllersWithViews();
         }
@@ -48,6 +50,7 @@ namespace TolabPortal
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -57,6 +60,8 @@ namespace TolabPortal
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<InterestsMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

@@ -11,6 +11,7 @@ namespace Tolab.Common
         public string UserId { get; }
         public int CountryId { get; }
         public string CountryCode { get; }
+        public bool? HasInterests { get; }
     }
 
     public class SessionManager : ISessionManager
@@ -72,6 +73,25 @@ namespace Tolab.Common
                     && _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
                 {
                     return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "CountryCode")?.Value;
+                }
+
+                return null;
+            }
+        }
+
+        public bool? HasInterests
+        {
+            get
+            {
+                if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User != null
+                    && _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                {
+                    var hasInterests = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "HasInterests")?.Value;
+
+                    if (hasInterests == null)
+                        return false;
+
+                    return bool.Parse(hasInterests);
                 }
 
                 return null;
