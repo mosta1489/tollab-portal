@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Tolab.Common;
 using System.Net;
+using TolabPortal.DataAccess.Models;
+using System.Text;
 
 namespace TolabPortal.DataAccess.Services
 {
@@ -12,6 +14,7 @@ namespace TolabPortal.DataAccess.Services
     {
         Task<HttpResponseMessage> StudentLogin(string loginPhone);
         Task<HttpResponseMessage> VerifyStudentLogin(string phoneKey, string phone, string verificationCode);
+        Task<HttpResponseMessage> RegisterStudent(Student student);
     }
 
     public class AccountService : IAccountService, IDisposable
@@ -50,6 +53,25 @@ namespace TolabPortal.DataAccess.Services
             {
                 var studentLoginVerificationResponse = await _httpClient.GetAsync($"/api/Verify?PhoneKey={phoneKey}&Phone={phone}&vcode={verificationCode}");
                 return studentLoginVerificationResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+
+        public async Task<HttpResponseMessage> RegisterStudent(Student student)
+        {
+            try
+            {
+                var studentJson = JsonConvert.SerializeObject(student);
+                var content = new StringContent(studentJson, Encoding.UTF8, "application/json");
+
+                var studentRegisterResponse = await _httpClient.PostAsync($"/api/Register", content);
+                return studentRegisterResponse;
             }
             catch (Exception ex)
             {

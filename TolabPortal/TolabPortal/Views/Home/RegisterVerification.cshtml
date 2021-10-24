@@ -1,4 +1,4 @@
-﻿@model TolabPortal.Models.LoginVerification
+﻿@model TolabPortal.Models.RegisterVerification
 
 @{
     ViewBag.CurrentPageTitle = "تفعيل الحساب";
@@ -28,15 +28,21 @@
 
 <div class="card card-item">
     <div class="card-body">
-        <form method="post" asp-action="LoginVerification" asp-controller="Home" class="pt-2">
+        <form method="post" asp-action="RegisterVerification" asp-controller="Home" class="pt-2">
             <div class="input-box">
-                <label asp-for="ActivationCode" class="label-text txtbold">اكتب كود التفعيل</label>
+                <label asp-for="VerificationCode" class="label-text txtbold">اكتب كود التفعيل</label>
                 <div class="form-group">
-                    <input asp-for="ActivationCode" class="form-control form--control" type="text" required>
+                    <input asp-for="VerificationCode" class="form-control form--control" type="text" required>
                     <span class="la la-comment input-icon"></span>
                 </div>
-                <input hidden asp-for="PhoneKey" value="@Model.PhoneKey"/>
-                <input hidden asp-for="PhoneNumber" value="@Model.PhoneNumber"/>
+                <input asp-for="PhoneKey" value="@Model.PhoneKey" hidden />
+                <input asp-for="PhoneNumber" value="@Model.PhoneNumber" hidden />
+                <input asp-for="ConditionsAgree" value="@Model.ConditionsAgree" hidden />
+
+                <input asp-for="Name" value="@Model.Name" hidden />
+                <input asp-for="Email" value="@Model.Email" hidden />
+                <input asp-for="Gender" value="@Model.Gender" hidden />
+                <input asp-for="Bio" value="@Model.Bio" hidden />
             </div><!-- end input-box -->
             <div class="btn-box">
                 <div class="d-flex align-items-center justify-content-between dsmblock">

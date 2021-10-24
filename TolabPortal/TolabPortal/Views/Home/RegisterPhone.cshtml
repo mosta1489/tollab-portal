@@ -1,18 +1,13 @@
-﻿@model TolabPortal.Models.Login;
+﻿
+@model TolabPortal.Models.RegisterPhone
 
 @{
-    ViewBag.CurrentPageTitle = "تسجيل الدخول";
-    var items = new string[] { "الرئيسية", "تسجيل الدخول" };
+    ViewBag.CurrentPageTitle = "انشاء حساب جديد";
+    var items = new string[] { "الرئيسية", "انشاء حساب جديد" };
     ViewBag.MenuItems = items;
 }
 
-<div class="register-heading-content-wrap text-left">
-    <div class="section-heading">
-        <h2 class="notehead">اضف رقم الموبايل واحصل على كود التفعيل</h2>
-    </div><!-- end section-heading -->
-</div>
-
-@if (ViewBag.HasError != null && ViewBag.HasError == true)
+@if (ViewBag.InvalidPhoneNumber != null && ViewBag.InvalidPhoneNumber == true)
 {
     <div class="alert alert-danger2 alert-dismissible fade show course-alert-info">
         <div class="d-flex align-items-center">
@@ -26,24 +21,25 @@
 
 <div class="card card-item">
     <div class="card-body">
-        <form method="post" asp-action="Login" asp-controller="Home" class="pt-2">
+        <form method="post" asp-action="Registerphone" asp-controller="Home" class="pt-2">
             <div class="input-box">
                 <label asp-for="PhoneNumber" class="label-text txtbold">رقم الموبايل</label>
                 <div class="form-group">
                     <input required asp-for="PhoneNumber" id="phone" class="form-control form--control" type="text" dir="ltr">
                 </div>
             </div><!-- end input-box -->
+            <input hidden id="phoneKey" asp-for="PhoneKey" />
             <div class="btn-box">
                 <div class="d-flex align-items-center justify-content-between dsmblock">
                     <div class="custom-control custom-checkbox mb-2 fs-15">
                         <input asp-for="ConditionsAgree" type="checkbox" class="custom-control-input" id="agreeCheckbox">
                         <label asp-for="ConditionsAgree" class="custom-control-label custom--control-label">
                             لقد قرأت ووافقت على
-                            <a href="~/Terms" class="text-color hover-underline">الشروط والأحكام</a>
+                            <a href="#" class="text-color hover-underline">الشروط والأحكام</a>
                         </label>
-                        <input hidden id="phoneKey" asp-for="PhoneKey"/>
+                        
                     </div><!-- end custom-control -->
-                    <button type="submit" class="btn theme-btn pullone">ارسل <i class="la la-arrow-right icon ml-1"></i></button>
+                    <button type="submit" class="btn theme-btn pullone"> التالي <i class="la la-arrow-right icon ml-1"></i></button>
                 </div>
             </div><!-- end btn-box -->
         </form>
@@ -51,9 +47,9 @@
 </div><!-- end card -->
 
 @section Scripts
-{   
+{
     <script>
-        // custom script used to send the country code along with phone number to the model 
+        // custom script used to send the country code along with phone number to the model
         $(function () {
             $("body").on('DOMSubtreeModified', ".iti__flag-container .iti__selected-flag", function () {
                 var countryCode = $('.iti__flag-container .iti__selected-flag').text();

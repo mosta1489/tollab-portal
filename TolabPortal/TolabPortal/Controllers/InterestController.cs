@@ -11,6 +11,7 @@ using Tolab.Common;
 
 namespace TolabPortal.Controllers
 {
+    [Route("[controller]")]
     public class InterestController : Controller
     {
         private readonly IInterestService _interestService;
@@ -25,12 +26,13 @@ namespace TolabPortal.Controllers
             return View();
         }
 
-        [Route("~/RegisterSection")]
+        [Route("RegisterSection")]
         public async Task<IActionResult> RegisterSection(bool hasError)
         {
             ViewBag.HasError = hasError;
 
-            long sampleCountryId = 20011;
+            long sampleCountryId = 20011;  // In real scenario, we should get country id from logged in users 
+
             var SectionsResponse = await _interestService.GetSectionsByCountryId(sampleCountryId);
 
             if (SectionsResponse.IsSuccessStatusCode)
@@ -46,7 +48,7 @@ namespace TolabPortal.Controllers
         }
 
         [HttpPost]
-        [Route("~/RegisterSection")]
+        [Route("RegisterSection")]
         public async Task<IActionResult> RegisterSection(string sectionId)
         {
             if (sectionId != null)
@@ -63,17 +65,16 @@ namespace TolabPortal.Controllers
             }
         }
 
-        [Route("~/RegisterCategory")]
+        [Route("RegisterCategory")]
         public IActionResult RegisterCategory()
         {
-
-            return View("RegisterSchool");
+            return View("RegisterCategory");
         }
 
 
         [HttpPost]
-        [Route("~/RegisterCategory")]
-        public async Task<IActionResult> RegisterCategoryAsync(string categoryId)
+        [Route("RegisterCategory")]
+        public async Task<IActionResult> RegisterCategory(string categoryId)
         {
             if (categoryId != null)
             {
@@ -85,6 +86,41 @@ namespace TolabPortal.Controllers
             {
 
             }
+            return View();
+        }
+
+
+        [Route("RegisterSubCategory")]
+        public IActionResult RegisterSubCategory()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [Route("RegisterSubCategory")]
+        public async Task<IActionResult> RegisterSubCategory(string categoryId)
+        {
+            return View();
+        }
+
+        [Route("RegisterDepartment")]
+        public IActionResult RegisterDepartment()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [Route("RegisterDepartment")]
+        public async Task<IActionResult> RegisterDepartment(string subCategoryId)
+        {
+            return View();
+        }
+
+        [Route("GetSubjects")]
+        public IActionResult GetSubjects()
+        {
             return View();
         }
 

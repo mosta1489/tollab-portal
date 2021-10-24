@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 using TolabPortal.DataAccess.Models;
 using TolabPortal.DataAccess.Services;
 using TolabPortal.Models;
+using Tolab.Common;
 
 namespace TolabPortal.Controllers
 {
@@ -16,11 +18,25 @@ namespace TolabPortal.Controllers
             _accountService = loginService;
         }
 
-        public async Task<IActionResult> Index()
+        #region Home and Terms
+        public async Task<IActionResult> Home()
         {
-            //Landing Page waiting for design
             return View();
         }
+
+        [Route("~/Index")]
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
+
+        [Route("~/Terms")]
+        public IActionResult Terms()
+        {
+            return View("Terms");
+        }
+
+        #endregion
 
         #region Login
 
@@ -42,16 +58,20 @@ namespace TolabPortal.Controllers
                 {
                     var responseString = await loginResponse.Content.ReadAsStringAsync();
                     var studentInfo = JsonConvert.DeserializeObject<Student>(responseString);
-                    ViewBag.PhoneKey = studentInfo.PhoneKey;
-                    ViewBag.PhoneNumber = studentInfo.Phone;
-                    return View("LoginVerification");
+
+                    LoginVerification loginVerification = new LoginVerification();
+                    loginVerification.PhoneKey = loginModel.PhoneKey;
+                    loginVerification.PhoneNumber = loginModel.PhoneNumber;
+                    return View("LoginVerification", loginVerification);
                 }
                 else
                 {
                     // added temporarily to redirect to verification page even phone number is invalid (should be removed later)
-                    ViewBag.PhoneKey = loginModel.PhoneKey;
-                    ViewBag.PhoneNumber = loginModel.PhoneNumber;
-                    return View("LoginVerification");
+
+                    LoginVerification loginVerification = new LoginVerification();
+                    loginVerification.PhoneKey = loginModel.PhoneKey;
+                    loginVerification.PhoneNumber = loginModel.PhoneNumber;
+                    return View("LoginVerification", loginVerification);
 
                     // error occured in login page using phone
                     //ViewBag.HasError = true;
@@ -89,11 +109,101 @@ namespace TolabPortal.Controllers
                     //ViewBag.HasError = true;
                 }
             }
+            else
+            {
+                ViewBag.HasError = true;
+            }
             return View();
         }
 
         #endregion
 
+        #region Register
 
+        [Route("~/Registerphone")]
+        public IActionResult Registerphone()
+        {
+            return View("RegisterPhone");
+        }
+
+        [HttpPost]
+        [Route("~/Registerphone")]
+        public IActionResult Registerphone(RegisterPhone registerPhone)
+        {
+            if (ModelState.IsValid)
+            {
+                RegisterInfo registerInfo = new RegisterInfo();
+                registerInfo.PhoneKey = registerPhone.PhoneKey;
+                registerInfo.PhoneNumber = registerPhone.PhoneNumber;
+                registerInfo.ConditionsAgree = registerPhone.ConditionsAgree;
+                return View("RegisterInfo", registerInfo);
+            }
+            else
+            {
+                ViewBag.InvalidPhoneNumber = true;
+            }
+            return View(registerPhone);
+        }
+
+
+        [Route("~/RegisterInfo")]
+        public IActionResult RegisterInfo()
+        {
+            return View("RegisterInfo");
+        }
+
+        [HttpPost]
+        [Route("~/RegisterInfo")]
+        public IActionResult RegisterInfo(RegisterInfo registerInfo)
+        {
+            if (ModelState.IsValid)
+            {
+                RegisterVerification registerVerification = new RegisterVerification();
+                registerVerification.PhoneKey = registerInfo.PhoneKey;
+                registerVerification.PhoneNumber = registerInfo.PhoneNumber;
+                registerVerification.ConditionsAgree = registerInfo.ConditionsAgree;
+                registerVerification.Name = registerInfo.Name;
+                registerVerification.Email = registerInfo.Email;
+                registerVerification.Gender = bool.Parse(registerInfo?.Gender ?? "false");
+                registerVerification.Bio = registerInfo.Bio;
+
+                return View("RegisterVerification", registerVerification);
+            }
+            else
+            {
+                ViewBag.InvalidInfo = true;
+            }
+            return View(registerInfo);
+        }
+
+        [HttpPost]
+        [Route("~/RegisterVerification")]
+        public async Task<IActionResult> RegisterVerification(RegisterVerification registerVerification)
+        {
+            if (ModelState.IsValid)
+            {
+                Student student = new Student(registerVerification.PhoneKey, registerVerification.PhoneNumber, registerVerification.Name, registerVerification.Email,
+                    registerVerification.Gender, registerVerification.Bio, Int32.Parse(registerVerification.VerificationCode));
+
+                var registerVerificationResponse = await _accountService.RegisterStudent(student);
+                if (registerVerificationResponse.IsSuccessStatusCode)
+                {
+                    var studentInfo = CommonUtilities.GetResponseModelFromJson<Student>(registerVerificationResponse);
+                    return View("VerificationSuccess");
+                }
+                else
+                {
+                    return View("VerificationSuccess");
+                    //ViewBag.HasError = true;
+                }
+            }
+            else
+            {
+                ViewBag.HasError = true;
+            }
+            return View(registerVerification);
+        }
+
+        #endregion
     }
 }
