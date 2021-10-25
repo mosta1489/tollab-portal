@@ -139,13 +139,18 @@
                 </div>
                 <ul class="generic-list-item generic-list-item-white generic-list-item-arrow d-flex flex-wrap align-items-center">
                     @{
-                        var items = @ViewBag.MenuItems as string[];
-                        foreach (var item in items)
+
+                        if (ViewBag.MenuItems != null)
                         {
-                            <li>
-                                <a href="#">@item</a>
-                            </li>
+                            var items = @ViewBag.MenuItems as string[];
+                            foreach (var item in items)
+                            {
+                                <li>
+                                    <a href="#">@item</a>
+                                </li>
+                            }
                         }
+
                     }
                 </ul>
             </div><!-- end breadcrumb-content -->

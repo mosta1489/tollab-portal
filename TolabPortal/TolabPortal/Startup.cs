@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Tolab.Common;
+using TolabPortal.DataAccess.Services.Payment;
 using TolabPortal.Infrastructure;
 
 namespace TolabPortal
@@ -23,6 +24,9 @@ namespace TolabPortal
             services.ConfigureBundles();
             services.ConfigureDependencyInjection();
             services.Configure<ApplicationConfig>(Configuration.GetSection("ApplicationConfig"));
+            services.AddHttpClient();
+            services.AddScoped<IMyFatoorahPaymentService, MyFatoorahPaymentService>();
+            services.AddScoped<IMyFatoorahClient, MyFatoorahClient>();
             services.AddControllersWithViews();
         }
 
