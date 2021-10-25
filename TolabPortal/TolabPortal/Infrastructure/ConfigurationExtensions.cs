@@ -12,6 +12,7 @@ namespace TolabPortal.Infrastructure
         {
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IInterestService, InterestService>();
+            services.AddScoped<ICourseService, CourseService>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ISessionManager, SessionManager>();
 

@@ -1,0 +1,236 @@
+﻿using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Tolab.Common;
+
+namespace TolabPortal.DataAccess.Services
+{
+    public interface ICourseService
+    {
+        Task<HttpResponseMessage> GetCoursesByDepartmentId(long departmentId, int page = 0);
+        Task<HttpResponseMessage> GetSubjectsWithTracksByDepartmentId(long departmentId, int page = 0);
+        Task<HttpResponseMessage> GetHomeCourses(int page = 0);
+        Task<HttpResponseMessage> GetTopLives();
+        Task<HttpResponseMessage> GetLives(int page = 0);
+        Task<HttpResponseMessage> GetLiveDetails(int liveId);
+
+        Task<HttpResponseMessage> GetTrackById(long trackId);
+        Task<HttpResponseMessage> GetCourseWithOneContentForStudent(long courseId, long contentId, long videoQuestionId);
+        Task<HttpResponseMessage> GetCoursesByTrackId(int trackId);
+        Task<HttpResponseMessage> GetCourseByIdForCurrentStudent(long courseId);
+        Task<HttpResponseMessage> GetStudentCourses(int page = 0);
+        Task<HttpResponseMessage> GetGroupsWithContentsByCourseIdForCurrentStudent(long courseId, int page, long contentId = 0);
+        Task<HttpResponseMessage> ViewThisContent(long contentId);
+    }
+    public class CourseService : ICourseService, IDisposable
+    {
+        private readonly HttpClient _httpClient;
+        private readonly ISessionManager _sessionManager;
+
+        public CourseService(IOptions<ApplicationConfig> options,
+            ISessionManager sessionManager)
+        {
+            _sessionManager = sessionManager;
+            var config = options.Value;
+            _httpClient = new HttpClient { BaseAddress = new Uri(config.ApiUrl) };
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {_sessionManager.AccessToken}");
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
+        }
+
+        public async Task<HttpResponseMessage> GetCoursesByDepartmentId(long departmentId, int page = 0)
+        {
+            try
+            {
+                var sectionsResponse = await _httpClient.GetAsync($"/api/GetCoursesByDepartmentId?departmentId={departmentId}&Page={page}");
+                return sectionsResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> GetSubjectsWithTracksByDepartmentId(long departmentId, int page = 0)
+        {
+            try
+            {
+                var sectionsResponse = await _httpClient.GetAsync($"/api/GetSubjectsWithTracksByDepartmentId?departmentId={departmentId}&Page={page}");
+                return sectionsResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+
+        public async Task<HttpResponseMessage> GetHomeCourses(int page)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetHomeCourses?Page={page}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> GetTopLives()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetTopLives");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> GetLives(int page = 0)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetLives?Page={page}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> GetLiveDetails(int liveId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetLiveDetails?id={liveId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+
+        public async Task<HttpResponseMessage> GetTrackById(long trackId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetTrackById?TrackId={trackId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> GetCourseWithOneContentForStudent(long courseId, long contentId, long videoQuestionId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetCourseWithOneContentForStudent?CourseId={courseId}&ContentId={contentId}&VideoQuestionId={videoQuestionId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> GetCoursesByTrackId(int trackId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetCoursesByTrackId?TrackId={trackId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> GetCourseByIdForCurrentStudent(long courseId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetCourseByIdForCurrentStudent?CourseId={courseId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> GetStudentCourses(int page = 0)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetStudentCourses?Page={page}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> GetGroupsWithContentsByCourseIdForCurrentStudent(long courseId, int page, long contentId = 0)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetGroupsWithContentsByCourseIdForCurrentStudent?CourseId={courseId}&Page={page}&ContentId={contentId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> ViewThisContent(long contentId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/ViewThisContent?ContentId={contentId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+    }
+}

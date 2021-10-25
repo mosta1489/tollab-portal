@@ -16,10 +16,6 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> GetSubCategoriesByCategoryId(long categoryId);
 
         Task<HttpResponseMessage> GetDepartmentsBySubCategoryId(long ubCategoryId);
-
-        Task<HttpResponseMessage> GetCoursesByDepartmentId(long departmentId);
-
-        Task<HttpResponseMessage> GetSubjectsWithTracksByDepartmentId(long departmentId);
     }
 
     public class InterestService : IInterestService, IDisposable
@@ -91,36 +87,6 @@ namespace TolabPortal.DataAccess.Services
             try
             {
                 var sectionsResponse = await _httpClient.GetAsync($"/api/GetDepartmentsBySubCategoryId?subCategoryId={subCategoryId}");
-                return sectionsResponse;
-            }
-            catch (Exception ex)
-            {
-                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                errorResponse.ReasonPhrase = ex.Message;
-                return errorResponse;
-            }
-        }
-
-        public async Task<HttpResponseMessage> GetCoursesByDepartmentId(long departmentId)
-        {
-            try
-            {
-                var sectionsResponse = await _httpClient.GetAsync($"/api/GetCoursesByDepartmentId?departmentId={departmentId}");
-                return sectionsResponse;
-            }
-            catch (Exception ex)
-            {
-                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                errorResponse.ReasonPhrase = ex.Message;
-                return errorResponse;
-            }
-        }
-
-        public async Task<HttpResponseMessage> GetSubjectsWithTracksByDepartmentId(long departmentId)
-        {
-            try
-            {
-                var sectionsResponse = await _httpClient.GetAsync($"/api/GetSubjectsWithTracksByDepartmentId?departmentId={departmentId}");
                 return sectionsResponse;
             }
             catch (Exception ex)

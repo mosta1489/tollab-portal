@@ -19,8 +19,9 @@ namespace TolabPortal.DataAccess.Models
     public class CategoryResponse
     {
         [JsonProperty("model")]
-        public IEnumerable<Category> Categories { get; set; }
+        public List<Category> Categories { get; set; }
         public Metas Metas { get; set; }
         public Errors Errors { get; set; }
+        public Section SelectedSection { get; set; }
     }
 }

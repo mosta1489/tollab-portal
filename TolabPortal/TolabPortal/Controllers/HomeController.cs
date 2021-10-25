@@ -28,7 +28,7 @@ namespace TolabPortal.Controllers
         public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Courses");
+                return RedirectToAction("GetHomeCourses", "Courses");
             return View();
         }
 
@@ -83,8 +83,8 @@ namespace TolabPortal.Controllers
             return View("LoginVerification");
         }
 
-        [Route("~/login/SendCode")]
-        public async Task<IActionResult> LoginSendCode(string phoneKey, string phoneNumber)
+        [Route("~/login/ReSendVerificationCode")]
+        public async Task<IActionResult> ReSendVerificationCode(string phoneKey, string phoneNumber)
         {
             Login login = new Login()
             {

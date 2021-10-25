@@ -8,11 +8,11 @@
 }
 
 
-@if (ViewBag.HasError != null && ViewBag.HasError == true)
+@if (ViewBag.ErrorMessage != null)
 {
     <div class="alert alert-danger2 alert-dismissible fade show course-alert-info">
         <div class="d-flex align-items-center">
-            <i class="la la-info-circle fs-30 mr-2"></i> لم يتم اختيار المرحلة
+            <i class="la la-info-circle fs-30 mr-2"></i> @ViewBag.ErrorMessage
         </div>
         <button type="button" class="close fs-20 pd-16" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true" class="la la-times"></span>
@@ -22,19 +22,24 @@
 
 <div class="card card-item">
     <div class="card-body">
-        <form class="pt-2">
-            <p class="mb-4 fontbb">مدرسة</p>
+        <form class="pt-2" method="post" asp-action="RegisterCategory" asp-controller="Interest">
+            <p class="mb-4 fontbb">@(Model.SelectedSection.NameLT)</p>
             <div class="row">
                 @if (Model?.Categories != null)
                 {
-                    foreach (var category in Model.Categories)
+                    for (int i = 0; i < Model.Categories.ToList().Count; i++)
                     {
+                        var category = Model.Categories[i];
                         <div class="col-lg-12 responsive-column-half">
                             <div class="custom-control custom-radio mb-3 ml-0 pl-0">
                                 <input type="radio" class="custom-control-input" id="@(category.Id)" name="categoryId" value="@(category.Id)">
                                 <label class="custom-control-label custom--control-label custom--control-label-boxed noshadbord" for="@(category.Id)">
                                     <span class="font-weight-semi-bold text-black d-block"> @(category.NameLT)</span>
                                 </label>
+                                <input asp-for="Categories[i].Id" value="@(category.Id)" hidden />
+                                <input asp-for="Categories[i].Name" value="@(category.Name)" hidden />
+                                <input asp-for="Categories[i].NameLT" value="@(category.NameLT)" hidden />
+                                <input asp-for="Categories[i].SectionId" value="@(category.SectionId)" hidden />
                             </div>
                         </div>
                     }

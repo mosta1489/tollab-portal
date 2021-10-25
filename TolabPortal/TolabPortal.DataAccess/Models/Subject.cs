@@ -7,21 +7,20 @@ using System.Threading.Tasks;
 
 namespace TolabPortal.DataAccess.Models
 {
-    public class Section
+    public class Subject
     {
         public long Id { get; set; }
         public string Name { get; set; }
         public string NameLT { get; set; }
         public string Image { get; set; }
-        public long? CountryId { get; set; }
-
-        public IEnumerable<Category> Categories { get; set; }
+        public long? DepartmentId { get; set; }
+        public List<Track> Tracks { get; set; }
     }
 
-    public class SectionResponse
+    public class SubjectResponse
     {
         [JsonProperty("model")]
-        public List<Section> Sections { get; set; }
+        public List<Subject> Subjects { get; set; }
         public Metas Metas { get; set; }
         public Errors Errors { get; set; }
     }
