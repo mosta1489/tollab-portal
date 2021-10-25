@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ using TolabPortal.ViewModels;
 
 namespace TolabPortal.Controllers
 {
-    
+    [AllowAnonymous]
     public class MyFatoorahPaymentController : Controller
     {
         private readonly IMyFatoorahPaymentService _paymentService;
@@ -35,7 +37,16 @@ namespace TolabPortal.Controllers
 
             }).ConfigureAwait(false); 
             if (response.IsSuccess)
-                return View(new PaymentViewModel() {InvoiceValue=amount,PaymentMethods=response.Data.PaymentMethods,CallBackUrl= "https://tollab.azurewebsites.net/", ErrorUrl= "https://tollab.azurewebsites.net/" });
+                return View(new PaymentViewModel() {
+                    InvoiceValue=amount,
+                    PaymentMethods=response.Data.PaymentMethods,
+                    CustomerMobile= "01267086929",
+                    MobileCountryCode= "+2",
+                    CustomerName= "46695",
+                    CustomerReference ="CourseIdOrTrackId",
+                    TransactionType=(int)TransactionType.Course,
+                    ReturnUrl=""
+                });
             return View("ErrorPayment");
         }
 
@@ -45,17 +56,16 @@ namespace TolabPortal.Controllers
         {
             if (ModelState.IsValid)
             {
-                 
-               
                 var response = await _paymentService.ExecutePayment(new ExecutePaymentRequest() {
                     PaymentMethodId = paymentVm.PaymentMethodId,
                     InvoiceValue = paymentVm.InvoiceValue,
-                    CallBackUrl = paymentVm.CallBackUrl,
-                    ErrorUrl = paymentVm.ErrorUrl,
+                    CustomerReference = paymentVm.CustomerReference,
+                    MobileCountryCode = paymentVm.MobileCountryCode,
+                    UserDefinedField = $"{paymentVm.TransactionType},{paymentVm.ReturnUrl}",
+                  //  CallBackUrl = "https://localhost/CompletePayment",
+                    //ErrorUrl = paymentVm.ErrorUrl,
                     Language = "AR",
-                    ExpiryDate = DateTime.Now.AddYears(1),
-
-
+                    ExpiryDate = DateTime.Now.AddYears(1)
                 }).ConfigureAwait(false);
                 if (response.IsSuccess)
                 {
@@ -69,19 +79,33 @@ namespace TolabPortal.Controllers
 
 
         }
+        [Route("~/ErrorPayment")]
+        public IActionResult ErrorPayment()
+        {
+            return View();
+        }
 
 
 
-        [Route("~/InitiatePayment/{amount}")]
-        public async Task<IActionResult> CompletePayment(GetPaymentStatusRequest getPaymentStatusRequest)
+        [Route("~/CompletePayment")]
+        public async Task<IActionResult> CompletePayment(string paymentId,string invoiceId)
         {
             if (ModelState.IsValid)
             {
-                var response = await _paymentService.GetPaymentStatus(getPaymentStatusRequest).ConfigureAwait(false);
-                return View("GetPaymentStatusResult", response);
+                var response = await _paymentService.LogTransaction(new GetPaymentStatusRequest { 
+                Key=invoiceId,
+                KeyType= "invoiceId"
+                }).ConfigureAwait(false);
+                if (response.IsSuccess)
+                {
+                    // split userDefined parameter to transactionType and return URl
+                    //subscribe to course or track or Live
+                    // redirect to paymnet Url
+                }
+                return RedirectToAction("Index","Home");
 
             }
-            return View("GetPaymentStatus", getPaymentStatusRequest);
+            return View("ErrorPayment");
         }
 
 

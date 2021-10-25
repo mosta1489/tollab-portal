@@ -1,9 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Tolab.Common;
 using TolabPortal.DataAccess.Models.Payment;
 
 namespace TolabPortal.DataAccess.Services.Payment
@@ -11,12 +15,14 @@ namespace TolabPortal.DataAccess.Services.Payment
     public class MyFatoorahPaymentService : IMyFatoorahPaymentService
     {
         private readonly IMyFatoorahClient _client;
-
-        public MyFatoorahPaymentService(IMyFatoorahClient client)
+        private readonly HttpClient _httpClient;
+        
+        public MyFatoorahPaymentService(IMyFatoorahClient client, IOptions<ApplicationConfig> options)
         {
             _client = client;
+            var config = options.Value;
+            _httpClient = new HttpClient { BaseAddress = new Uri(config.ApiUrl) };
         }
-
         public async Task<GenericResponse<InitiatePaymentResponse>> InitiatePayment(InitiatePaymentRequest intiatePaymentRequest)
         {
 
@@ -63,6 +69,35 @@ namespace TolabPortal.DataAccess.Services.Payment
 
             var GetPaymentStatusRequestJSON = JsonConvert.SerializeObject(getPaymentStatusRequest);
             var response = await _client.PerformRequest(GetPaymentStatusRequestJSON, endPoint: "GetPaymentStatus").ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<GenericResponse<GetPaymentStatusResponse>>(response);
+
+        }
+
+        //public async Task<HttpResponseMessage> LogTransaction(string response)
+        //{
+        //    try
+        //    {
+                
+        //        var content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8, "application/json");
+
+        //        var transactionResponse = await _httpClient.PostAsync($"/api/LogTransaction", content);
+        //        return transactionResponse;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+        //        errorResponse.ReasonPhrase = ex.Message;
+        //        return errorResponse;
+        //    }
+        //}
+
+        public async Task<GenericResponse<GetPaymentStatusResponse>> LogTransaction(GetPaymentStatusRequest getPaymentStatusRequest)
+        {
+
+            var GetPaymentStatusRequestJSON = JsonConvert.SerializeObject(getPaymentStatusRequest);
+            var response = await _client.PerformRequest(GetPaymentStatusRequestJSON, endPoint: "GetPaymentStatus").ConfigureAwait(false);
+            //var content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8, "application/json");
+            //var transactionResponse = await _httpClient.PostAsync($"/api/LogTransaction", content);
             return JsonConvert.DeserializeObject<GenericResponse<GetPaymentStatusResponse>>(response);
 
         }

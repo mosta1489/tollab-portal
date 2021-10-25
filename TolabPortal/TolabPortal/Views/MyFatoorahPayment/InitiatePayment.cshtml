@@ -1,0 +1,48 @@
+﻿
+@model PaymentViewModel
+
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<div class="card card-item">
+    <div class="card-body">
+        <form method="post" asp-action="ExecutePayment" class="pt-2">
+
+            <input hidden  asp-for="InvoiceValue" />
+            <input hidden  asp-for="MobileCountryCode" />
+            <input hidden  asp-for="CustomerMobile" />
+            <input hidden  asp-for="MobileCountryCode" />
+            <input hidden  asp-for="CustomerName" />
+            <input hidden asp-for=" CustomerReference" />
+            <input hidden asp-for=" TransactionType" />
+            <input hidden asp-for=" ReturnUrl" />
+            @*<input hidden id="InvoiceValue" asp-for="CallBackUrl" />
+            <input hidden id="ErrorUrl" asp-for="ErrorUrl" />*@
+
+            <p class="mb-4">قم باختيار طريقة الدفع المناسبة لك</p>
+            <div class="row">
+                @foreach (var method in Model.PaymentMethods)
+                {
+                    <div class="col-lg-12 responsive-column-half">
+                        <div class="custom-control custom-radio mb-3 ml-0 pl-0">
+                            <input type="radio" class="custom-control-input" id="@method.PaymentMethodId"  asp-for="PaymentMethodId" value="@method.PaymentMethodId">
+                            <label class="custom-control-label custom--control-label custom--control-label-boxed noshadbord" for="@method.PaymentMethodId">
+                                <span class="payvalue">@method.ServiceCharge @method.PaymentMethodCode</span>
+                                 
+                                <span class="font-weight-semi-bold text-black d-block">
+                                    <img src="@method.ImageUrl" class="payimgnew">@method.PaymentMethodAr
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+            <div class="btn-box align-items-center justify-content-between mt-2 pullone">
+                <button class="btn theme-btn ml-3 ">قم بالدفع <i class="la la-arrow-right icon ml-1"></i></button>
+            </div><!-- end btn-box -->
+        </form>
+</div><!-- end card-body -->
+</div><!-- end card -->

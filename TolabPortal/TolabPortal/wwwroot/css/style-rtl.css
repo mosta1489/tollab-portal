@@ -10799,7 +10799,7 @@ div.datedropper .picker .pick-lg-b li {
 
 .teachername {
 	position: absolute;
-	bottom: 118px;
+	bottom: 0;
 	display: block;
 	width: 100%;
 	right: 0;
@@ -10817,6 +10817,8 @@ div.datedropper .picker .pick-lg-b li {
 	object-fit: cover;
 	margin-left: 10px;
 	border: 2px solid #fff;
+	border-top-left-radius: 50%!important;
+	border-top-right-radius: 50% !important;
 }
 
 
@@ -11034,6 +11036,144 @@ div.datedropper .picker .pick-lg-b li {
 	color: #fff;
 }
 
+@media (max-width:991px){	
+	.mobsm {
+		text-align: center;
+		margin-top: 20px;
+
+}
+	.wsm100 {
+		width: 100%;
+}
+}
 
 
 	
+.catimg {
+	height: 247px;
+	object-fit: cover;
+}	
+	
+.card-item-list-layout .card-image .card-img-top {
+	height: 257px;
+	object-fit: cover
+}
+
+@media only screen and (min-width:480px) and (max-width:767px) {
+	.card-item-list-layout .card-image .card-img-top {
+		height: 340px;
+	}
+}
+
+@media only screen and (min-width:320px) and (max-width:479px) {
+	.card-item-list-layout .card-image .card-img-top {
+		height: 233px;
+	}
+}	
+
+
+.full-height{
+	height:calc( 100% - 30px );
+}
+
+
+
+.homebg {
+	background-repeat:no-repeat;
+	padding-bottom: 70px;
+	min-height: calc( 100vh - 163px );
+	background-size: cover;
+	padding-top: 110px;
+}
+
+.homebg:after {
+	opacity: 0.85;
+}
+
+
+
+.mobsm img {
+	width:250px !important;
+	float:left
+}
+
+
+@media (max-width:991px){	
+	.mobsm {
+		text-align: center;
+		margin-top: 20px;
+
+}
+	.homebg {
+		height: auto;
+		padding-top: 0;
+}
+
+	.mobsm img {
+		float:none;
+		margin:auto;
+}
+	.wsmtwo100 {
+		width: 100%;
+}
+}
+
+
+@media (max-width:1350px){	
+	.homebg {
+		height: auto;
+}
+}
+
+.wsmtwo100:hover {
+	color:#000;
+	background:#fff;
+}
+
+
+.text-purp {
+	color:#4f3fa9;
+}
+
+
+
+.payimg {
+	float: left;
+	width: 52px;
+	position: relative;
+	bottom: 3px;
+}
+
+.payhead {
+	font-size: 24px;
+	line-height: 35px;
+	margin-bottom: 30px;
+}
+
+.payprice {
+	background: #f68a03;
+	padding: 15px 20px 20px;
+	color: #fff;
+	font-size: 30px;
+	border-radius: 5px;
+	display: inline-block !important;
+}
+
+
+
+.payimgnew {
+	width: 34px;
+	margin-left: 7px;
+}
+
+.payvalue {
+	float: left;
+	color: #4f3fa9;
+	font-weight:bold;
+	direction:ltr;
+}
+
+
+
+
+

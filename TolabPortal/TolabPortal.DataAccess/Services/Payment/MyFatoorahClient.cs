@@ -42,10 +42,11 @@ namespace TolabPortal.DataAccess.Services.Payment
             string response = string.Empty;
             if (!responseMessage.IsSuccessStatusCode)
             {
+                var rawResponse = await responseMessage.Content.ReadAsStringAsync();
                 response = JsonConvert.SerializeObject(new
                 {
                     IsSuccess = false,
-                    Message = responseMessage.StatusCode.ToString()
+                    Message = rawResponse
                 });
             }
             else

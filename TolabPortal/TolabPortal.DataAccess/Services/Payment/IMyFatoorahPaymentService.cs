@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 using TolabPortal.DataAccess.Models.Payment;
 
 namespace TolabPortal.DataAccess.Services.Payment
@@ -12,5 +13,6 @@ namespace TolabPortal.DataAccess.Services.Payment
         Task<GenericResponse<GetPaymentStatusResponse>> GetPaymentStatus(GetPaymentStatusRequest getPaymentStatusRequest);
         Task<GenericResponse<InitiatePaymentResponse>> InitiatePayment(InitiatePaymentRequest intiatePaymentRequest);
         Task<GenericResponse<SendPaymentResponse>> SendPayment(SendPaymentRequest request);
+        Task<GenericResponse<GetPaymentStatusResponse>> LogTransaction(GetPaymentStatusRequest getPaymentStatusRequest);
     }
 }
