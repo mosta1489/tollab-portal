@@ -10143,3 +10143,8 @@ div.datedropper .picker .pick-lg-b li {
 .dark-theme .portfolio-filter li.active {
 	color: #4f3fa9
 }
+
+
+.full-height{
+	height:calc( 100% - 30px );
+}

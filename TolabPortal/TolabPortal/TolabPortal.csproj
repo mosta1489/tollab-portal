@@ -16,4 +16,8 @@
     <ProjectReference Include="..\TolabPortal.DataAccess\TolabPortal.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Payment\" />
+  </ItemGroup>
+
 </Project>
