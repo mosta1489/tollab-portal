@@ -146,18 +146,14 @@
                 </div>
                 <ul class="generic-list-item generic-list-item-white generic-list-item-arrow d-flex flex-wrap align-items-center">
                     @{
+                        var items = @ViewBag.MenuItems as string[];
 
-                        if (ViewBag.MenuItems != null)
+                        foreach (var item in items)
                         {
-                            var items = @ViewBag.MenuItems as string[];
-                            foreach (var item in items)
-                            {
-                                <li>
-                                    <a href="#">@item</a>
-                                </li>
-                            }
+                            <li>
+                                <a href="#">@item</a>
+                            </li>
                         }
-
                     }
                 </ul>
             </div><!-- end breadcrumb-content -->
@@ -179,9 +175,8 @@
         <span class="ring-shape ring-shape-7"></span>
         <div class="container">
             <div class="row">
-                <div class="col-lg-7 mx-auto">
-                    @RenderBody()
-                </div>
+                @RenderBody()
+
             </div>
         </div><!-- end container -->
     </section><!-- end contact-area -->

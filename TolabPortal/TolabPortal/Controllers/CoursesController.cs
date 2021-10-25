@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 using Tolab.Common;
 using TolabPortal.DataAccess.Models;
@@ -21,8 +20,18 @@ namespace TolabPortal.Controllers
             _sessionManager = sessionManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            long sampleDepartmentId = 10028;
+            var response = await _courseService.GetSubjectsWithTracksByDepartmentId(sampleDepartmentId);
+            if (response.IsSuccessStatusCode)
+            {
+                var subjects = await CommonUtilities.GetResponseModelFromJson<SubjectResponse>(response);
+                return View("Index", subjects);
+            }
+            else
+            {
+            }
             return View();
         }
 
@@ -37,11 +46,9 @@ namespace TolabPortal.Controllers
             }
             else
             {
-
             }
             return View("Index");
         }
-
 
         [Route("SubjectsWithTracks")]
         public async Task<IActionResult> GetSubjectsWithTracksByDepartmentId()
@@ -55,10 +62,8 @@ namespace TolabPortal.Controllers
             }
             else
             {
-
             }
             return View("Index");
         }
-
     }
 }
