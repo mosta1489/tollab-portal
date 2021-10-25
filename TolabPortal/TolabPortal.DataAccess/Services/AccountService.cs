@@ -81,5 +81,20 @@ namespace TolabPortal.DataAccess.Services
             }
         }
 
+        public async Task<HttpResponseMessage> GetStudentProfile()
+        {
+            try
+            {
+                var studentProfileResponse = await _httpClient.GetAsync($"/api/GetStudentProfile");
+                return studentProfileResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
     }
 }
