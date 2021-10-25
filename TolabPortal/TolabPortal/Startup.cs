@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using Tolab.Common;
 using TolabPortal.DataAccess.Services.Payment;
 using TolabPortal.Infrastructure;
@@ -24,6 +26,15 @@ namespace TolabPortal
             services.ConfigureBundles();
             services.ConfigureDependencyInjection();
             services.Configure<ApplicationConfig>(Configuration.GetSection("ApplicationConfig"));
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromDays(30);
+                options.LoginPath = "/login";
+            });
             services.AddHttpClient();
             services.AddScoped<IMyFatoorahPaymentService, MyFatoorahPaymentService>();
             services.AddScoped<IMyFatoorahClient, MyFatoorahClient>();
@@ -43,6 +54,7 @@ namespace TolabPortal
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -50,7 +62,10 @@ namespace TolabPortal
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<InterestsMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

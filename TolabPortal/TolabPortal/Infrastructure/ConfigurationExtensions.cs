@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Tolab.Common;
 using TolabPortal.DataAccess.Services;
 
 namespace TolabPortal.Infrastructure
@@ -9,6 +12,8 @@ namespace TolabPortal.Infrastructure
         {
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IInterestService, InterestService>();
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<ISessionManager, SessionManager>();
 
             return services;
         }

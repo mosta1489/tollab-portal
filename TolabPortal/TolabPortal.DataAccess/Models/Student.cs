@@ -1,11 +1,7 @@
-﻿using Dapper.Contrib.Extensions;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace TolabPortal.DataAccess.Models
 {
@@ -26,37 +22,38 @@ namespace TolabPortal.DataAccess.Models
         public DateTime? CreationDate { get; set; }
         public string IdentityId { get; set; }
         public long CountryId { get; set; }
-
         public bool? Enabled { get; set; }
+
         [JsonIgnore]
         public int Vcode { get; set; }
+
         public DateTime? ExpirationVCodeDate { get; set; }
         public bool Verified { get; set; }
-
         public string PaymentLink { get; set; }
         public string PaymentKey { get; set; }
         public DateTime? LastSendDate { get; set; }
-
         public int? ScreenShootCount { get; set; }
         public DateTime? LastTakenScreenshootDate { get; set; }
-
         public int? NumberMaxLoginCount { get; set; }
         public int? NumberCurrentLoginCount { get; set; }
-
-
         public JArray Token { get; set; }
         public int NumberOfCourses { get; set; }
-
         public IEnumerable<Interest> Interests { get; set; }
-
-
         public IEnumerable<Section> Sections { get; set; }
         public string Currency { get; internal set; }
-        [Computed]
         public string CurrencyLT { get; set; }
-        [Computed]
         public string CountryCode { get; set; }
-        [Computed]
         public string UserType { get; set; }
+
+        public Student(string phoneKey, string phone, string name, string email, bool? gender, string bio, int countryId)
+        {
+            this.PhoneKey = phoneKey;
+            this.Phone = phone;
+            this.Name = name;
+            this.Email = email;
+            this.Gender = gender;
+            this.Bio = bio;
+            CountryId = countryId;
+        }
     }
 }

@@ -1,23 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Tolab.Common;
 using TolabPortal.DataAccess.Models;
 using TolabPortal.DataAccess.Services;
-using TolabPortal.Models;
-using Tolab.Common;
 
 namespace TolabPortal.Controllers
 {
+    [Authorize]
+    [Route("[controller]")]
     public class InterestController : Controller
     {
         private readonly IInterestService _interestService;
+        private readonly ISessionManager _sessionManager;
 
-        public InterestController(IInterestService interestService)
+        public InterestController(IInterestService interestService,
+            ISessionManager sessionManager)
         {
             _interestService = interestService;
+            _sessionManager = sessionManager;
         }
 
         public IActionResult Index()
@@ -25,13 +26,14 @@ namespace TolabPortal.Controllers
             return View();
         }
 
-        [Route("~/RegisterSection")]
+        [Route("RegisterSection")]
         public async Task<IActionResult> RegisterSection(bool hasError)
         {
             ViewBag.HasError = hasError;
 
-            long sampleCountryId = 20011;
-            var SectionsResponse = await _interestService.GetSectionsByCountryId(sampleCountryId);
+            //long sampleCountryId = _sessionManager.CountryId;
+
+            var SectionsResponse = await _interestService.GetSections();
 
             if (SectionsResponse.IsSuccessStatusCode)
             {
@@ -40,13 +42,12 @@ namespace TolabPortal.Controllers
             }
             else
             {
-
             }
             return View("RegisterSection");
         }
 
         [HttpPost]
-        [Route("~/RegisterSection")]
+        [Route("RegisterSection")]
         public async Task<IActionResult> RegisterSection(string sectionId)
         {
             if (sectionId != null)
@@ -63,17 +64,15 @@ namespace TolabPortal.Controllers
             }
         }
 
-        [Route("~/RegisterCategory")]
+        [Route("RegisterCategory")]
         public IActionResult RegisterCategory()
         {
-
-            return View("RegisterSchool");
+            return View("RegisterCategory");
         }
 
-
         [HttpPost]
-        [Route("~/RegisterCategory")]
-        public async Task<IActionResult> RegisterCategoryAsync(string categoryId)
+        [Route("RegisterCategory")]
+        public async Task<IActionResult> RegisterCategory(string categoryId)
         {
             if (categoryId != null)
             {
@@ -83,10 +82,40 @@ namespace TolabPortal.Controllers
             }
             else
             {
-
             }
             return View();
         }
 
+        [Route("RegisterSubCategory")]
+        public IActionResult RegisterSubCategory()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("RegisterSubCategory")]
+        public async Task<IActionResult> RegisterSubCategory(string categoryId)
+        {
+            return View();
+        }
+
+        [Route("RegisterDepartment")]
+        public IActionResult RegisterDepartment()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("RegisterDepartment")]
+        public async Task<IActionResult> RegisterDepartment(string subCategoryId)
+        {
+            return View();
+        }
+
+        [Route("GetSubjects")]
+        public IActionResult GetSubjects()
+        {
+            return View();
+        }
     }
 }
