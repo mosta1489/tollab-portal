@@ -32,17 +32,14 @@ namespace TolabPortal.Controllers
         {
             ViewBag.ErrorMessage = errorMessage;
 
-            var SectionsResponse = await _interestService.GetSections();
+            var sectionsResponse = await _interestService.GetSections();
 
-            if (SectionsResponse.IsSuccessStatusCode)
+            if (sectionsResponse.IsSuccessStatusCode)
             {
-                var responseResult = await CommonUtilities.GetResponseModelFromJson<SectionResponse>(SectionsResponse);
+                var responseResult = await CommonUtilities.GetResponseModelFromJson<SectionResponse>(sectionsResponse);
                 return View("RegisterSection", responseResult);
             }
-            else
-            {
 
-            }
             return View("RegisterSection");
         }
 
@@ -101,8 +98,8 @@ namespace TolabPortal.Controllers
                         var departments = await CommonUtilities.GetResponseModelFromJson<DepartmentResponse>(departmenResponse);
                         responseResult.SubCategories[i].Departments = departments.Departments;
 
-                        responseResult.SubCategories[i].Name = responseResult.SubCategories[i].Name.Replace("\t","");
-                        responseResult.SubCategories[i].NameLT = responseResult.SubCategories[i].NameLT.Replace("\t","");
+                        responseResult.SubCategories[i].Name = responseResult.SubCategories[i].Name.Replace("\t", "");
+                        responseResult.SubCategories[i].NameLT = responseResult.SubCategories[i].NameLT.Replace("\t", "");
                     }
                     responseResult.SelectedCategory = selectedCategory;
                     return View("RegisterSubCategory", responseResult);

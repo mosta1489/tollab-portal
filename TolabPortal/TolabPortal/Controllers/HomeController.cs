@@ -28,7 +28,7 @@ namespace TolabPortal.Controllers
         public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
-                return RedirectToAction("GetHomeCourses", "Courses");
+                return RedirectToAction("Index", "Courses");
             return View();
         }
 

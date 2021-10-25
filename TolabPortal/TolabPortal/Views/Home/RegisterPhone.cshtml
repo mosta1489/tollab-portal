@@ -6,55 +6,56 @@
     var items = new string[] { "الرئيسية", "انشاء حساب جديد" };
     ViewBag.MenuItems = items;
 }
-
-@if (ViewBag.InvalidPhoneNumber != null && ViewBag.InvalidPhoneNumber == true)
-{
-    <div class="alert alert-danger2 alert-dismissible fade show course-alert-info">
-        <div class="d-flex align-items-center">
-            <i class="la la-info-circle fs-30 mr-2"></i> رقم الهاتف غير صحيح
+<div class="col-lg-7 mx-auto">
+    @if (ViewBag.InvalidPhoneNumber != null && ViewBag.InvalidPhoneNumber == true)
+    {
+        <div class="alert alert-danger2 alert-dismissible fade show course-alert-info">
+            <div class="d-flex align-items-center">
+                <i class="la la-info-circle fs-30 mr-2"></i> رقم الهاتف غير صحيح
+            </div>
+            <button type="button" class="close fs-20 pd-16" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true" class="la la-times"></span>
+            </button>
         </div>
-        <button type="button" class="close fs-20 pd-16" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true" class="la la-times"></span>
-        </button>
-    </div>
-}
+    }
 
-<div class="card card-item">
-    <div class="card-body">
-        <form method="post" asp-action="Registerphone" asp-controller="Home" class="pt-2">
-            <div class="input-box">
-                <label asp-for="PhoneNumber" class="label-text txtbold">رقم الموبايل</label>
-                <div class="form-group">
-                    <input required asp-for="PhoneNumber" id="phone" class="form-control form--control" type="text" dir="ltr">
-                </div>
-            </div><!-- end input-box -->
-            <input hidden id="phoneKey" asp-for="PhoneKey" />
-            <div class="btn-box">
-                <div class="d-flex align-items-center justify-content-between dsmblock">
-                    <div class="custom-control custom-checkbox mb-2 fs-15">
-                        <input asp-for="ConditionsAgree" type="checkbox" class="custom-control-input" id="agreeCheckbox">
-                        <label asp-for="ConditionsAgree" class="custom-control-label custom--control-label">
-                            لقد قرأت ووافقت على
-                            <a href="#" class="text-color hover-underline">الشروط والأحكام</a>
-                        </label>
-                        
-                    </div><!-- end custom-control -->
-                    <button type="submit" class="btn theme-btn pullone"> التالي <i class="la la-arrow-right icon ml-1"></i></button>
-                </div>
-            </div><!-- end btn-box -->
-        </form>
-    </div><!-- end card-body -->
-</div><!-- end card -->
+    <div class="card card-item">
+        <div class="card-body">
+            <form method="post" asp-action="Registerphone" asp-controller="Home" class="pt-2">
+                <div class="input-box">
+                    <label asp-for="PhoneNumber" class="label-text txtbold">رقم الموبايل</label>
+                    <div class="form-group">
+                        <input required asp-for="PhoneNumber" id="phone" class="form-control form--control" type="text" dir="ltr">
+                    </div>
+                </div><!-- end input-box -->
+                <input hidden id="phoneKey" asp-for="PhoneKey" />
+                <div class="btn-box">
+                    <div class="d-flex align-items-center justify-content-between dsmblock">
+                        <div class="custom-control custom-checkbox mb-2 fs-15">
+                            <input asp-for="ConditionsAgree" type="checkbox" class="custom-control-input" id="agreeCheckbox">
+                            <label asp-for="ConditionsAgree" class="custom-control-label custom--control-label">
+                                لقد قرأت ووافقت على
+                                <a href="#" class="text-color hover-underline">الشروط والأحكام</a>
+                            </label>
 
-@section Scripts
+                        </div><!-- end custom-control -->
+                        <button type="submit" class="btn theme-btn pullone"> التالي <i class="la la-arrow-right icon ml-1"></i></button>
+                    </div>
+                </div><!-- end btn-box -->
+            </form>
+        </div><!-- end card-body -->
+    </div><!-- end card -->
+
+    @section Scripts
 {
-    <script>
-        // custom script used to send the country code along with phone number to the model
-        $(function () {
-            $("body").on('DOMSubtreeModified', ".iti__flag-container .iti__selected-flag", function () {
-                var countryCode = $('.iti__flag-container .iti__selected-flag').text();
-                $("#phoneKey").val(countryCode);
+        <script>
+            // custom script used to send the country code along with phone number to the model
+            $(function () {
+                $("body").on('DOMSubtreeModified', ".iti__flag-container .iti__selected-flag", function () {
+                    var countryCode = $('.iti__flag-container .iti__selected-flag').text();
+                    $("#phoneKey").val(countryCode);
+                });
             });
-        });
-    </script>
-}
+        </script>
+    }
+</div>
