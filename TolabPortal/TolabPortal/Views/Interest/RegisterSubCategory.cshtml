@@ -33,7 +33,20 @@
                             <input type="radio" id="@(subCategory.Id)" name="subCategoryId" value="@(subCategory.Id)">
                             <label for="@(subCategory.Id)">@(subCategory.NameLT)</label>
                         </div>
+                        <div class="payment-tab-content">
+                            @foreach (var department in subCategory.Departments)
+                            {
+                                <div class="custom-control custom-checkbox fs-15">
+                                    <input type="checkbox" class="custom-control-input" id="sublevelone">
+                                    <label class="custom-control-label custom--control-label w-100" for="sublevelone">@department.NameLT</label>
+                                </div>
+                                <!-- end custom-control -->
+                            }
+
+                        </div>
                     </div><!-- end payment-tab -->
+
+
 
                 }
             </div>
