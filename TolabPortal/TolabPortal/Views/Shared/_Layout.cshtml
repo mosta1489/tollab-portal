@@ -148,11 +148,14 @@
                     @{
                         var items = @ViewBag.MenuItems as string[];
 
-                        foreach (var item in items)
+                        if (items != null)
                         {
-                            <li>
-                                <a href="#">@item</a>
-                            </li>
+                            foreach (var item in items)
+                            {
+                                <li>
+                                    <a href="#">@item</a>
+                                </li>
+                            }
                         }
                     }
                 </ul>

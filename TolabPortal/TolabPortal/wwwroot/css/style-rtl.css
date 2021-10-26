@@ -6523,7 +6523,7 @@ div.datedropper .picker .pick-lg-b li {
 	height: 18px;
 	line-height: 17px;
 	text-align: center;
-	background-color: #4f3fa9;
+	background-color: #dd493d;
 	color: #fff;
 	font-size: 14px;
 	-webkit-border-radius: 50%;
@@ -10799,7 +10799,7 @@ div.datedropper .picker .pick-lg-b li {
 
 .teachername {
 	position: absolute;
-	bottom: 118px;
+	bottom: 0;
 	display: block;
 	width: 100%;
 	right: 0;
@@ -11172,6 +11172,50 @@ div.datedropper .picker .pick-lg-b li {
 	font-weight:bold;
 	direction:ltr;
 }
+
+
+
+.regdone {	
+	background: rgba(142, 142, 142, 0.1);
+	color: #0f9508;
+	padding: 15px;
+	font-size: 18px;
+	font-weight: bold;
+    border-radius: 4px;
+	line-height: 22px;
+}
+
+.regdone img{	
+	margin-left:5px;
+}
+
+
+.bg-8 {
+	background-color: #151515 !important;
+}
+
+
+
+.overlaycoverlive {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	content: "";	
+	 background: rgb(45,34,106);
+	background: linear-gradient(90deg, rgba(45,34,106,1) 0%, rgba(79,63,169,1) 37%); 
+}
+
+.soonlive{
+	background: rgba(0,0,0,.3);
+	padding: 0 20px;
+	border-radius: 5px;
+	margin-bottom: 20px;
+	width:120px;
+}
+
+
 
 
 

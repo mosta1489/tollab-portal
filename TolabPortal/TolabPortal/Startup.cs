@@ -35,9 +35,8 @@ namespace TolabPortal
                 options.ExpireTimeSpan = TimeSpan.FromDays(30);
                 options.LoginPath = "/login";
             });
-            services.AddHttpClient();
-            services.AddScoped<IMyFatoorahPaymentService, MyFatoorahPaymentService>();
-            services.AddScoped<IMyFatoorahClient, MyFatoorahClient>();
+            
+          
             services.AddControllersWithViews();
         }
 

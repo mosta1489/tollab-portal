@@ -62,8 +62,8 @@ namespace TolabPortal.Controllers
                     CustomerReference = paymentVm.CustomerReference,
                     MobileCountryCode = paymentVm.MobileCountryCode,
                     UserDefinedField = $"{paymentVm.TransactionType},{paymentVm.ReturnUrl}",
-                  //  CallBackUrl = "https://localhost/CompletePayment",
-                    //ErrorUrl = paymentVm.ErrorUrl,
+                    CallBackUrl = $"{config["CallBackPayemntRoot"]}/CompletePayment",
+                    ErrorUrl = $"{config["CallBackPayemntRoot"]}/ErrorPayment",
                     Language = "AR",
                     ExpiryDate = DateTime.Now.AddYears(1)
                 }).ConfigureAwait(false);
@@ -88,68 +88,37 @@ namespace TolabPortal.Controllers
 
 
         [Route("~/CompletePayment")]
-        public async Task<IActionResult> CompletePayment(string paymentId,string invoiceId)
+        public async Task<IActionResult> CompletePayment(string paymentId)
         {
             if (ModelState.IsValid)
             {
                 var response = await _paymentService.LogTransaction(new GetPaymentStatusRequest { 
-                Key=invoiceId,
-                KeyType= "invoiceId"
+                Key=paymentId,
+                KeyType= "paymentId"
                 }).ConfigureAwait(false);
                 if (response.IsSuccess)
                 {
-                    // split userDefined parameter to transactionType and return URl
-                    //subscribe to course or track or Live
-                    // redirect to paymnet Url
+                    if (response.Data.InvoiceStatus.ToLower()=="paid")
+                    {
+                        
+                        // split userDefined parameter to transactionType and return URl
+                        //subscribe to course or track or Live
+                        // redirect to paymnet Url
+                        
+                    }
+
+
                 }
-                return RedirectToAction("Index","Home");
+
+               
 
             }
             return View("ErrorPayment");
+
         }
 
 
 
-        //[HttpGet("sendPayment")]
-        //public IActionResult SendPayment()
-        //{
-        //    var model = new SendPaymentRequest
-        //    {
-        //        //required fields
-        //        CustomerName = "Customer Name",
-        //        NotificationOption = "LNK",
-        //        InvoiceValue = 100,
-        //        //optional fields 
-        //        DisplayCurrencyIso = "KWD",
-        //        MobileCountryCode = "965",
-        //        CustomerMobile = "12345678",
-        //        CustomerEmail = "email@example.com",
-        //        CallBackUrl = "https://example.com/callback",
-        //        ErrorUrl = "https://example.com/error",
-        //        Language = "En",
-        //        CustomerReference = "",
-        //        CustomerCivilId = "",
-        //        UserDefinedField = "",
-        //        ExpiryDate = DateTime.Now.AddYears(1),
-        //    };
-
-        //    return View("SendPayment", model);
-        //}
-        //[HttpPost("sendPayment")]
-        //public async Task<IActionResult> PostSendPayment(SendPaymentRequest sendPaymentRequest)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (string.IsNullOrEmpty(sendPaymentRequest.Language))
-        //            sendPaymentRequest.Language = "en";
-        //        var response = await _paymentService.SendPayment(new SendPaymentRequest()
-        //        {
-
-        //        }).ConfigureAwait(false);
-        //        return View("SendPaymentResult", response);
-
-        //    }
-        //    return View("SendPayment", sendPaymentRequest);
-        //}
+         
     }
 }

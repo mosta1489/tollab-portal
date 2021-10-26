@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Tolab.Common;
 using TolabPortal.DataAccess.Services;
+using TolabPortal.DataAccess.Services.Payment;
 
 namespace TolabPortal.Infrastructure
 {
@@ -10,9 +11,13 @@ namespace TolabPortal.Infrastructure
     {
         public static IServiceCollection ConfigureDependencyInjection(this IServiceCollection services)
         {
+            services.AddScoped<ISubscribeService, SubscribeService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IInterestService, InterestService>();
             services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IMyFatoorahPaymentService, MyFatoorahPaymentService>();
+            services.AddHttpClient();
+            services.AddScoped<IMyFatoorahClient, MyFatoorahClient>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ISessionManager, SessionManager>();
 

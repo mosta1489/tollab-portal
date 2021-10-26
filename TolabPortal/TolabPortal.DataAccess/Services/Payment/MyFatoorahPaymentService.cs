@@ -73,31 +73,14 @@ namespace TolabPortal.DataAccess.Services.Payment
 
         }
 
-        //public async Task<HttpResponseMessage> LogTransaction(string response)
-        //{
-        //    try
-        //    {
-                
-        //        var content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8, "application/json");
-
-        //        var transactionResponse = await _httpClient.PostAsync($"/api/LogTransaction", content);
-        //        return transactionResponse;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-        //        errorResponse.ReasonPhrase = ex.Message;
-        //        return errorResponse;
-        //    }
-        //}
 
         public async Task<GenericResponse<GetPaymentStatusResponse>> LogTransaction(GetPaymentStatusRequest getPaymentStatusRequest)
         {
 
             var GetPaymentStatusRequestJSON = JsonConvert.SerializeObject(getPaymentStatusRequest);
             var response = await _client.PerformRequest(GetPaymentStatusRequestJSON, endPoint: "GetPaymentStatus").ConfigureAwait(false);
-            //var content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8, "application/json");
-            //var transactionResponse = await _httpClient.PostAsync($"/api/LogTransaction", content);
+            var content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8, "application/json");
+            var transactionResponse = await _httpClient.PostAsync($"/api/LogTransaction", content).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<GenericResponse<GetPaymentStatusResponse>>(response);
 
         }
