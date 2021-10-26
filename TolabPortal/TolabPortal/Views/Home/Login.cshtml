@@ -6,6 +6,7 @@
     ViewBag.MenuItems = items;
 }
 
+
 <div class="col-lg-7 mx-auto">
     <div class="register-heading-content-wrap text-left">
         <div class="section-heading">
@@ -34,6 +35,11 @@
                         <input required asp-for="PhoneNumber" id="phone" class="form-control form--control" type="text" dir="ltr">
                     </div>
                 </div><!-- end input-box -->
+                <div class="btn-box">
+                    <div class="d-flex align-items-center justify-content-between dsmblock">
+                        <button type="submit" class="btn theme-btn pullone">ارسل <i class="la la-arrow-right icon ml-1"></i></button>
+                    </div>
+                </div><!-- end btn-box -->
             </form>
         </div><!-- end card-body -->
     </div><!-- end card -->
@@ -50,4 +56,6 @@
             });
         </script>
     }
+
+
 </div>
