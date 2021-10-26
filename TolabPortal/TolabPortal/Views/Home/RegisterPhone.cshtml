@@ -1,5 +1,4 @@
-﻿
-@model TolabPortal.Models.RegisterPhone
+﻿@model TolabPortal.Models.RegisterPhone
 
 @{
     ViewBag.CurrentPageTitle = "انشاء حساب جديد";
@@ -29,19 +28,6 @@
                     </div>
                 </div><!-- end input-box -->
                 <input hidden id="phoneKey" asp-for="PhoneKey" />
-                <div class="btn-box">
-                    <div class="d-flex align-items-center justify-content-between dsmblock">
-                        <div class="custom-control custom-checkbox mb-2 fs-15">
-                            <input asp-for="ConditionsAgree" type="checkbox" class="custom-control-input" id="agreeCheckbox">
-                            <label asp-for="ConditionsAgree" class="custom-control-label custom--control-label">
-                                لقد قرأت ووافقت على
-                                <a href="#" class="text-color hover-underline">الشروط والأحكام</a>
-                            </label>
-
-                        </div><!-- end custom-control -->
-                        <button type="submit" class="btn theme-btn pullone"> التالي <i class="la la-arrow-right icon ml-1"></i></button>
-                    </div>
-                </div><!-- end btn-box -->
             </form>
         </div><!-- end card-body -->
     </div><!-- end card -->

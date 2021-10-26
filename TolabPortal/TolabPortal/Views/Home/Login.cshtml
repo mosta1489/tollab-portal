@@ -6,7 +6,6 @@
     ViewBag.MenuItems = items;
 }
 
-
 <div class="col-lg-7 mx-auto">
     <div class="register-heading-content-wrap text-left">
         <div class="section-heading">
@@ -35,19 +34,6 @@
                         <input required asp-for="PhoneNumber" id="phone" class="form-control form--control" type="text" dir="ltr">
                     </div>
                 </div><!-- end input-box -->
-                <div class="btn-box">
-                    <div class="d-flex align-items-center justify-content-between dsmblock">
-                        <div class="custom-control custom-checkbox mb-2 fs-15">
-                            <input asp-for="ConditionsAgree" type="checkbox" class="custom-control-input" id="agreeCheckbox">
-                            <label asp-for="ConditionsAgree" class="custom-control-label custom--control-label">
-                                لقد قرأت ووافقت على
-                                <a href="~/Terms" class="text-color hover-underline">الشروط والأحكام</a>
-                            </label>
-                            <input hidden id="phoneKey" asp-for="PhoneKey" />
-                        </div><!-- end custom-control -->
-                        <button type="submit" class="btn theme-btn pullone">ارسل <i class="la la-arrow-right icon ml-1"></i></button>
-                    </div>
-                </div><!-- end btn-box -->
             </form>
         </div><!-- end card-body -->
     </div><!-- end card -->
@@ -64,6 +50,4 @@
             });
         </script>
     }
-
-
 </div>
