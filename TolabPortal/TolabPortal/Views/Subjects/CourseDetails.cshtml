@@ -1,0 +1,443 @@
+﻿
+@{
+    Layout = "_DetailsLayout";
+}
+
+@model TolabPortal.DataAccess.Models.Course
+
+@{
+    ViewBag.itemDetails = Model.ItemDetails;
+}
+
+<!--======================================
+        START COURSE DETAILS AREA
+======================================-->
+<section class="course-details-area pb-20px bg-grligh">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 pb-5">
+                <div class="course-details-content-wrap pt-50px">
+                    <div class="course-overview-card">
+                        <h3 class="fs-23 txtbold pb-3">تفاصيل الدورة</h3>
+                        <p class="fs-15 pb-2">هناك حقيقة مثبتة منذ زمن طويل وهي أن المحتوى المقروء لصفحة ما سيلهي القارئ عن التركيز على الشكل الخارجي للنص أو شكل توضع الفقرات في الصفحة التي يقرأها. الهدف من استخدام Lorem Ipsum هو أنه يحتوي على توزيع طبيعي -إلى حد ما- للأحرف ، بدلاً من استخدام "يوجد محتوى هنا ، يوجد محتوى هنا"</p>
+                    </div><!-- end course-overview-card -->
+                    <div class="course-overview-card">
+                        <div class="curriculum-header d-flex align-items-center justify-content-between pb-4">
+                            <h3 class="fs-23 txtbold">المحاضرات</h3>
+                        </div>
+                        <div class="curriculum-content">
+                            <div id="accordion" class="generic-accordion">
+                                <div class="card">
+                                    <div class="card-header" id="headingOne">
+                                        <button class="btn btn-link d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            <i class="la la-plus"></i>
+                                            <i class="la la-minus"></i>
+                                            الشرح
+                                            <span class="fs-15 text-gray font-weight-medium text-color-9">(2) جزء</span>
+                                        </button>
+                                    </div><!-- end card-header -->
+                                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <ul class="generic-list-item">
+                                                <li>
+                                                    <a href="#" class="d-flex align-items-center justify-content-between text-color" data-toggle="modal" data-target="#previewModal">
+                                                        <span>
+                                                            <i class="la la-play-circle mr-1"></i>
+                                                            الجزء الأول
+                                                        </span>
+                                                        <span>60:00</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="d-flex align-items-center justify-content-between">
+                                                        <span>
+                                                            <i class="la la-lock mr-1"></i>
+                                                            الجزء الثاني
+                                                        </span>
+                                                        <span>20:09</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="d-flex align-items-center justify-content-between">
+                                                        <span>
+                                                            <i class="la la-lock mr-1"></i>
+                                                            الجزء الثالث
+                                                        </span>
+                                                        <span>30:25</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div><!-- end card-body -->
+                                    </div><!-- end collapse -->
+                                </div><!-- end card -->
+                                <div class="card">
+                                    <div class="card-header" id="headingTwo">
+                                        <button class="btn btn-link collapsed d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            <i class="la la-plus"></i>
+                                            <i class="la la-minus"></i>
+                                            مذكرات
+                                            <span class="fs-15 text-gray font-weight-medium text-color-9">(3) ملفات</span>
+                                        </button>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <ul class="generic-list-item">
+                                                <li>
+                                                    <a href="#" class="d-flex align-items-center justify-content-between text-color">
+                                                        <span>
+                                                            <i class="la la-file-pdf-o mr-1"></i>
+                                                            ملخص المفعول المطلق
+                                                        </span>
+                                                        <span>35mb</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="d-flex align-items-center justify-content-between text-color">
+                                                        <span>
+                                                            <i class="la la-file-excel-o mr-1"></i>
+                                                            ملخص المفعول المطلق الثاني
+                                                        </span>
+                                                        <span>200kb</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="d-flex align-items-center justify-content-between text-color">
+                                                        <span>
+                                                            <i class="la la-file-word-o mr-1"></i>
+                                                            ملخص المفعول المطلق الثالث
+                                                        </span>
+                                                        <span>500kb</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div><!-- end card-body -->
+                                    </div>
+                                </div><!-- end card -->
+                                <div class="card">
+                                    <div class="card-header" id="headingThree">
+                                        <button class="btn btn-link collapsed d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                            <i class="la la-plus"></i>
+                                            <i class="la la-minus"></i>
+                                            الإمتحانات والواجبات
+                                            <span class="fs-15 text-gray font-weight-medium text-color-9">2 واجبات</span>
+                                        </button>
+                                    </div>
+                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <ul class="generic-list-item">
+                                                <li>
+                                                    <a href="#" class="d-flex align-items-center justify-content-between text-color">
+                                                        <span>
+                                                            <i class="la la-file-text mr-1"></i>
+                                                            واجب رقم واحد
+                                                        </span>
+                                                        <span class="ribbon ml-2 fs-13">تم حله</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="d-flex align-items-center justify-content-between text-color">
+                                                        <span>
+                                                            <i class="la la-file-text mr-1"></i>
+                                                            واجب رقم اثنين
+                                                        </span>
+                                                        <span class="ribbon ribbon-gray-bg ml-2 fs-13">بانتظار حله</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div><!-- end card-body -->
+                                    </div><!-- end collapse -->
+                                </div><!-- end card -->
+                            </div><!-- end generic-accordion -->
+                        </div><!-- end curriculum-content -->
+                    </div><!-- end course-overview-card -->
+                    <div class="course-overview-card pt-4">
+                        <h3 class="fs-23 txtbold pb-4">الأسئلة</h3>
+                        <div class="review-wrap">
+                            <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
+                                <div class="media-img mr-4 rounded-full borderonew">
+                                    <img class="rounded-full lazy" src="/images/student-1.jpg">
+                                </div>
+                                <div class="media-body">
+                                    <div class="d-flex flex-wrap align-items-center justify-content-between pb-1">
+                                        <h5>يوسف حسن</h5>
+                                        <div class="review-stars">
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                        </div>
+                                    </div>
+                                    <span class="d-block lh-18 pb-2">11 فبراير , 12:06 ص</span>
+                                    <p class="pb-2">
+                                        مستر بعد اذن حضرتك في صفحة 66 في خصائص الكلاسكية الجديدة رقم واحد قايل التجربة الذاتية بس ده مش بيناقض انهم اهتموا بالغير ؟
+                                    </p>
+                                </div>
+                            </div><!-- end media -->
+                            <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
+                                <div class="media-img mr-4 rounded-full borderonew">
+                                    <img class="rounded-full lazy" src="/images/student-2.jpg">
+                                </div>
+                                <div class="media-body">
+                                    <div class="d-flex flex-wrap align-items-center justify-content-between pb-1">
+                                        <h5>اسلام طاحون</h5>
+                                        <div class="review-stars">
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                        </div>
+                                    </div>
+                                    <span class="d-block lh-18 pb-2">11 فبراير , 12:06 ص</span>
+                                    <p class="pb-2">
+                                        مستر بعد اذن حضرتك في صفحة 66 في خصائص الكلاسكية الجديدة رقم واحد قايل التجربة الذاتية بس ده مش بيناقض انهم اهتموا بالغير ؟
+                                    </p>
+                                </div>
+                            </div><!-- end media -->
+                            <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
+                                <div class="media-img mr-4 rounded-full borderonew">
+                                    <img class="rounded-full lazy" src="/images/student-3.jpg">
+                                </div>
+                                <div class="media-body">
+                                    <div class="d-flex flex-wrap align-items-center justify-content-between pb-1">
+                                        <h5>رجاء قصابني</h5>
+                                        <div class="review-stars">
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                        </div>
+                                    </div>
+                                    <span class="d-block lh-18 pb-2">11 فبراير , 12:06 ص</span>
+                                    <p class="pb-2">
+                                        مستر بعد اذن حضرتك في صفحة 66 في خصائص الكلاسكية الجديدة رقم واحد قايل التجربة الذاتية بس ده مش بيناقض انهم اهتموا بالغير ؟
+                                    </p>
+                                </div>
+                            </div><!-- end media -->
+                        </div><!-- end review-wrap -->
+                        <div class="see-more-review-btn text-center">
+                            <button type="button" class="btn theme-btn theme-btn-transparent">عرض مزيد من الاسئلة</button>
+                        </div>
+                    </div><!-- end course-overview-card -->
+                    <div class="course-overview-card pt-4">
+                        <h3 class="fs-23 txtbold pb-4">اضف سؤال جديد</h3>
+                        <form class="row">
+                            <div class="input-box col-lg-12">
+                                <div class="form-group">
+                                    <textarea class="form-control form--control pl-3" name="message" placeholder="اكتب سؤال هنا..." rows="5"></textarea>
+                                </div>
+                            </div><!-- end input-box -->
+                            <div class="btn-box col-lg-12">
+                                <button class="btn theme-btn" type="submit">ارسال السؤال</button>
+                            </div><!-- end btn-box -->
+                        </form>
+                    </div><!-- end course-overview-card -->
+                    <div class="course-overview-card pt-4">
+                        <h3 class="fs-23 txtbold pb-4">تقييم الدورة</h3>
+                        <div class="feedback-wrap">
+                            <div class="media media-card align-items-center">
+                                <div class="review-rating-summary">
+                                    <span class="stats-average__count">4.6</span>
+                                    <div class="rating-wrap pt-1">
+                                        <div class="review-stars">
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star-half-alt"></span>
+                                        </div>
+                                        <span class="rating-total d-block">(2,533)</span>
+                                        <span>تقييم الدورة</span>
+                                    </div><!-- end rating-wrap -->
+                                </div><!-- end review-rating-summary -->
+                                <div class="media-body">
+                                    <div class="review-bars d-flex align-items-center mb-2">
+                                        <div class="review-bars__text">5 نجوم</div>
+                                        <div class="review-bars__fill">
+                                            <div class="skillbar-box">
+                                                <div class="skillbar" data-percent="77%">
+                                                    <div class="skillbar-bar bg-3"></div>
+                                                </div> <!-- End Skill Bar -->
+                                            </div>
+                                        </div><!-- end review-bars__fill -->
+                                        <div class="review-bars__percent">77%</div>
+                                    </div><!-- end review-bars -->
+                                    <div class="review-bars d-flex align-items-center mb-2">
+                                        <div class="review-bars__text">4 نجوم</div>
+                                        <div class="review-bars__fill">
+                                            <div class="skillbar-box">
+                                                <div class="skillbar" data-percent="54%">
+                                                    <div class="skillbar-bar bg-3"></div>
+                                                </div> <!-- End Skill Bar -->
+                                            </div>
+                                        </div><!-- end review-bars__fill -->
+                                        <div class="review-bars__percent">54%</div>
+                                    </div><!-- end review-bars -->
+                                    <div class="review-bars d-flex align-items-center mb-2">
+                                        <div class="review-bars__text">3 نجوم</div>
+                                        <div class="review-bars__fill">
+                                            <div class="skillbar-box">
+                                                <div class="skillbar" data-percent="14%">
+                                                    <div class="skillbar-bar bg-3"></div>
+                                                </div> <!-- End Skill Bar -->
+                                            </div>
+                                        </div><!-- end review-bars__fill -->
+                                        <div class="review-bars__percent">14%</div>
+                                    </div><!-- end review-bars -->
+                                    <div class="review-bars d-flex align-items-center mb-2">
+                                        <div class="review-bars__text">2 نجوم</div>
+                                        <div class="review-bars__fill">
+                                            <div class="skillbar-box">
+                                                <div class="skillbar" data-percent="5%">
+                                                    <div class="skillbar-bar bg-3"></div>
+                                                </div> <!-- End Skill Bar -->
+                                            </div>
+                                        </div><!-- end review-bars__fill -->
+                                        <div class="review-bars__percent">5%</div>
+                                    </div><!-- end review-bars -->
+                                    <div class="review-bars d-flex align-items-center mb-2">
+                                        <div class="review-bars__text">1 نجوم</div>
+                                        <div class="review-bars__fill">
+                                            <div class="skillbar-box">
+                                                <div class="skillbar" data-percent="2%">
+                                                    <div class="skillbar-bar bg-3"></div>
+                                                </div> <!-- End Skill Bar -->
+                                            </div>
+                                        </div><!-- end review-bars__fill -->
+                                        <div class="review-bars__percent">2%</div>
+                                    </div><!-- end review-bars -->
+                                </div><!-- end media-body -->
+                            </div>
+                        </div><!-- end feedback-wrap -->
+                    </div><!-- end course-overview-card -->
+                    <div class="course-overview-card pt-2">
+                        <h3 class="fs-23 txtbold pb-4">قيم الدورة</h3>
+                        <div class="leave-rating-wrap pb-2">
+                            <div class="leave-rating leave--rating">
+                                <input type="radio" name='rate' id="star5" />
+                                <label for="star5" title="5 Stars"></label>
+                                <input type="radio" name='rate' id="star4" />
+                                <label for="star4" title="4 Stars"></label>
+                                <input type="radio" name='rate' id="star3" />
+                                <label for="star3" title="3 Stars"></label>
+                                <input type="radio" name='rate' id="star2" />
+                                <label for="star2" title="2 Stars"></label>
+                                <input type="radio" name='rate' id="star1" />
+                                <label for="star1" title="1 Star"></label>
+                            </div><!-- end leave-rating -->
+                        </div>
+                    </div><!-- end course-overview-card -->
+                </div><!-- end course-details-content-wrap -->
+            </div><!-- end col-lg-8 -->
+            <div class="col-lg-4">
+                <div class="sidebar sidebar-negative">
+                    <div class="card card-item">
+                        <div class="card-body">
+                            <div class="preview-course-video">
+                                <a href="javascript:void(0)" data-toggle="modal" data-target="#previewModal">
+                                    <img src="images/img-loading.png" data-src="/images/screenshot.jpg" class="w-100 rounded lazy screensh">
+                                    <div class="preview-course-video-content">
+                                        <div class="overlay"></div>
+                                        <div class="play-button">
+                                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="-307.4 338.8 91.8 91.8" style=" enable-background:new -307.4 338.8 91.8 91.8;" xml:space="preserve">
+                                            <style type="text/css">
+                                                .st0 {
+                                                    fill: #ffffff;
+                                                    border-radius: 100px;
+                                                }
+
+                                                .st1 {
+                                                    fill: #000000;
+                                                }
+</style>
+                                            <g>
+                                            <circle class="st0" cx="-261.5" cy="384.7" r="45.9"></circle><path class="st1" d="M-272.9,363.2l35.8,20.7c0.7,0.4,0.7,1.3,0,1.7l-35.8,20.7c-0.7,0.4-1.5-0.1-1.5-0.9V364C-274.4,363.3-273.5,362.8-272.9,363.2z"></path>
+                                             </g>
+                                         </svg>
+                                        </div>
+                                        <p class="fs-15 font-weight-bold text-white pt-3">معاينة هذه الدورة</p>
+                                    </div>
+                                </a>
+                            </div><!-- end preview-course-video -->
+                            <div class="preview-course-feature-content pt-30px">
+                                <p class="d-flex align-items-center pb-40px">
+                                    <span class="fs-35 font-weight-semi-bold text-black">50 ج.م</span>
+                                    <span class="before-price mx-1">60 ج.م</span>
+                                </p>
+                                <div class="buy-course-btn-box pb-4">
+                                    <button type="button" class="btn theme-btn w-100 mb-2"><i class="la la-shopping-cart fs-18 mr-1"></i>اشترك الآن</button>
+                                </div>
+                                <div class="preview-course-incentives">
+                                    <h3 class="card-title fs-18 pb-2">تشمل هذه الدورة</h3>
+                                    <ul class="generic-list-item">
+                                        <li><i class="la la-play-circle-o mr-2 text-color"></i>3 فيديو</li>
+                                        <li><i class="la la-clock mr-2 text-color"></i>1.9 ساعات تشغيل</li>
+                                        <li><i class="la la-file mr-2 text-color"></i>3 ملفات مذكرات</li>
+                                        <li><i class="la la-file-text mr-2 text-color"></i>2 امتحانات وواجبات</li>
+                                    </ul>
+                                </div><!-- end preview-course-incentives -->
+                            </div><!-- end preview-course-content -->
+                        </div>
+                    </div><!-- end card -->
+                    <div class="card card-item">
+                        <div class="card-body">
+                            <h3 class="card-title fs-18 pb-2">الدورات ذات الصلة</h3>
+                            <div class="divider"><span></span></div>
+                            <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
+                                <a href="#" class="media-img newmedhig">
+                                    <img class="mr-3 lazy" src="/images/img-loading.png" data-src="images/course001.jpg">
+                                </a>
+                                <div class="media-body">
+                                    <h5 class="fs-15"><a href="#">الحصة الاولى - الحصة المجمعة الاولى مراجعة نحو والمفعول المطلق</a></h5>
+                                    <span class="d-block lh-18 py-1 fs-14">أ. تامر عاشور</span>
+                                </div>
+                            </div><!-- end media -->
+                            <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
+                                <a href="#" class="media-img newmedhig">
+                                    <img class="mr-3 lazy" src="/images/img-loading.png" data-src="images/course002.jpg">
+                                </a>
+                                <div class="media-body">
+                                    <h5 class="fs-15"><a href="#">الحصة الاولى - الحصة المجمعة الاولى مراجعة نحو والمفعول المطلق</a></h5>
+                                    <span class="d-block lh-18 py-1 fs-14">أ. تامر عاشور</span>
+                                </div>
+                            </div><!-- end media -->
+                            <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
+                                <a href="#" class="media-img newmedhig">
+                                    <img class="mr-3 lazy" src="/images/img-loading.png" data-src="images/course005.jpg">
+                                </a>
+                                <div class="media-body">
+                                    <h5 class="fs-15"><a href="#">الحصة الاولى - الحصة المجمعة الاولى مراجعة نحو والمفعول المطلق</a></h5>
+                                    <span class="d-block lh-18 py-1 fs-14">أ. تامر عاشور</span>
+                                </div>
+                            </div><!-- end media -->
+                            <div class="view-all-course-btn-box">
+                                <a href="#" class="btn theme-btn w-100"> عرض جميع الدورات<i class="la la-arrow-right icon ml-1"></i></a>
+                            </div>
+                        </div>
+                    </div><!-- end card -->
+                    <div class="card card-item">
+                        <div class="card-body">
+                            <h3 class="card-title fs-18 pb-2">الوسوم</h3>
+                            <div class="divider"><span></span></div>
+                            <ul class="generic-list-item generic-list-item-boxed d-flex flex-wrap fs-15">
+                                <li class="mr-2"><a href="#">ثانوية عامة</a></li>
+                                <li class="mr-2"><a href="#">صف أول</a></li>
+                                <li class="mr-2"><a href="#">لغة عربية</a></li>
+                                <li class="mr-2"><a href="#">وليد الأحمدي</a></li>
+                                <li class="mr-2"><a href="#">الصف الثاني الثانوي</a></li>
+                                <li class="mr-2"><a href="#">ثانوية عامة</a></li>
+                                <li class="mr-2"><a href="#">صف أول</a></li>
+                                <li class="mr-2"><a href="#">لغة عربية</a></li>
+                            </ul>
+                        </div>
+                    </div><!-- end card -->
+                </div><!-- end sidebar -->
+            </div><!-- end col-lg-4 -->
+        </div><!-- end row -->
+    </div><!-- end container -->
+</section><!-- end course-details-area -->
+<!--======================================
+        END COURSE DETAILS AREA
+======================================-->

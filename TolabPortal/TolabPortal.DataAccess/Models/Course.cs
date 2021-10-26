@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -69,5 +70,14 @@ namespace TolabPortal.DataAccess.Models
         public IEnumerable<VideoQuestion> VideoQuestions { get; set; }
 
         public Content Content { get; set; }
+        public ItemDetails ItemDetails { get; set; }
+    }
+
+    public class CourseResponse
+    {
+        [JsonProperty("model")]
+        public Course Course { get; set; }
+        public Metas Metas { get; set; }
+        public Errors Errors { get; set; }
     }
 }

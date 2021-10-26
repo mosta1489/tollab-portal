@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="icon" sizes="16x16" href="images/favicon.png">
+    <link rel="icon" sizes="16x16" href="/images/favicon.png">
 
     <link rel="stylesheet" href="/css/commonBundle.css" />
 </head>
@@ -37,7 +37,7 @@
                     <div class="row align-items-center">
                         <div class="col-lg-2">
                             <div class="logo-box">
-                                <a href="#" class="logo"><img src="images/logo.png" class="logoimg"></a>
+                                <a href="#" class="logo"><img src="/images/logo.png" class="logoimg"></a>
                                 <div class="user-btn-action">
                                     <div class="off-canvas-menu-toggle main-menu-toggle icon-element icon-element-sm shadow-sm" data-toggle="tooltip" data-placement="top">
                                         <i class="la la-bars"></i>
@@ -53,7 +53,7 @@
                                             <a href="/subjects">الرئيسية</a>
                                         </li>
                                         <li>
-                                            <a href="/lives">البث المباشر</a>
+                                            <a href="#">الأقسام</a>
                                         </li>
                                         <li>
                                             <a href="#">اتصل بنا</a>
@@ -104,10 +104,10 @@
             </div><!-- end off-canvas-menu-close -->
             <ul class="generic-list-item off-canvas-menu-list pt-90px">
                 <li>
-                    <a href="#">الرئيسية</a>
+                    <a href="/subjects">الرئيسية</a>
                 </li>
                 <li>
-                    <a href="/lives">البث المباشر</a>
+                    <a href="#">الأقسام</a>
                 </li>
                 <li>
                     <a href="#">اتصل بنا</a>
@@ -131,63 +131,66 @@
         </div><!-- end off-canvas-menu -->
         <div class="body-overlay"></div>
     </header><!-- end header-menu-area -->
-    <!--======================================
-    END HEADER AREA
-    ======================================-->
     <!-- ================================
-    START BREADCRUMB AREA
+        START BREADCRUMB AREA
     ================================= -->
-    <section class="breadcrumb-area section-padding img-bg-4">
-        <div class="overlay"></div>
+    @{
+        var itemDetails = (TolabPortal.DataAccess.Models.ItemDetails)ViewBag.itemDetails;
+    }
+    <section class="breadcrumb-area pt-50px pb-50px landcover" style="background-image: url(/images/course003.jpg)">
+        <div class="overlaycover"></div>
         <div class="container">
-            <div class="breadcrumb-content d-flex flex-wrap align-items-center justify-content-between">
-                <div class="section-heading">
-                    <h2 class="section__title text-white">@ViewBag.CurrentPageTitle</h2>
-                </div>
-                <ul class="generic-list-item generic-list-item-white generic-list-item-arrow d-flex flex-wrap align-items-center">
-                    @{
-                        var items = @ViewBag.MenuItems as string[];
-
-                        foreach (var item in items)
-                        {
-                            <li>
-                                <a href="#">@item</a>
-                            </li>
-                        }
-                    }
-                </ul>
-            </div><!-- end breadcrumb-content -->
+            <div class="col-lg-8 mr-auto">
+                <div class="breadcrumb-content text-left">
+                    <ul class="generic-list-item generic-list-item-arrow d-flex flex-wrap align-items-center genernewcolr">
+                        <li><a href="#"> @itemDetails.PageRootName </a></li>
+                        <li><a href="#"> @itemDetails.SectionName </a></li>
+                        <li><a href="#"> @itemDetails.CategoryName </a></li>
+                        <li><a href="#"> @itemDetails.SubCategoryName </a></li>
+                    </ul>
+                    <div class="section-heading">
+                        <h2 class="section__title txtwhite"> @itemDetails.CourseName </h2>
+                    </div><!-- end section-heading -->
+                    <div class="d-flex flex-wrap align-items-center pt-3">
+                        <h6 class="ribbon ribbon-lg mr-2 bg-3 text-white">الأكثر مبيعا</h6>
+                        <div class="rating-wrap d-flex flex-wrap align-items-center">
+                            <div class="review-stars">
+                                <span class="rating-number text-white"> 4.4 </span>
+                                <span class="la la-star"></span>
+                                <span class="la la-star"></span>
+                                <span class="la la-star"></span>
+                                <span class="la la-star"></span>
+                                <span class="la la-star-o"></span>
+                            </div>
+                            <span class="student-total pl-2">(20,230)</span>
+                        </div>
+                    </div><!-- end d-flex -->
+                    <p class="pt-2 pb-1 text-ligpur">مقدم من <a class="text-color-9">@itemDetails.TeacherName</a></p>
+                    <div class="bread-btn-box pt-3">
+                        <button class="btn theme-btn theme-btn-sm theme-btn-bord lh-28 mr-2 mb-2">
+                            <i class="la la-heart-o mr-1"></i>
+                            <span class="swapping-btn" data-text-swap="مفضلة" data-text-original="اضف للمفضلة">اضف للمفضلة</span>
+                        </button>
+                        <button class="btn theme-btn theme-btn-sm theme-btn-bord lh-28 mr-2 mb-2" data-toggle="modal" data-target="#shareModal">
+                            <i class="la la-share mr-1"></i>شارك اصدقائك
+                        </button>
+                        <button class="btn theme-btn theme-btn-sm theme-btn-bord lh-28 mb-2" data-toggle="modal" data-target="#reportModal">
+                            <i class="la la-flag mr-1"></i>بلغ عن سوء معاملة
+                        </button>
+                    </div>
+                </div><!-- end breadcrumb-content -->
+            </div><!-- end col-lg-8 -->
         </div><!-- end container -->
     </section><!-- end breadcrumb-area -->
     <!-- ================================
-    END BREADCRUMB AREA
+        END BREADCRUMB AREA
     ================================= -->
     <!-- ================================
     START CONTACT AREA
     ================================= -->
-    <section class="contact-area section--padding position-relative  pt-60px pb-40px bg-grligh">
-        <span class="ring-shape ring-shape-1"></span>
-        <span class="ring-shape ring-shape-2"></span>
-        <span class="ring-shape ring-shape-3"></span>
-        <span class="ring-shape ring-shape-4"></span>
-        <span class="ring-shape ring-shape-5"></span>
-        <span class="ring-shape ring-shape-6"></span>
-        <span class="ring-shape ring-shape-7"></span>
-        <div class="container">
-            @if (IsSectionDefined(name: "LivesPageCustomSection"))
-            {
-                @RenderSection(name: "LivesPageCustomSection")
-                @RenderBody()
-            }
-            else
-            {
-                <div class="row">
-                    @RenderBody()
-                </div>
-            }
 
-        </div><!-- end container -->
-    </section><!-- end contact-area -->
+    @RenderBody()
+
     <!-- ================================
     END CONTACT AREA
     ================================= -->
@@ -200,7 +203,7 @@
                 <div class="col-lg-3 responsive-column-half">
                     <div class="footer-item">
                         <a href="#">
-                            <img src="images/logo.png" class="footer__logo logoimg">
+                            <img src="/images/logo.png" class="footer__logo logoimg">
                         </a>
                         <ul class="generic-list-item pt-4">
                             <li><a href="#" class="direlang">+123 456 789</a></li>
@@ -242,8 +245,8 @@
                         <div class="divider border-bottom-0"><span></span></div>
                         <div class="mobile-app">
                             <p class="pb-3 lh-24">حمل التطبيق الخاص بنا على </p>
-                            <a href="#" class="d-block mb-2 hover-s"><img src="images/appstore.png" alt="App store" class="img-fluid"></a>
-                            <a href="#" class="d-block hover-s"><img src="images/googleplay.png" alt="Google play store" class="img-fluid"></a>
+                            <a href="#" class="d-block mb-2 hover-s"><img src="/images/appstore.png" alt="App store" class="img-fluid"></a>
+                            <a href="#" class="d-block hover-s"><img src="/images/googleplay.png" alt="Google play store" class="img-fluid"></a>
                         </div>
                     </div><!-- end footer-item -->
                 </div><!-- end col-lg-3 -->

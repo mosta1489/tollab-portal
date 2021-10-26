@@ -1,0 +1,100 @@
+﻿
+@model TolabPortal.DataAccess.Models.CoursesByTrackIdModel
+
+@{
+
+    var interest = (TolabPortal.Models.GetStudentProfileModel.Interest)ViewBag.Interest;
+
+    ViewBag.CurrentPageTitle = interest.SubCategoryName;
+    var items = new string[] { "الرئيسية", interest.SectionNameLT, interest.CategoryNameLT, interest.SubCategoryNameLT, Model.TrackNameLT };
+    ViewBag.MenuItems = items;
+}
+
+
+<section class="course-area section--padding  pt-60px pb-40px bg-grligh">
+    <div class="container">
+        <div class="teacher-bar">
+            <div class="d-flex flex-wrap align-items-center justify-content-between">
+                <div class="d-flex flex-wrap align-items-center mgautsm">
+                    <div class="teacherimg">
+                        <img class="card-img-top" src="/images/teacher001.jpg">
+                    </div>
+                    <div class="teacherinfo">
+                        <h2> @Model.TeacherName </h2>
+                        <p> (@Model.Courses.ToList().Count.ToString()) كورسات </p>
+                    </div>
+                </div>
+                <div class="aboutbar mr-3">
+                    <p><span class="text-black"> @Model.CategoryNameLT </span></p>
+                    <p class="fs-14"> @Model.SubCategoryNameLT </p>
+                </div>
+            </div><!-- end filter-bar-inner -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    @foreach (var course in Model.Courses)
+                    {
+                        var courseDetailsEndPoint = $"/Subjects/Track/Course?courseId={course.Id}";
+
+                        <div class="col-lg-4 responsive-column-half">
+                            <div class="card card-item card-preview full-height">
+                                <div class="card-image">
+                                    <a href="@courseDetailsEndPoint" class="d-block">
+                                        <img class="card-img-top lazy catimg" src="images/img-loading-ar.png" data-src="/images/course001.jpg">
+                                    </a>
+                                    <div class="course-badge-labels">
+                                        <div class="course-badge">الأكثر مبيعا</div>
+                                    </div>
+                                </div><!-- end card-image -->
+                                <div class="card-body">
+                                    <h6 class="ribbon ribbon-purpl-bg fs-14 mb-3"> @($"{course.VideoCount} فيديوهات ")</h6>
+                                    <h5 class="card-title"><a href="@courseDetailsEndPoint"> @course.NameLT </a></h5>
+                                    <p class="card-text"> @Model.TeacherName </p>
+                                    <div class="rating-wrap d-flex align-items-center py-2">
+                                        <div class="review-stars">
+                                            <span class="rating-number">4.4</span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star"></span>
+                                            <span class="la la-star-o"></span>
+                                        </div>
+                                        <span class="rating-total pl-1">(20,230)</span>
+                                    </div><!-- end rating-wrap -->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <p class="card-price text-black font-weight-bold"> @course.CurrentCost <span class="before-price font-weight-medium"> @course.PreviousCost </span></p>
+                                        <div class="icon-element icon-element-sm shadow-sm cursor-pointer"><i class="la la-heart-o"></i></div>
+                                        <a href="#" class="btn theme-btn">اشترك</a>
+                                    </div>
+                                </div><!-- end card-body -->
+                            </div><!-- end card -->
+                        </div><!-- end col-lg-6 -->
+                    }
+
+                </div><!-- end row -->
+                <div class="text-center pt-3">
+                    <nav aria-label="Page navigation example" class="pagination-box">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true"><i class="la la-arrow-right"></i></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true"><i class="la la-arrow-left"></i></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div><!-- end col-lg-8 -->
+        </div><!-- end row -->
+    </div><!-- end container -->
+</section><!-- end courses-area -->
