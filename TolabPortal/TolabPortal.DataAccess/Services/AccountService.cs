@@ -1,30 +1,38 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Tolab.Common;
-using System.Net;
 using TolabPortal.DataAccess.Models;
-using System.Text;
 
 namespace TolabPortal.DataAccess.Services
 {
     public interface IAccountService
     {
         Task<HttpResponseMessage> StudentLogin(string loginPhone);
+
         Task<HttpResponseMessage> VerifyStudentLogin(string phoneKey, string phone, string verificationCode);
+
         Task<HttpResponseMessage> RegisterStudent(Student student);
+
+        Task<HttpResponseMessage> GetStudentProfile();
     }
 
     public class AccountService : IAccountService, IDisposable
     {
         private readonly HttpClient _httpClient;
+        private readonly ISessionManager _sessionManager;
 
-        public AccountService(IOptions<ApplicationConfig> options)
+        public AccountService(IOptions<ApplicationConfig> options,
+            ISessionManager sessionManager)
         {
+            _sessionManager = sessionManager;
             var config = options.Value;
             _httpClient = new HttpClient { BaseAddress = new Uri(config.ApiUrl) };
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {_sessionManager.AccessToken}");
         }
 
         public void Dispose()
@@ -62,7 +70,6 @@ namespace TolabPortal.DataAccess.Services
             }
         }
 
-
         public async Task<HttpResponseMessage> RegisterStudent(Student student)
         {
             try
@@ -95,6 +102,5 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
-
     }
 }
