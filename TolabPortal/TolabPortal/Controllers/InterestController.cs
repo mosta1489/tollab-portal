@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Tolab.Common;
 using TolabPortal.DataAccess.Models;
 using TolabPortal.DataAccess.Services;
@@ -131,20 +135,17 @@ namespace TolabPortal.Controllers
         {
             if (subCategoryId != null)
             {
-                var subCategoriesResponse = await _interestService.GetDepartmentsBySubCategoryId(long.Parse(subCategoryId));
-                if (subCategoriesResponse.IsSuccessStatusCode)
-                {
-                    var selectedSubCategory = subCategoryResponse.SubCategories.FirstOrDefault(s => s.Id == long.Parse(subCategoryId));
-                    var responseResult = await CommonUtilities.GetResponseModelFromJson<DepartmentResponse>(subCategoriesResponse);
-                    responseResult.SelectedSubCategory = selectedSubCategory;
-                    return View("RegisterDepartment", responseResult);
-                }
-                else
-                {
-                    var responseResult = await CommonUtilities.GetResponseModelFromJson<DepartmentResponse>(subCategoriesResponse);
-                    var errorMessage = responseResult.Errors.Message;
-                    return RedirectToAction("RegisterSubCategory", new { errorMessage = errorMessage });
-                }
+                var departmenResponse = await _interestService.GetDepartmentsBySubCategoryId(long.Parse(subCategoryId));
+                var departments = await CommonUtilities.GetResponseModelFromJson<DepartmentResponse>(departmenResponse);
+                var subCategoriesResponse = await _interestService.AddDepartmentToStudent(departments.Departments.Select(d => d.Id).ToList());
+
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsIdentity identity = new ClaimsIdentity(await GetUserClaims(), CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
+
+                return RedirectToAction("Index", "Courses");
             }
             else
             {
@@ -170,6 +171,21 @@ namespace TolabPortal.Controllers
         public IActionResult GetSubjects()
         {
             return View();
+        }
+
+
+        private async Task<IEnumerable<Claim>> GetUserClaims()
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                new Claim("AccessToken", User.FindFirstValue("AccessToken")),
+                new Claim("CountryId", User.FindFirstValue("CountryId")),
+                new Claim("CountryCode", User.FindFirstValue("CountryCode")),
+                new Claim("HasInterests", true.ToString())
+            };
+
+            return claims;
         }
     }
 }

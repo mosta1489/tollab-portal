@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Tolab.Common;
 
 namespace TolabPortal.DataAccess.Services
@@ -16,6 +19,8 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> GetSubCategoriesByCategoryId(long categoryId);
 
         Task<HttpResponseMessage> GetDepartmentsBySubCategoryId(long ubCategoryId);
+
+        Task<HttpResponseMessage> AddDepartmentToStudent(List<long> departmentIds);
     }
 
     public class InterestService : IInterestService, IDisposable
@@ -97,5 +102,24 @@ namespace TolabPortal.DataAccess.Services
             }
         }
 
+        public async Task<HttpResponseMessage> AddDepartmentToStudent(List<long> departmentIds)
+        {
+            try
+            {
+                if (departmentIds == null)
+                    throw new ArgumentNullException();
+                
+                var sectionsResponse = await _httpClient.PostAsync("/api/AddDepartmentToStudent", new StringContent(JsonConvert.SerializeObject(departmentIds), Encoding.UTF8, "application/json"));
+                return sectionsResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = ex.Message
+                };
+                return errorResponse;
+            }
+        }
     }
 }
