@@ -54,6 +54,7 @@ namespace TolabPortal.Controllers
                     subjects.Add(subject);
                 }
             }
+
             return View("Index", subjects.SelectMany(s => s.Subjects).SelectMany(s => s.Tracks));
         }
 
