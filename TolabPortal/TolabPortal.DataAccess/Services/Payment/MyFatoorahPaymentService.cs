@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,13 @@ namespace TolabPortal.DataAccess.Services.Payment
     public class MyFatoorahPaymentService : IMyFatoorahPaymentService
     {
         private readonly IMyFatoorahClient _client;
+        private readonly ILogger<MyFatoorahPaymentService> logger;
         private readonly HttpClient _httpClient;
         
-        public MyFatoorahPaymentService(IMyFatoorahClient client, IOptions<ApplicationConfig> options)
+        public MyFatoorahPaymentService(IMyFatoorahClient client, IOptions<ApplicationConfig> options, ILogger<MyFatoorahPaymentService>logger)
         {
             _client = client;
+            this.logger = logger;
             var config = options.Value;
             _httpClient = new HttpClient { BaseAddress = new Uri(config.ApiUrl) };
         }
@@ -79,8 +82,10 @@ namespace TolabPortal.DataAccess.Services.Payment
 
             var GetPaymentStatusRequestJSON = JsonConvert.SerializeObject(getPaymentStatusRequest);
             var response = await _client.PerformRequest(GetPaymentStatusRequestJSON, endPoint: "GetPaymentStatus").ConfigureAwait(false);
-            var content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8, "application/json");
+            var content = new StringContent(response, Encoding.UTF8, "application/json");
             var transactionResponse = await _httpClient.PostAsync($"/api/LogTransaction", content).ConfigureAwait(false);
+            if (!transactionResponse.IsSuccessStatusCode)
+                logger.LogError($"logTransaction :{response}");
             return JsonConvert.DeserializeObject<GenericResponse<GetPaymentStatusResponse>>(response);
 
         }

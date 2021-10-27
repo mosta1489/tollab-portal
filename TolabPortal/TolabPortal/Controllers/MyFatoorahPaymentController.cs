@@ -1,26 +1,32 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TolabPortal.DataAccess.Models.Payment;
+using TolabPortal.DataAccess.Services;
 using TolabPortal.DataAccess.Services.Payment;
 using TolabPortal.ViewModels;
 
 namespace TolabPortal.Controllers
 {
-    [AllowAnonymous]
+  
     public class MyFatoorahPaymentController : Controller
     {
         private readonly IMyFatoorahPaymentService _paymentService;
+        private readonly ISubscribeService subscribeService;
+        private readonly ILogger<MyFatoorahPaymentController> logger;
         private readonly IConfiguration config;
 
-        public MyFatoorahPaymentController(IMyFatoorahPaymentService paymentService, IConfiguration config)
+        public MyFatoorahPaymentController(IMyFatoorahPaymentService paymentService, ISubscribeService subscribeService, ILogger<MyFatoorahPaymentController> logger,IConfiguration config)
         {
             _paymentService = paymentService;
+            this.subscribeService = subscribeService;
+            this.logger = logger;
             this.config = config;
         }
 
@@ -43,9 +49,9 @@ namespace TolabPortal.Controllers
                     CustomerMobile= "01267086929",
                     MobileCountryCode= "+2",
                     CustomerName= "46695",
-                    CustomerReference ="CourseIdOrTrackId",
+                    CustomerReference = "10110",
                     TransactionType=(int)TransactionType.Course,
-                    ReturnUrl=""
+                    ReturnUrl= "2,https://f5e9-46-153-75-72.ngrok.io/Subjects/Track/Course?courseId=10110"
                 });
             return View("ErrorPayment");
         }
@@ -79,6 +85,7 @@ namespace TolabPortal.Controllers
 
 
         }
+        [AllowAnonymous]
         [Route("~/ErrorPayment")]
         public IActionResult ErrorPayment()
         {
@@ -90,30 +97,49 @@ namespace TolabPortal.Controllers
         [Route("~/CompletePayment")]
         public async Task<IActionResult> CompletePayment(string paymentId)
         {
-            if (ModelState.IsValid)
+
+            try
             {
-                var response = await _paymentService.LogTransaction(new GetPaymentStatusRequest { 
-                Key=paymentId,
-                KeyType= "paymentId"
+                var response = await _paymentService.LogTransaction(new GetPaymentStatusRequest
+                {
+                    Key = paymentId,
+                    KeyType = "paymentId"
                 }).ConfigureAwait(false);
                 if (response.IsSuccess)
                 {
-                    if (response.Data.InvoiceStatus.ToLower()=="paid")
+                    if (response.Data.InvoiceStatus.ToLower() == "paid")
                     {
-                        
-                        // split userDefined parameter to transactionType and return URl
-                        //subscribe to course or track or Live
-                        // redirect to paymnet Url
-                        
+                        var computedFiled = response.Data.UserDefinedField.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        switch (computedFiled[0])
+                        {
+                            case string transaction when int.Parse(transaction) == (int)TransactionType.Course:
+                                await subscribeService.SubscribeCourse(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                break;
+                            case string transaction when int.Parse(transaction) == (int)TransactionType.Live:
+                                await subscribeService.SubscribeLive(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                break;
+                            case string transaction when int.Parse(transaction) == (int)TransactionType.Track:
+                                await subscribeService.SubscribeTrack(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                break;
+                        }
+
+                        if (!string.IsNullOrEmpty(computedFiled[1]))
+                            return Redirect(computedFiled[1]);
+                        return RedirectToAction("Index", "Home");
+
                     }
 
 
                 }
 
-               
+                return View("ErrorPayment");
 
             }
-            return View("ErrorPayment");
+            catch (Exception ex)
+            {
+                logger.LogError($"Complete payment :{ex.Message} ||StackTrace : {ex.StackTrace} ");
+                return View("ErrorPayment");
+            }
 
         }
 
