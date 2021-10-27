@@ -14,7 +14,7 @@ using TolabPortal.ViewModels;
 
 namespace TolabPortal.Controllers
 {
-  
+ [AllowAnonymous]
     public class MyFatoorahPaymentController : Controller
     {
         private readonly IMyFatoorahPaymentService _paymentService;
@@ -46,12 +46,12 @@ namespace TolabPortal.Controllers
                 return View(new PaymentViewModel() {
                     InvoiceValue=amount,
                     PaymentMethods=response.Data.PaymentMethods,
-                    CustomerMobile= "01267086929",
+                    CustomerMobile= "01282200866",
                     MobileCountryCode= "+2",
-                    CustomerName= "46695",
-                    CustomerReference = "10110",
+                    CustomerName= "41781",
+                    CustomerReference = "10420",
                     TransactionType=(int)TransactionType.Course,
-                    ReturnUrl= "2,https://f5e9-46-153-75-72.ngrok.io/Subjects/Track/Course?courseId=10110"
+                    ReturnUrl= "https://f5e9-46-153-75-72.ngrok.io/Subjects/Track/Course?courseId=10420"
                 });
             return View("ErrorPayment");
         }
@@ -109,7 +109,7 @@ namespace TolabPortal.Controllers
                 {
                     if (response.Data.InvoiceStatus.ToLower() == "paid")
                     {
-                        var computedFiled = response.Data.UserDefinedField.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        var computedFiled = response.Data.UserDefinedField.Split(",", StringSplitOptions.RemoveEmptyEntries);
                         switch (computedFiled[0])
                         {
                             case string transaction when int.Parse(transaction) == (int)TransactionType.Course:
