@@ -29,7 +29,7 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> GetQuestions(long courseId, int page = 0, long videoQuestionId = 0);
         Task<HttpResponseMessage> AddQuestion(string comment, float minute, string image, long contentId, long liveId, bool viewMyAccount);
         Task<HttpResponseMessage> AddStudentReply(string comment, long videoQuestionId, bool viewMyAccount, string image);
-        Task<HttpResponseMessage> GetTeacherExams(long? courseId = null, bool? publish = null, int page = 0);
+        Task<HttpResponseMessage> GetStudentExams(long? courseId = null, long? solveStatusId = null, int page = 0);
     }
     public class CourseService : ICourseService, IDisposable
     {
@@ -301,11 +301,11 @@ namespace TolabPortal.DataAccess.Services
             }
         }
 
-        public async Task<HttpResponseMessage> GetTeacherExams(long? courseId = null, bool? publish = null, int page = 0)
+        public async Task<HttpResponseMessage> GetStudentExams(long? courseId = null, long? solveStatusId = null, int page = 0)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/GetTeacherExams?CourseId={courseId}&Publish={publish}&Page={page}");
+                var response = await _httpClient.GetAsync($"/api/GetStudentExams?CourseId={courseId}&SolveStatusId={solveStatusId}&Page={page}");
                 return response;
             }
             catch (Exception ex)

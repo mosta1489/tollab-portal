@@ -123,11 +123,11 @@ namespace TolabPortal.Controllers
                 }
 
                 // getting Course Exams
-                var examsResponse = await _courseService.GetTeacherExams(courseId);
+                var examsResponse = await _courseService.GetStudentExams(courseId);
                 if (examsResponse.IsSuccessStatusCode)
                 {
-                    var exams = await CommonUtilities.GetResponseModelFromJson<ExamViewResponse>(examsResponse);
-                    courseDetails.Course.TeacherExams = exams.ExamViews;
+                    var exams = await CommonUtilities.GetResponseModelFromJson<StudentExamsToCorrectResponse>(examsResponse);
+                    courseDetails.Course.TeacherExams = exams.StudentExamsToCorrect;
                 }
 
                 return View("CourseDetails", courseDetails.Course);

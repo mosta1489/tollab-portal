@@ -70,7 +70,7 @@ namespace TolabPortal.DataAccess.Models
         public IEnumerable<VideoQuestion> VideoQuestions { get; set; }
 
         public Content Content { get; set; }
-        public IEnumerable<ExamView> TeacherExams { get; set; }
+        public IEnumerable<StudentExamsToCorrect> TeacherExams { get; set; }
         public ItemDetails ItemDetails { get; set; }
     }
 
