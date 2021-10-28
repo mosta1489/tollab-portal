@@ -36,11 +36,12 @@
                                 <label for="@(subCategory.Id)">@(subCategory.NameLT)</label>
                             </div>
                             <div class="payment-tab-content">
-                                @foreach (var department in subCategory.Departments)
+                                @for (int j = 0; j < subCategory.Departments.Count; ++j)
                                 {
+                                    var department = subCategory.Departments[j];
                                     <div class="custom-control custom-checkbox fs-15">
-                                        <input type="checkbox" class="custom-control-input" id="sublevelone">
-                                        <label class="custom-control-label custom--control-label w-100" for="sublevelone">@department.NameLT</label>
+                                        <input type="checkbox" class="custom-control-input" id="@(department.Id)" value="@(department.Id)" name="departmentIds">
+                                        <label class="custom-control-label custom--control-label w-100" for="@(department.Id)">@department.NameLT</label>
                                     </div>
                                     <!-- end custom-control -->
                                 }
@@ -60,3 +61,16 @@
         </div><!-- end card-body -->
     </div><!-- end card -->
 </div>
+
+@section Scripts
+{
+    <script>
+
+        $(function () {
+            $('input[type=radio][name=subCategoryId]').change(function () {
+                console.log("selected");
+                $('input[type=checkbox]').prop('checked', false);
+            });
+        });
+    </script>
+}

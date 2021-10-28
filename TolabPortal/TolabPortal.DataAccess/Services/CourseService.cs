@@ -24,8 +24,12 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> GetCoursesByTrackId(int trackId);
         Task<HttpResponseMessage> GetCourseByIdForCurrentStudent(long courseId);
         Task<HttpResponseMessage> GetStudentCourses(int page = 0);
-        Task<HttpResponseMessage> GetGroupsWithContentsByCourseIdForCurrentStudent(long courseId, int page, long contentId = 0);
+        Task<HttpResponseMessage> GetGroupsWithContentsByCourseIdForCurrentStudent(long courseId, int page = 0, long contentId = 0);
         Task<HttpResponseMessage> ViewThisContent(long contentId);
+        Task<HttpResponseMessage> GetQuestions(long courseId, int page = 0, long videoQuestionId = 0);
+        Task<HttpResponseMessage> AddQuestion(string comment, float minute, string image, long contentId, long liveId, bool viewMyAccount);
+        Task<HttpResponseMessage> AddStudentReply(string comment, long videoQuestionId, bool viewMyAccount, string image);
+        Task<HttpResponseMessage> GetTeacherExams(long? courseId = null, bool? publish = null, int page = 0);
     }
     public class CourseService : ICourseService, IDisposable
     {
@@ -232,5 +236,86 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
+        public async Task<HttpResponseMessage> GetQuestions(long courseId, int page = 0, long videoQuestionId = 0)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetQuestions?CourseId={courseId}&Page={page}&VideoQuestionId={videoQuestionId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> AddQuestion(string question, float minute, string image, long contentId, long liveId, bool viewMyAccount)
+        {
+            try
+            {
+                var formContent = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("Question", question),
+                    new KeyValuePair<string, string>("Minute", minute.ToString()),
+                    new KeyValuePair<string, string>("Image", image),
+                    new KeyValuePair<string, string>("ContentId", contentId.ToString()),
+                    new KeyValuePair<string, string>("LiveId", liveId.ToString()),
+                    new KeyValuePair<string, string>("ViewMyAccount", viewMyAccount.ToString())
+                });
+
+                var response = await _httpClient.PostAsync("api/AddQuestion", formContent);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = ex.Message
+                };
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> AddStudentReply(string comment, long videoQuestionId, bool viewMyAccount, string image)
+        {
+            try
+            {
+                var formContent = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("Comment", comment),
+                    new KeyValuePair<string, string>("VideoQuestionId", videoQuestionId.ToString()),
+                    new KeyValuePair<string, string>("ViewMyAccount", viewMyAccount.ToString()),
+                    new KeyValuePair<string, string>("Image", image),
+                });
+
+                var response = await _httpClient.PostAsync("api/AddStudentReply", formContent);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = ex.Message
+                };
+                return errorResponse;
+            }
+        }
+
+        public async Task<HttpResponseMessage> GetTeacherExams(long? courseId = null, bool? publish = null, int page = 0)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetTeacherExams?CourseId={courseId}&Publish={publish}&Page={page}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
     }
+
 }

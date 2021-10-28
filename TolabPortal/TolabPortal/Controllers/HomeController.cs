@@ -29,7 +29,7 @@ namespace TolabPortal.Controllers
         {
             if (User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Subjects");
-                //return RedirectToAction("RegisterSection", "Interest");
+            //return RedirectToAction("RegisterSection", "Interest");
             return View();
         }
 
@@ -116,7 +116,14 @@ namespace TolabPortal.Controllers
                     var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
 
                     await LoginUser(studentInfo);
+                    var claims = await GetUserClaims(studentInfo);
+                    if (studentInfo.model.Interests.Count > 0)
+                    {
+                        return RedirectToAction("Index", "Subjects");
+                    }
                     return RedirectToAction("LoginVerificationSuccess");
+
+
                 }
                 else
                 {

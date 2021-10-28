@@ -14,6 +14,8 @@ namespace TolabPortal.DataAccess.Models
         public string SubCategoryName { get; set; }
         public string TrackName { get; set; }
         public string CourseName { get; set; }
+        public string LiveName { get; set; }
         public string TeacherName { get; set; }
+        public string LiveRemainingTime { get; set; }
     }
 }

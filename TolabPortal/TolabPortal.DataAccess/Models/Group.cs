@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,12 @@ namespace TolabPortal.DataAccess.Models
         public long? CourseId { get; set; }
         public List<Content> Contents { get; set; }
         public int OrderNumber { get; set; }
+    }
+    public class GroupResponse
+    {
+        [JsonProperty("model")]
+        public List<Group> Groups { get; set; }
+        public Metas Metas { get; set; }
+        public Errors Errors { get; set; }
     }
 }

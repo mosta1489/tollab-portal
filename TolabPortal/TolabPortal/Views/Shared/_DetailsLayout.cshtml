@@ -53,10 +53,7 @@
                                             <a href="/subjects">الرئيسية</a>
                                         </li>
                                         <li>
-                                            <a href="#">الأقسام</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">اتصل بنا</a>
+                                            <a href="/lives">البث المباشر</a>
                                         </li>
                                     </ul><!-- end ul -->
                                 </nav><!-- end main-menu -->
@@ -107,10 +104,7 @@
                     <a href="/subjects">الرئيسية</a>
                 </li>
                 <li>
-                    <a href="#">الأقسام</a>
-                </li>
-                <li>
-                    <a href="#">اتصل بنا</a>
+                    <a href="/lives">البث المباشر</a>
                 </li>
                 @*<li>
                         <a href="#"><img src="images/sa.png" class="countflag"></a>
@@ -144,14 +138,41 @@
                 <div class="breadcrumb-content text-left">
                     <ul class="generic-list-item generic-list-item-arrow d-flex flex-wrap align-items-center genernewcolr">
                         <li><a href="#"> @itemDetails.PageRootName </a></li>
-                        <li><a href="#"> @itemDetails.SectionName </a></li>
-                        <li><a href="#"> @itemDetails.CategoryName </a></li>
-                        <li><a href="#"> @itemDetails.SubCategoryName </a></li>
+                        @if (@itemDetails.SectionName == "البث المباشر")
+                        {
+                            <li><a href="#"> @itemDetails.SectionName </a></li>
+                        }
+
+                        @if (!string.IsNullOrEmpty(itemDetails.CategoryName) && !string.IsNullOrEmpty(itemDetails.SubCategoryName)) // ========== For live details page ==========
+                        {
+                            <li><a href="#"> @itemDetails.CategoryName </a></li>
+                            <li><a href="#"> @itemDetails.SubCategoryName </a></li>
+                            <li><a href="#"> @itemDetails.TrackName </a></li>
+                        }
+
                     </ul>
-                    <div class="section-heading">
-                        <h2 class="section__title txtwhite"> @itemDetails.CourseName </h2>
-                    </div><!-- end section-heading -->
-                    <div class="d-flex flex-wrap align-items-center pt-3">
+                    @if (!string.IsNullOrEmpty(itemDetails.CourseName))
+                    {
+                        <div class="section-heading">
+                            <h2 class="section__title txtwhite"> @itemDetails.CourseName </h2>
+                        </div><!-- end section-heading -->
+                    }
+                    else
+                    {
+                        <div class="section-heading">
+                            <h2 class="section__title txtwhite"> @itemDetails.LiveName </h2>
+                        </div><!-- end section-heading -->
+                    }
+
+
+                    @if (!string.IsNullOrEmpty(Model.ItemDetails.LiveRemainingTime)) // ========== For live details page ==========
+                    {
+                        <div class="d-flex flex-wrap align-items-center pt-3">
+                            <h6 class="ribbon ribbon-lg mr-2 bg-6 text-white"> @Model.ItemDetails.LiveRemainingTime	</h6>
+                        </div>
+                    }
+
+                    <!--<div class="d-flex flex-wrap align-items-center pt-3">
                         <h6 class="ribbon ribbon-lg mr-2 bg-3 text-white">الأكثر مبيعا</h6>
                         <div class="rating-wrap d-flex flex-wrap align-items-center">
                             <div class="review-stars">
@@ -164,9 +185,13 @@
                             </div>
                             <span class="student-total pl-2">(20,230)</span>
                         </div>
-                    </div><!-- end d-flex -->
+                    </div>-->
+                    <!-- end d-flex -->
+
+
                     <p class="pt-2 pb-1 text-ligpur">مقدم من <a class="text-color-9">@itemDetails.TeacherName</a></p>
-                    <div class="bread-btn-box pt-3">
+
+                    <!--<div class="bread-btn-box pt-3">
                         <button class="btn theme-btn theme-btn-sm theme-btn-bord lh-28 mr-2 mb-2">
                             <i class="la la-heart-o mr-1"></i>
                             <span class="swapping-btn" data-text-swap="مفضلة" data-text-original="اضف للمفضلة">اضف للمفضلة</span>
@@ -177,7 +202,8 @@
                         <button class="btn theme-btn theme-btn-sm theme-btn-bord lh-28 mb-2" data-toggle="modal" data-target="#reportModal">
                             <i class="la la-flag mr-1"></i>بلغ عن سوء معاملة
                         </button>
-                    </div>
+                    </div> -->
+
                 </div><!-- end breadcrumb-content -->
             </div><!-- end col-lg-8 -->
         </div><!-- end container -->
@@ -224,8 +250,7 @@
                         <div class="divider border-bottom-0"><span></span></div>
                         <ul class="generic-list-item">
                             <li><a href="/subjects">الرئيسية</a></li>
-                            <li><a href="#">الأقسام</a></li>
-                            <li><a href="#">اتصل بنا</a></li>
+                            <li><a href="/lives">البث المباشر</a></li>
                         </ul>
                     </div><!-- end footer-item -->
                 </div><!-- end col-lg-3 -->

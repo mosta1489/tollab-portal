@@ -81,7 +81,7 @@ namespace TolabPortal.Controllers
         }
 
         [Route("Track/Course")]
-        public async Task<IActionResult> GetCourseDetails(int courseId)
+        public async Task<IActionResult> GetCourseDetails(long courseId, string trackNameLT)
         {
             var courseDetailsResponse = await _courseService.GetCourseByIdForCurrentStudent(courseId);
             if (courseDetailsResponse.IsSuccessStatusCode)
@@ -99,20 +99,36 @@ namespace TolabPortal.Controllers
                 abstractCourseInfo.CategoryName = interest.CategoryNameLT;
                 abstractCourseInfo.SubCategoryName = interest.SubCategoryNameLT;
 
-                var trackDetailsResponse = await _courseService.GetCoursesByTrackId((int)courseDetails.Course.TrackId.Value);
-                var trackName = "";
-                if (trackDetailsResponse.IsSuccessStatusCode)
-                {
-                    var trackDetails = await CommonUtilities.GetResponseModelFromJson<CoursesByTrackIdModelResponse>(trackDetailsResponse);
-                    trackName = trackDetails.CoursesByTrackId.TrackNameLT;
-                }
-
-                abstractCourseInfo.TrackName = trackName;
+                abstractCourseInfo.TrackName = trackNameLT;
                 abstractCourseInfo.CourseName = courseDetails.Course.NameLT;
                 abstractCourseInfo.TeacherName = courseDetails.Course.TeacherName;
 
                 // abstract course info is being used by details layout
                 courseDetails.Course.ItemDetails = abstractCourseInfo;
+
+                // getting Course Content
+                var groupsWithContentsResponse = await _courseService.GetGroupsWithContentsByCourseIdForCurrentStudent(courseId);
+                if (groupsWithContentsResponse.IsSuccessStatusCode)
+                {
+                    var groupsWithContents = await CommonUtilities.GetResponseModelFromJson<GroupResponse>(groupsWithContentsResponse);
+                    courseDetails.Course.Groups = groupsWithContents.Groups;
+                }
+
+                // getting Course Questions
+                var videoQuestionsResponse = await _courseService.GetQuestions(courseId);
+                if (videoQuestionsResponse.IsSuccessStatusCode)
+                {
+                    var videoQuestions = await CommonUtilities.GetResponseModelFromJson<VideoQuestionResponse>(videoQuestionsResponse);
+                    courseDetails.Course.VideoQuestions = videoQuestions.VideoQuestions;
+                }
+
+                // getting Course Exams
+                var examsResponse = await _courseService.GetTeacherExams(courseId);
+                if (examsResponse.IsSuccessStatusCode)
+                {
+                    var exams = await CommonUtilities.GetResponseModelFromJson<ExamViewResponse>(examsResponse);
+                    courseDetails.Course.TeacherExams = exams.ExamViews;
+                }
 
                 return View("CourseDetails", courseDetails.Course);
 
@@ -122,5 +138,12 @@ namespace TolabPortal.Controllers
                 return View("CourseDetails", new Course());
             }
         }
+
+        //[Route("Track/Course/VideQuestion")]
+        //public async Task<IActionResult> AddCourseVideoQuestion()
+        //{
+
+        //}
+
     }
 }

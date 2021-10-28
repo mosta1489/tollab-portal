@@ -12,10 +12,11 @@ namespace TolabPortal.DataAccess.Services
 {
     public interface ISubscribeService
     {
-       
+
         Task<HttpResponseMessage> SubscribeCourse(long courseId, string promoCode = "");
         Task<HttpResponseMessage> SubscribeLive(long liveId, string promoCode = "");
         Task<HttpResponseMessage> SubscribeTrack(long trackId, string promoCode = "");
+        Task<HttpResponseMessage> GetAllStudentTransactions(int page = 0);
     }
 
     public class SubscribeService : IDisposable, ISubscribeService
@@ -71,6 +72,21 @@ namespace TolabPortal.DataAccess.Services
             try
             {
                 var response = await _httpClient.GetAsync($"/api/TrackSubscription?TrackId={trackId}&PromocodeText={promoCode}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+        public async Task<HttpResponseMessage> GetAllStudentTransactions(int page = 0)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetAllStudentTransactions?Page={page}");
                 return response;
             }
             catch (Exception ex)

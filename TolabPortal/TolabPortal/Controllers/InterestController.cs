@@ -102,6 +102,8 @@ namespace TolabPortal.Controllers
                         var departments = await CommonUtilities.GetResponseModelFromJson<DepartmentResponse>(departmenResponse);
                         responseResult.SubCategories[i].Departments = departments.Departments;
 
+
+
                         responseResult.SubCategories[i].Name = responseResult.SubCategories[i].Name.Replace("\t", "");
                         responseResult.SubCategories[i].NameLT = responseResult.SubCategories[i].NameLT.Replace("\t", "");
                     }
@@ -131,27 +133,22 @@ namespace TolabPortal.Controllers
 
         [HttpPost]
         [Route("RegisterSubCategory")]
-        public async Task<IActionResult> RegisterSubCategory(SubCategoryResponse subCategoryResponse, string subCategoryId)
+        public async Task<IActionResult> RegisterSubCategory(long[] departmentIds)
         {
-            if (subCategoryId != null)
-            {
-                var departmenResponse = await _interestService.GetDepartmentsBySubCategoryId(long.Parse(subCategoryId));
-                var departments = await CommonUtilities.GetResponseModelFromJson<DepartmentResponse>(departmenResponse);
-                var subCategoriesResponse = await _interestService.AddDepartmentToStudent(departments.Departments.Select(d => d.Id).ToList());
-
-                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                ClaimsIdentity identity = new ClaimsIdentity(await GetUserClaims(), CookieAuthenticationDefaults.AuthenticationScheme);
-                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
-
-                return RedirectToAction("Index", "Courses");
-            }
-            else
+            if (departmentIds == null || departmentIds.Length == 0)
             {
                 var errorMessage = "لم يتم اختيار مرحلة";
                 return RedirectToAction("RegisterSubCategory", new { errorMessage = errorMessage });
             }
+
+            var subCategoriesResponse = await _interestService.AddDepartmentToStudent(departmentIds.ToList());
+
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsIdentity identity = new ClaimsIdentity(await GetUserClaims(), CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
+
+            return RedirectToAction("Index", "Subjects");
         }
 
         [Route("RegisterDepartment")]
@@ -163,12 +160,6 @@ namespace TolabPortal.Controllers
         [HttpPost]
         [Route("RegisterDepartment")]
         public async Task<IActionResult> RegisterDepartment(string subCategoryId)
-        {
-            return View();
-        }
-
-        [Route("GetSubjects")]
-        public IActionResult GetSubjects()
         {
             return View();
         }
