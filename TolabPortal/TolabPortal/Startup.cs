@@ -32,7 +32,7 @@ namespace TolabPortal
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             }).AddCookie(options =>
             {
-                options.ExpireTimeSpan = TimeSpan.FromDays(30);
+                options.ExpireTimeSpan = TimeSpan.FromDays(1);
                 options.LoginPath = "/login";
             });
             

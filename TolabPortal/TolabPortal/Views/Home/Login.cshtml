@@ -6,7 +6,6 @@
     ViewBag.MenuItems = items;
 }
 
-
 <div class="col-lg-7 mx-auto">
     <div class="register-heading-content-wrap text-left">
         <div class="section-heading">
@@ -16,14 +15,14 @@
 
     @if (ViewBag.ErrorMessage != null)
     {
-        <div class="alert alert-danger2 alert-dismissible fade show course-alert-info">
-            <div class="d-flex align-items-center">
-                <i class="la la-info-circle fs-30 mr-2"></i> @ViewBag.ErrorMessage
-            </div>
-            <button type="button" class="close fs-20 pd-16" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" class="la la-times"></span>
-            </button>
+    <div class="alert alert-danger2 alert-dismissible fade show course-alert-info">
+        <div class="d-flex align-items-center">
+            <i class="la la-info-circle fs-30 mr-2"></i> @ViewBag.ErrorMessage
         </div>
+        <button type="button" class="close fs-20 pd-16" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true" class="la la-times"></span>
+        </button>
+    </div>
     }
 
     <div class="card card-item">
@@ -36,6 +35,8 @@
                     </div>
                      <input hidden id="phoneKey" asp-for="PhoneKey" />
                 </div><!-- end input-box -->
+                <input hidden id="phoneKey" asp-for="PhoneKey" />
+
                 <div class="btn-box">
                     <div class="d-flex align-items-center justify-content-between dsmblock">
                         <button type="submit" class="btn theme-btn pullone">ارسل <i class="la la-arrow-right icon ml-1"></i></button>
@@ -57,6 +58,4 @@
             });
         </script>
     }
-
-
 </div>
