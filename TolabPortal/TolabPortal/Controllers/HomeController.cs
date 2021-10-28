@@ -117,13 +117,12 @@ namespace TolabPortal.Controllers
 
                     await LoginUser(studentInfo);
                     var claims = await GetUserClaims(studentInfo);
+
                     if (studentInfo.model.Interests.Count > 0)
                     {
                         return RedirectToAction("Index", "Subjects");
                     }
                     return RedirectToAction("LoginVerificationSuccess");
-
-
                 }
                 else
                 {
@@ -258,7 +257,6 @@ namespace TolabPortal.Controllers
             ClaimsIdentity identity = new ClaimsIdentity(await GetUserClaims(user), CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsPrincipal principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
         }
 
         private async Task<IEnumerable<Claim>> GetUserClaims(LoginVerificationSuccessResponseModel user)
@@ -266,6 +264,7 @@ namespace TolabPortal.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.model.Id.ToString()),
+                new Claim("UserName", user.model.Name),
                 new Claim("AccessToken", user.model.Token.First().access_token),
                 new Claim("CountryId", user.model.CountryId.ToString()),
                 new Claim("CountryCode", user.model.CountryCode),
@@ -291,5 +290,18 @@ namespace TolabPortal.Controllers
         }
 
         #endregion Register
+
+
+        [Route("~/logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            var logoutResponse = await _accountService.LogoutStudent();
+            if (logoutResponse.IsSuccessStatusCode)
+            {
+                var logoutResult = await CommonUtilities.GetResponseModelFromJson<StudentLogoutResponse>(logoutResponse);
+            }
+            return View("Index");
+        }
     }
 }

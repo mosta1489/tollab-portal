@@ -127,7 +127,7 @@ namespace TolabPortal.Controllers
                 if (examsResponse.IsSuccessStatusCode)
                 {
                     var exams = await CommonUtilities.GetResponseModelFromJson<StudentExamsToCorrectResponse>(examsResponse);
-                    courseDetails.Course.TeacherExams = exams.StudentExamsToCorrect;
+                    courseDetails.Course.StudentExams = exams.StudentExamsToCorrect;
                 }
 
                 return View("CourseDetails", courseDetails.Course);

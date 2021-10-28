@@ -27,6 +27,8 @@
                         </div>
                         <div class="curriculum-content">
                             <div id="accordion" class="generic-accordion">
+
+                                <!-- ============= Course Content ============= -->
                                 @foreach (var group in Model.Groups)
                                 {
                                     <div class="card">
@@ -35,7 +37,7 @@
                                                 <i class="la la-plus"></i>
                                                 <i class="la la-minus"></i>
                                                 @group.NameLT
-                                                <span class="fs-15 text-gray font-weight-medium text-color-9">(2) جزء</span>
+                                                <span class="fs-15 text-gray font-weight-medium text-color-9">(@group.Contents.Count) جزء</span>
                                             </button>
                                         </div><!-- end card-header -->
                                         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
@@ -74,36 +76,39 @@
                                         </div><!-- end collapse -->
                                     </div><!-- end card -->
                                 }
+
+                                <!-- ============= Course Exams ============= -->
                                 <div class="card">
                                     <div class="card-header" id="headingThree">
                                         <button class="btn btn-link collapsed d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                             <i class="la la-plus"></i>
                                             <i class="la la-minus"></i>
                                             الإمتحانات والواجبات
-                                            <span class="fs-15 text-gray font-weight-medium text-color-9">2 واجبات</span>
+                                            <span class="fs-15 text-gray font-weight-medium text-color-9">@Model.StudentExams.ToList().Count واجبات</span>
                                         </button>
                                     </div>
                                     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                                         <div class="card-body">
                                             <ul class="generic-list-item">
-                                                <li>
-                                                    <a href="#" class="d-flex align-items-center justify-content-between text-color">
-                                                        <span>
-                                                            <i class="la la-file-text mr-1"></i>
-                                                            واجب رقم واحد
-                                                        </span>
-                                                        <span class="ribbon ml-2 fs-13">تم حله</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="d-flex align-items-center justify-content-between text-color">
-                                                        <span>
-                                                            <i class="la la-file-text mr-1"></i>
-                                                            واجب رقم اثنين
-                                                        </span>
-                                                        <span class="ribbon ribbon-gray-bg ml-2 fs-13">بانتظار حله</span>
-                                                    </a>
-                                                </li>
+                                                @foreach (var exam in Model.StudentExams)
+                                                {
+                                                    <li>
+                                                        <a href="#" class="d-flex align-items-center justify-content-between text-color">
+                                                            <span>
+                                                                <i class="la la-file-text mr-1"></i>
+                                                                @exam.ExamName
+                                                            </span>
+                                                            @if (exam.Done || exam.SolveStatusNameLT == "تم حله")
+                                                            {
+                                                                <span class="ribbon ml-2 fs-13"> @exam.SolveStatusNameLT </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="ribbon ribbon-gray-bg ml-2 fs-13">@exam.SolveStatusNameLT</span>
+                                                            }
+                                                        </a>
+                                                    </li>
+                                                }
                                             </ul>
                                         </div><!-- end card-body -->
                                     </div><!-- end collapse -->
@@ -210,11 +215,12 @@
                                             var courseVideCount = (Model.VideoCount == 0) ? Model.Groups.Sum(g => g.Contents.Count(c => c.ContentTypeId == 1)) : Model.VideoCount;
                                             var courseFilesCount = (Model.FilesCount == 0) ? Model.Groups.Sum(g => g.Contents.Count(c => c.ContentTypeId == 2)) : Model.FilesCount;
                                             var courseDuration = Model.Groups.Sum(g => g.Contents.Where(c => c.ContentTypeId == 1).Sum(c => c.Duration));
+                                            var courseExamsCount = Model.StudentExams.ToList().Count;
                                         }
                                         <li><i class="la la-play-circle-o mr-2 text-color"></i> @courseVideCount </li>
                                         <li><i class="la la-clock mr-2 text-color"></i>@courseDuration دقيقة تشغيل</li>
                                         <li><i class="la la-file mr-2 text-color"></i>@courseFilesCount ملفات مذكرات</li>
-                                        <li><i class="la la-file-text mr-2 text-color"></i>2 امتحانات وواجبات</li>
+                                        <li><i class="la la-file-text mr-2 text-color"></i>@courseExamsCount  امتحانات وواجبات</li>
                                     </ul>
                                 </div><!-- end preview-course-incentives -->
                             </div><!-- end preview-course-content -->

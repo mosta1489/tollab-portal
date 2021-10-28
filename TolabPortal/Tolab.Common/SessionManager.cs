@@ -50,6 +50,19 @@ namespace Tolab.Common
                 return null;
             }
         }
+        public string UserName
+        {
+            get
+            {
+                if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User != null
+                    && _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserName")?.Value;
+                }
+
+                return null;
+            }
+        }
 
         public int CountryId
         {

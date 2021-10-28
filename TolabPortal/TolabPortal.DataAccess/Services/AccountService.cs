@@ -19,6 +19,7 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> RegisterStudent(Student student);
 
         Task<HttpResponseMessage> GetStudentProfile();
+        Task<HttpResponseMessage> LogoutStudent();
     }
 
     public class AccountService : IAccountService, IDisposable
@@ -102,5 +103,21 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
+        public async Task<HttpResponseMessage> LogoutStudent()
+        {
+            try
+            {
+                var studentProfileResponse = await _httpClient.GetAsync($"/api/StudentLogout");
+                return studentProfileResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+        
     }
 }

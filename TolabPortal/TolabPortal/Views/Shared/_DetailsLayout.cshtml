@@ -37,7 +37,7 @@
                     <div class="row align-items-center">
                         <div class="col-lg-2">
                             <div class="logo-box">
-                                <a href="#" class="logo"><img src="/images/logo.png" class="logoimg"></a>
+                                <a href="~/home" class="logo"><img src="/images/logo.png" class="logoimg"></a>
                                 <div class="user-btn-action">
                                     <div class="off-canvas-menu-toggle main-menu-toggle icon-element icon-element-sm shadow-sm" data-toggle="tooltip" data-placement="top">
                                         <i class="la la-bars"></i>
@@ -66,7 +66,42 @@
                                             <li><a href="~/registerphone" class="btn theme-btn theme-btn-sm text-white"><i class="la la-user-plus mr-1"></i> انشاء حساب جديد</a></li>
                                         </ul>
                                     </div>
-                                }<!-- end nav-right-button -->
+                                }
+                                else
+                                {
+                                    <div class="nav-right-button border-right border-right-gray pl-4">
+                                        <div class="shop-cart user-profile-cart">
+                                            <ul>
+                                                <li>
+                                                    <div class="shop-cart-btn pt-0 pb-0 d-flex align-items-center">
+                                                        <div class="avatar-sm">
+                                                            <img class="rounded-full img-fluid" src="/images/defaultUser.png" alt="Avatar image">
+                                                        </div>
+                                                        <div class="fs-14 lh-18 text-left ml-2">
+                                                            مرحبا ,<br />
+                                                            <b>
+                                                                @User.Claims.First(c => c.Type == "UserName").Value
+                                                            </b>
+                                                        </div>
+                                                    </div>
+                                                    <ul class="cart-dropdown-menu after-none px-0 notification-dropdown-menu">
+                                                        <li>
+                                                            <ul class="generic-list-item">
+                                                                <li>
+                                                                    <a href="~/logout" class="font-weight-bold">
+                                                                        <i class="la la-power-off mr-1 la-lg"></i>تسجيل خروج
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div><!-- end shop-cart -->
+                                    </div><!-- end nav-right-button -->
+                                }
+
+                                <!-- end nav-right-button -->
                                 <!--<div class="shop-cart">
                                     <ul>
                                         <li>
