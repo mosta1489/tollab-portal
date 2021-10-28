@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TolabPortal.DataAccess.Models
+﻿namespace TolabPortal.DataAccess.Models
 {
     public class Track
     {
@@ -31,6 +25,8 @@ namespace TolabPortal.DataAccess.Models
         public decimal TotalCurrentCost { get; set; }
         public decimal TotalOldCost { get; set; }
         public string TeacherName { get; set; }
+        public string TeatcherPhoto { get; set; }
+
         public bool IsSubscriped { get; set; }
     }
 }
