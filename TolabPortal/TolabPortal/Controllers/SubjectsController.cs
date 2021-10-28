@@ -131,7 +131,6 @@ namespace TolabPortal.Controllers
                 }
 
                 return View("CourseDetails", courseDetails.Course);
-
             }
             else
             {
@@ -142,8 +141,6 @@ namespace TolabPortal.Controllers
         //[Route("Track/Course/VideQuestion")]
         //public async Task<IActionResult> AddCourseVideoQuestion()
         //{
-
         //}
-
     }
 }

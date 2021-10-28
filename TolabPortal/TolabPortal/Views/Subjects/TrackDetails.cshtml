@@ -1,5 +1,5 @@
-﻿
-@using System.Net;
+﻿@using System.Net;
+@using System.Web
 @model TolabPortal.DataAccess.Models.CoursesByTrackIdModel
 
 @{
@@ -10,7 +10,6 @@
     var items = new string[] { "الرئيسية", interest.SectionNameLT, interest.CategoryNameLT, interest.SubCategoryNameLT, Model.TrackNameLT };
     ViewBag.MenuItems = items;
 }
-
 
 <section class="course-area section--padding  pt-60px pb-40px bg-grligh">
     <div class="container">
@@ -36,7 +35,7 @@
                 <div class="row">
                     @foreach (var course in Model.Courses)
                     {
-                        var courseDetailsEndPoint = $"/Subjects/Track/Course?courseId={course.Id}&trackName={WebUtility.UrlEncode(Model.TrackNameLT)} ";
+                        var courseDetailsEndPoint = $"/Subjects/Track/Course?courseId={course.Id}&trackNameLT={HttpUtility.UrlEncode(Model.TrackNameLT)}";
 
                         <div class="col-lg-4 responsive-column-half">
                             <div class="card card-item card-preview full-height">
@@ -48,7 +47,6 @@
                                     <!--<div class="course-badge-labels">
                                         <div class="course-badge">الأكثر مبيعا</div>
                                     </div>-->
-
                                 </div><!-- end card-image -->
                                 <div class="card-body">
                                     <h6 class="ribbon ribbon-purpl-bg fs-14 mb-3"> @($"{course.VideoCount} فيديوهات ")</h6>
@@ -68,7 +66,6 @@
                                     </div>-->
                                     <!-- end rating-wrap -->
 
-
                                     <div class="d-flex justify-content-between align-items-center">
                                         <p class="card-price text-black font-weight-bold"> @course.CurrentCost <span class="before-price font-weight-medium"> @course.PreviousCost </span></p>
                                         <div class="icon-element icon-element-sm shadow-sm cursor-pointer"><i class="la la-heart-o"></i></div>
@@ -78,7 +75,6 @@
                             </div><!-- end card -->
                         </div><!-- end col-lg-6 -->
                     }
-
                 </div><!-- end row -->
                 @*<div class="text-center pt-3">
                         <nav aria-label="Page navigation example" class="pagination-box">
