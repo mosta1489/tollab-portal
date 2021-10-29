@@ -206,7 +206,8 @@
                                            InvoiceAmount = Model.CurrentCost.Value,
                                            TransactionId = Model.Id.ToString(),
                                            TransactionType = (int)TransactionType.Course,
-                                           ReturnRoute = $"/Subjects/Track/Course?courseId={Model.Id}&trackNameLT={Model.ItemDetails.TrackName}"
+                                           ReturnRoute = $"/Subjects/Track/Course?courseId={Model.Id}&trackNameLT={Model.ItemDetails.TrackName}",
+                                             CssClassName = "btn-block"
                                         })
                                 }
 
