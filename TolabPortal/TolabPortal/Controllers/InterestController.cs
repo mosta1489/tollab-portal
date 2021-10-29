@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Tolab.Common;
 using TolabPortal.DataAccess.Models;
 using TolabPortal.DataAccess.Services;
@@ -102,8 +102,6 @@ namespace TolabPortal.Controllers
                         var departments = await CommonUtilities.GetResponseModelFromJson<DepartmentResponse>(departmenResponse);
                         responseResult.SubCategories[i].Departments = departments.Departments;
 
-
-
                         responseResult.SubCategories[i].Name = responseResult.SubCategories[i].Name.Replace("\t", "");
                         responseResult.SubCategories[i].NameLT = responseResult.SubCategories[i].NameLT.Replace("\t", "");
                     }
@@ -164,7 +162,6 @@ namespace TolabPortal.Controllers
             return View();
         }
 
-
         private async Task<IEnumerable<Claim>> GetUserClaims()
         {
             List<Claim> claims = new List<Claim>
@@ -173,6 +170,7 @@ namespace TolabPortal.Controllers
                 new Claim("AccessToken", User.FindFirstValue("AccessToken")),
                 new Claim("CountryId", User.FindFirstValue("CountryId")),
                 new Claim("CountryCode", User.FindFirstValue("CountryCode")),
+                new Claim("UserPhoto", User.FindFirstValue("UserPhoto")),
                 new Claim("HasInterests", true.ToString())
             };
 

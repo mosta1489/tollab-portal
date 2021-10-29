@@ -12,6 +12,7 @@ namespace Tolab.Common
         public int CountryId { get; }
         public string CountryCode { get; }
         public bool? HasInterests { get; }
+        public string UserPhoto { get; }
     }
 
     public class SessionManager : ISessionManager
@@ -50,6 +51,7 @@ namespace Tolab.Common
                 return null;
             }
         }
+
         public string UserName
         {
             get
@@ -63,6 +65,7 @@ namespace Tolab.Common
                 return null;
             }
         }
+
         public string UserPhoto
         {
             get
