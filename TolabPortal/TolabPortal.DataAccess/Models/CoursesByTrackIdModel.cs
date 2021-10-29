@@ -17,6 +17,7 @@ namespace TolabPortal.DataAccess.Models
         public string TrackNameLT { get; set; }
         public string TrackImage { get; set; }
         public string TeacherName { get; set; }
+        public string TeacherPhoto { get; set; }
         public IEnumerable<Course> Courses { get; set; }
     }
     public class CoursesByTrackIdModelResponse

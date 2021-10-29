@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Tolab.Common;
+using TolabPortal.DataAccess.Models;
+using TolabPortal.DataAccess.Models.Exams;
 
 namespace TolabPortal.DataAccess.Services
 {
@@ -30,6 +33,7 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> AddQuestion(string comment, float minute, string image, long contentId, long liveId, bool viewMyAccount);
         Task<HttpResponseMessage> AddStudentReply(string comment, long videoQuestionId, bool viewMyAccount, string image);
         Task<HttpResponseMessage> GetStudentExams(long? courseId = null, long? solveStatusId = null, int page = 0);
+        Task<HttpResponseMessage> GetTeacherById(long teacherId);
     }
     public class CourseService : ICourseService, IDisposable
     {
@@ -48,51 +52,6 @@ namespace TolabPortal.DataAccess.Services
         public void Dispose()
         {
             _httpClient?.Dispose();
-        }
-
-        public async Task<HttpResponseMessage> GetCoursesByDepartmentId(long departmentId, int page = 0)
-        {
-            try
-            {
-                var sectionsResponse = await _httpClient.GetAsync($"/api/GetCoursesByDepartmentId?departmentId={departmentId}&Page={page}");
-                return sectionsResponse;
-            }
-            catch (Exception ex)
-            {
-                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                errorResponse.ReasonPhrase = ex.Message;
-                return errorResponse;
-            }
-        }
-        public async Task<HttpResponseMessage> GetSubjectsWithTracksByDepartmentId(long departmentId, int page = 0)
-        {
-            try
-            {
-                var sectionsResponse = await _httpClient.GetAsync($"/api/GetSubjectsWithTracksByDepartmentId?departmentId={departmentId}&Page={page}");
-                return sectionsResponse;
-            }
-            catch (Exception ex)
-            {
-                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                errorResponse.ReasonPhrase = ex.Message;
-                return errorResponse;
-            }
-        }
-
-
-        public async Task<HttpResponseMessage> GetHomeCourses(int page)
-        {
-            try
-            {
-                var response = await _httpClient.GetAsync($"/api/GetHomeCourses?Page={page}");
-                return response;
-            }
-            catch (Exception ex)
-            {
-                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                errorResponse.ReasonPhrase = ex.Message;
-                return errorResponse;
-            }
         }
         public async Task<HttpResponseMessage> GetTopLives()
         {
@@ -137,7 +96,49 @@ namespace TolabPortal.DataAccess.Services
             }
         }
 
-
+        #region Subjects, Tracks and Courses Services
+        public async Task<HttpResponseMessage> GetCoursesByDepartmentId(long departmentId, int page = 0)
+        {
+            try
+            {
+                var sectionsResponse = await _httpClient.GetAsync($"/api/GetCoursesByDepartmentId?departmentId={departmentId}&Page={page}");
+                return sectionsResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> GetSubjectsWithTracksByDepartmentId(long departmentId, int page = 0)
+        {
+            try
+            {
+                var sectionsResponse = await _httpClient.GetAsync($"/api/GetSubjectsWithTracksByDepartmentId?departmentId={departmentId}&Page={page}");
+                return sectionsResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> GetHomeCourses(int page)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetHomeCourses?Page={page}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
         public async Task<HttpResponseMessage> GetTrackById(long trackId)
         {
             try
@@ -208,6 +209,8 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
+        #endregion
+
         public async Task<HttpResponseMessage> GetGroupsWithContentsByCourseIdForCurrentStudent(long courseId, int page, long contentId = 0)
         {
             try
@@ -236,6 +239,8 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
+
+        #region Course Questions
         public async Task<HttpResponseMessage> GetQuestions(long courseId, int page = 0, long videoQuestionId = 0)
         {
             try
@@ -300,12 +305,112 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
+        #endregion
 
+        #region Course Exams
         public async Task<HttpResponseMessage> GetStudentExams(long? courseId = null, long? solveStatusId = null, int page = 0)
         {
             try
             {
                 var response = await _httpClient.GetAsync($"/api/GetStudentExams?CourseId={courseId}&SolveStatusId={solveStatusId}&Page={page}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+        public async Task<HttpResponseMessage> GetExamDeatailsForStudent(long examId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetExamDeatailsForStudent?ExamId={examId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> StartPdfExam(long examId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/StartPdfExam?ExamId={examId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> AnswerPdfExam(long examQuestionId, long studentExamId)
+        {
+            try
+            {
+                var formContent = new FormUrlEncodedContent(new[]
+               {
+                    new KeyValuePair<string, string>("ExamQuestionId", examQuestionId.ToString()),
+                    new KeyValuePair<string, string>("StudentExamId", studentExamId.ToString()),
+                });
+
+                var response = await _httpClient.PostAsync("api/AnswerPdfExam", formContent);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+        public async Task<HttpResponseMessage> StartExam(long examId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/StartExam?ExamId={examId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+        public async Task<HttpResponseMessage> AnswerExam(StudentAnswersWithStudentExamId answersWithStudentExamId)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(answersWithStudentExamId);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync("api/AnswerExam", content);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+        #endregion
+
+        public async Task<HttpResponseMessage> GetTeacherById(long teacherId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetTeacherById?TeacherId={teacherId}");
                 return response;
             }
             catch (Exception ex)
