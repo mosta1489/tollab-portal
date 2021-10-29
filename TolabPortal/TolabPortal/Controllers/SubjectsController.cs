@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tolab.Common;
 using TolabPortal.DataAccess.Models;
-using TolabPortal.DataAccess.Models.Exams;
 using TolabPortal.DataAccess.Services;
 using TolabPortal.Models;
 
@@ -95,7 +94,6 @@ namespace TolabPortal.Controllers
                     {
                         course.IsCurrentStudentSubscribedToCourse = studentTransactions.studentTransactionsVM.studentTransactions.Any(t => t.CourseId == course.Id);
                     }
-                    trackDetails.CoursesByTrackId.Courses.ToList()[0].IsCurrentStudentSubscribedToCourse = true;
                 }
                 return View("TrackDetails", trackDetails.CoursesByTrackId);
             }
@@ -154,7 +152,6 @@ namespace TolabPortal.Controllers
                     var videoQuestions = await CommonUtilities.GetResponseModelFromJson<VideoQuestionResponse>(videoQuestionsResponse);
                     courseDetails.Course.VideoQuestions = videoQuestions.VideoQuestions;
                 }
-                courseDetails.Course.IsCurrentStudentSubscribedToCourse = true;
 
                 // getting Course Exams
                 //var examsResponse = await _courseService.GetStudentExams(courseId);
