@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TolabPortal.DataAccess.Models.Exams;
 
 namespace TolabPortal.DataAccess.Models
 {
@@ -71,6 +72,7 @@ namespace TolabPortal.DataAccess.Models
 
         public Content Content { get; set; }
         public IEnumerable<StudentExamsToCorrect> StudentExams { get; set; }
+        public bool IsCurrentStudentSubscribedToCourse { get; set; }
         public ItemDetails ItemDetails { get; set; }
     }
 

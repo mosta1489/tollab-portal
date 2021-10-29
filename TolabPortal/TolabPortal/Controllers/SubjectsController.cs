@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tolab.Common;
 using TolabPortal.DataAccess.Models;
+using TolabPortal.DataAccess.Models.Exams;
 using TolabPortal.DataAccess.Services;
 using TolabPortal.Models;
 
@@ -18,13 +19,16 @@ namespace TolabPortal.Controllers
         private readonly ISessionManager _sessionManager;
         private readonly IAccountService _accountService;
         private readonly IInterestService _interestService;
+        private readonly ISubscribeService _subscribeService;
 
-        public SubjectsController(ICourseService courseService, ISessionManager sessionManager, IAccountService accountService, IInterestService interestService)
+        public SubjectsController(ICourseService courseService, ISessionManager sessionManager, IAccountService accountService,
+            IInterestService interestService, ISubscribeService subscribeService)
         {
             _courseService = courseService;
             _sessionManager = sessionManager;
             _accountService = accountService;
             _interestService = interestService;
+            _subscribeService = subscribeService;
         }
 
         public async Task<IActionResult> Index()
@@ -72,6 +76,27 @@ namespace TolabPortal.Controllers
                 var interest = student.model.Interests.FirstOrDefault();
                 ViewBag.Interest = interest;
 
+                // getting teacher image
+                var teacherProfileResponse = await _courseService.GetTeacherById(trackDetails.CoursesByTrackId.Courses.FirstOrDefault().TeacherId);
+                if (teacherProfileResponse.IsSuccessStatusCode)
+                {
+                    var teacherProfile = await CommonUtilities.GetResponseModelFromJson<TeacherResponse>(teacherProfileResponse);
+                    trackDetails.CoursesByTrackId.TeacherPhoto = teacherProfile.Teacher.Photo;
+                }
+
+                // getting user transactions / subscribtions to check whether it contains the id of each course in this track
+                var studentTransactionsResponse = await _subscribeService.GetAllStudentTransactions();
+                if (studentTransactionsResponse.IsSuccessStatusCode)
+                {
+                    var studentTransactions = await CommonUtilities.GetResponseModelFromJson<StudentTransactionsResponse>(studentTransactionsResponse);
+
+                    // update which course are paid for current student
+                    foreach (var course in trackDetails.CoursesByTrackId.Courses)
+                    {
+                        course.IsCurrentStudentSubscribedToCourse = studentTransactions.studentTransactionsVM.studentTransactions.Any(t => t.CourseId == course.Id);
+                    }
+                    trackDetails.CoursesByTrackId.Courses.ToList()[0].IsCurrentStudentSubscribedToCourse = true;
+                }
                 return View("TrackDetails", trackDetails.CoursesByTrackId);
             }
             else
@@ -103,6 +128,14 @@ namespace TolabPortal.Controllers
                 abstractCourseInfo.CourseName = courseDetails.Course.NameLT;
                 abstractCourseInfo.TeacherName = courseDetails.Course.TeacherName;
 
+                // getting user transactions / subscribtions to check whether it contains the id of current course
+                var studentTransactionsResponse = await _subscribeService.GetAllStudentTransactions();
+                if (studentTransactionsResponse.IsSuccessStatusCode)
+                {
+                    var studentTransactions = await CommonUtilities.GetResponseModelFromJson<StudentTransactionsResponse>(studentTransactionsResponse);
+                    courseDetails.Course.IsCurrentStudentSubscribedToCourse = studentTransactions.studentTransactionsVM.studentTransactions.Any(t => t.CourseId == courseDetails.Course.Id);
+                }
+
                 // abstract course info is being used by details layout
                 courseDetails.Course.ItemDetails = abstractCourseInfo;
 
@@ -121,14 +154,16 @@ namespace TolabPortal.Controllers
                     var videoQuestions = await CommonUtilities.GetResponseModelFromJson<VideoQuestionResponse>(videoQuestionsResponse);
                     courseDetails.Course.VideoQuestions = videoQuestions.VideoQuestions;
                 }
+                courseDetails.Course.IsCurrentStudentSubscribedToCourse = true;
 
                 // getting Course Exams
-                var examsResponse = await _courseService.GetStudentExams(courseId);
-                if (examsResponse.IsSuccessStatusCode)
-                {
-                    var exams = await CommonUtilities.GetResponseModelFromJson<StudentExamsToCorrectResponse>(examsResponse);
-                    courseDetails.Course.StudentExams = exams.StudentExamsToCorrect;
-                }
+                //var examsResponse = await _courseService.GetStudentExams(courseId);
+                //if (examsResponse.IsSuccessStatusCode)
+                //{
+                //    var exams = await CommonUtilities.GetResponseModelFromJson<StudentExamsToCorrectResponse>(examsResponse);
+                //    courseDetails.Course.StudentExams = exams.StudentExamsToCorrect;
+
+                //}
 
                 return View("CourseDetails", courseDetails.Course);
             }

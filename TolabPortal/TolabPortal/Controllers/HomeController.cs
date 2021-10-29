@@ -265,6 +265,7 @@ namespace TolabPortal.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.model.Id.ToString()),
                 new Claim("UserName", user.model.Name),
+                new Claim("UserPhoto", user.model.Photo?.ToString() ?? string.Empty),
                 new Claim("AccessToken", user.model.Token.First().access_token),
                 new Claim("CountryId", user.model.CountryId.ToString()),
                 new Claim("CountryCode", user.model.CountryCode),

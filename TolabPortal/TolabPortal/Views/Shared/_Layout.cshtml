@@ -75,7 +75,15 @@
                                                 <li>
                                                     <div class="shop-cart-btn pt-0 pb-0 d-flex align-items-center">
                                                         <div class="avatar-sm">
-                                                            <img class="rounded-full img-fluid" src="/images/defaultUser.png" alt="Avatar image">
+                                                            @if (string.IsNullOrEmpty(User.Claims.First(c => c.Type == "UserPhoto").Value))
+                                                            {
+                                                                <img class="rounded-full img-fluid" src="/images/defaultUser.png" alt="Avatar image">
+                                                            }
+                                                            else
+                                                            {
+                                                                <img class="rounded-full img-fluid" src="https://tollab.azurewebsites.net/ws/Images/StudentImages/@(User.Claims.First(c => c.Type == "UserPhoto").Value)" alt="Avatar image">
+                                                            }
+
                                                         </div>
                                                         <div class="fs-14 lh-18 text-left ml-2">
                                                             مرحبا ,<br />

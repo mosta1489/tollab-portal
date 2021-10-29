@@ -33,7 +33,7 @@
                                 <div class="custom-control custom-radio mb-3 ml-0 pl-0">
                                     <input type="radio" class="custom-control-input" id="@(section.Id)" name="sectionId" value="@(section.Id)">
                                     <label class="custom-control-label custom--control-label custom--control-label-boxed noshadbord" for="@(section.Id)">
-                                        @*<img src="@(section.Image)" class="chosimg">*@
+                                        <img src="https://tollab.azurewebsites.net/ws/Images/SectionImages/@(section.Image)" class="chosimg">
                                         <span class="font-weight-semi-bold text-black d-block"> @(section.NameLT) </span>
                                     </label>
                                     <input asp-for="Sections[i].Id" value="@(section.Id)" hidden />

@@ -17,102 +17,112 @@
         <div class="row">
             <div class="col-lg-8 pb-5">
                 <div class="course-details-content-wrap pt-50px">
-                    <div class="course-overview-card">
-                        <video controls crossorigin playsinline id="player">
-                            <!-- Video files -->
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" />
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4" type="video/mp4" />
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4" type="video/mp4" />
-                        </video>
-                    </div><!-- end course-overview-card -->
+                    @if (Model.IsCurrentStudentSubscribedToLive)
+                    {
+                        // ========== Remove below code that rendering a video from remote url and use ZOOM SDK instead ==========
+
+                        <!--<div class="course-overview-card">
+                            <video controls crossorigin playsinline id="player">-->
+                                <!-- Video files -->
+                                <!--<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" />
+                                <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4" type="video/mp4" />
+                                <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4" type="video/mp4" />
+                            </video>
+                        </div>--><!-- end course-overview-card -->
+                    }
+                    else
+                    {
+                        // If student is NOT subscribed yet, What we need to show ??
+                    }
+
                     <!--<div class="course-overview-card">
                         <h3 class="fs-23 txtbold pb-3">تفاصيل البث</h3>
                         <p class="fs-15 pb-2">هناك حقيقة مثبتة منذ زمن طويل وهي أن المحتوى المقروء لصفحة ما سيلهي القارئ عن التركيز على الشكل الخارجي للنص أو شكل توضع الفقرات في الصفحة التي يقرأها. الهدف من استخدام Lorem Ipsum هو أنه يحتوي على توزيع طبيعي -إلى حد ما- للأحرف ، بدلاً من استخدام "يوجد محتوى هنا ، يوجد محتوى هنا"</p>
                     </div>-->
                     <!-- end course-overview-card -->
                     <!--<div class="course-overview-card">
-                        <div class="curriculum-header d-flex align-items-center justify-content-between pb-4">
-                            <h3 class="fs-23 txtbold">المرفقات</h3>
-                        </div>
-                        <div class="curriculum-content">
-                            <div id="accordion" class="generic-accordion">
-                                <div class="card">
-                                    <div class="card-header" id="headingTwo">
-                                        <button class="btn btn-link collapsed d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                            <i class="la la-plus"></i>
-                                            <i class="la la-minus"></i>
-                                            مذكرات
-                                            <span class="fs-15 text-gray font-weight-medium text-color-9">(3) ملفات</span>
-                                        </button>
-                                    </div>
-                                    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <ul class="generic-list-item">
-                                                <li>
-                                                    <a href="#" class="d-flex align-items-center justify-content-between text-color">
-                                                        <span>
-                                                            <i class="la la-file-pdf-o mr-1"></i>
-                                                            ملخص المفعول المطلق
-                                                        </span>
-                                                        <span>35mb</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="d-flex align-items-center justify-content-between text-color">
-                                                        <span>
-                                                            <i class="la la-file-excel-o mr-1"></i>
-                                                            ملخص المفعول المطلق الثاني
-                                                        </span>
-                                                        <span>200kb</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="d-flex align-items-center justify-content-between text-color">
-                                                        <span>
-                                                            <i class="la la-file-word-o mr-1"></i>
-                                                            ملخص المفعول المطلق الثالث
-                                                        </span>
-                                                        <span>500kb</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>-->
+                    <div class="curriculum-header d-flex align-items-center justify-content-between pb-4">
+                        <h3 class="fs-23 txtbold">المرفقات</h3>
+                    </div>
+                    <div class="curriculum-content">
+                        <div id="accordion" class="generic-accordion">
+                            <div class="card">
+                                <div class="card-header" id="headingTwo">
+                                    <button class="btn btn-link collapsed d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <i class="la la-plus"></i>
+                                        <i class="la la-minus"></i>
+                                        مذكرات
+                                        <span class="fs-15 text-gray font-weight-medium text-color-9">(3) ملفات</span>
+                                    </button>
+                                </div>
+                                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <ul class="generic-list-item">
+                                            <li>
+                                                <a href="#" class="d-flex align-items-center justify-content-between text-color">
+                                                    <span>
+                                                        <i class="la la-file-pdf-o mr-1"></i>
+                                                        ملخص المفعول المطلق
+                                                    </span>
+                                                    <span>35mb</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="d-flex align-items-center justify-content-between text-color">
+                                                    <span>
+                                                        <i class="la la-file-excel-o mr-1"></i>
+                                                        ملخص المفعول المطلق الثاني
+                                                    </span>
+                                                    <span>200kb</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="d-flex align-items-center justify-content-between text-color">
+                                                    <span>
+                                                        <i class="la la-file-word-o mr-1"></i>
+                                                        ملخص المفعول المطلق الثالث
+                                                    </span>
+                                                    <span>500kb</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>-->
                     <!-- end card-body -->
                     <!--</div>
                     </div>-->
                     <!-- end card -->
                     <!--<div class="card">
-                        <div class="card-header" id="headingThree">
-                            <button class="btn btn-link collapsed d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                <i class="la la-plus"></i>
-                                <i class="la la-minus"></i>
-                                الإمتحانات والواجبات
-                                <span class="fs-15 text-gray font-weight-medium text-color-9">2 واجبات</span>
-                            </button>
-                        </div>
-                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                            <div class="card-body">
-                                <ul class="generic-list-item">
-                                    <li>
-                                        <a href="#" class="d-flex align-items-center justify-content-between text-color">
-                                            <span>
-                                                <i class="la la-file-text mr-1"></i>
-                                                واجب رقم واحد
-                                            </span>
-                                            <span class="ribbon ml-2 fs-13">تم حله</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="d-flex align-items-center justify-content-between text-color">
-                                            <span>
-                                                <i class="la la-file-text mr-1"></i>
-                                                واجب رقم اثنين
-                                            </span>
-                                            <span class="ribbon ribbon-gray-bg ml-2 fs-13">بانتظار حله</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>-->
+                    <div class="card-header" id="headingThree">
+                        <button class="btn btn-link collapsed d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <i class="la la-plus"></i>
+                            <i class="la la-minus"></i>
+                            الإمتحانات والواجبات
+                            <span class="fs-15 text-gray font-weight-medium text-color-9">2 واجبات</span>
+                        </button>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                        <div class="card-body">
+                            <ul class="generic-list-item">
+                                <li>
+                                    <a href="#" class="d-flex align-items-center justify-content-between text-color">
+                                        <span>
+                                            <i class="la la-file-text mr-1"></i>
+                                            واجب رقم واحد
+                                        </span>
+                                        <span class="ribbon ml-2 fs-13">تم حله</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="d-flex align-items-center justify-content-between text-color">
+                                        <span>
+                                            <i class="la la-file-text mr-1"></i>
+                                            واجب رقم اثنين
+                                        </span>
+                                        <span class="ribbon ribbon-gray-bg ml-2 fs-13">بانتظار حله</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>-->
                     <!-- end card-body -->
                     <!--</div>--><!-- end collapse -->
                     <!--</div>--><!-- end card -->
@@ -120,22 +130,22 @@
                     <!--</div>--><!-- end curriculum-content -->
                     <!--</div>--><!-- end course-overview-card -->
                     <!--<div class="course-overview-card pt-4">
-                        <h3 class="fs-23 txtbold pb-4">الأسئلة</h3>
-                        <div class="review-wrap">
-                            <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
-                                <div class="media-img mr-4 rounded-full borderonew">
-                                    <img class="rounded-full lazy" src="images/student-1.jpg">
+                    <h3 class="fs-23 txtbold pb-4">الأسئلة</h3>
+                    <div class="review-wrap">
+                        <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
+                            <div class="media-img mr-4 rounded-full borderonew">
+                                <img class="rounded-full lazy" src="images/student-1.jpg">
+                            </div>
+                            <div class="media-body">
+                                <div class="d-flex flex-wrap align-items-center justify-content-between pb-1">
+                                    <h5 class="mb-2">يوسف حسن</h5>
                                 </div>
-                                <div class="media-body">
-                                    <div class="d-flex flex-wrap align-items-center justify-content-between pb-1">
-                                        <h5 class="mb-2">يوسف حسن</h5>
-                                    </div>
-                                    <span class="d-block lh-18 pb-2">11 فبراير , 12:06 ص</span>
-                                    <p class="pb-2">
-                                        مستر بعد اذن حضرتك في صفحة 66 في خصائص الكلاسكية الجديدة رقم واحد قايل التجربة الذاتية بس ده مش بيناقض انهم اهتموا بالغير ؟
-                                    </p>
-                                </div>
-                            </div>-->
+                                <span class="d-block lh-18 pb-2">11 فبراير , 12:06 ص</span>
+                                <p class="pb-2">
+                                    مستر بعد اذن حضرتك في صفحة 66 في خصائص الكلاسكية الجديدة رقم واحد قايل التجربة الذاتية بس ده مش بيناقض انهم اهتموا بالغير ؟
+                                </p>
+                            </div>
+                        </div>-->
                     <!-- end media -->
                     <!--<div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
                         <div class="media-img mr-4 rounded-full borderonew">
@@ -174,13 +184,13 @@
                     </div>-->
                     <!-- end course-overview-card -->
                     <!--<div class="course-overview-card pt-4">
-                        <h3 class="fs-23 txtbold pb-4">اضف سؤال جديد</h3>
-                        <form class="row">
-                            <div class="input-box col-lg-12">
-                                <div class="form-group">
-                                    <textarea class="form-control form--control pl-3" name="message" placeholder="اكتب سؤال هنا..." rows="5"></textarea>
-                                </div>
-                            </div>-->
+                    <h3 class="fs-23 txtbold pb-4">اضف سؤال جديد</h3>
+                    <form class="row">
+                        <div class="input-box col-lg-12">
+                            <div class="form-group">
+                                <textarea class="form-control form--control pl-3" name="message" placeholder="اكتب سؤال هنا..." rows="5"></textarea>
+                            </div>
+                        </div>-->
                     <!-- end input-box -->
                     <!--<div class="btn-box col-lg-12">
                         <button class="btn theme-btn" type="submit">ارسال السؤال</button>
@@ -225,7 +235,7 @@
                                     <span class="fs-35 font-weight-semi-bold text-black"> @Model.CurrentCost </span>
                                     <!--<span class="before-price mx-1">60 ج.م</span> -->
                                 </p>
-                                @if (Model.IsCurrentStudentSubscribed)
+                                @if (Model.IsCurrentStudentSubscribedToLive)
                                 {
                                     <div class="buy-course-btn-box pb-4">
                                         <div class="regdone">
@@ -235,16 +245,20 @@
                                 }
                                 else
                                 {
-                                    <div class="buy-course-btn-box pb-4">
-                                        <button type="button" class="btn theme-btn w-100 mb-2"><i class="la la-shopping-cart fs-18 mr-1"></i>اشترك الآن</button>
-                                    </div>
+                                    @await Component.InvokeAsync("MyFatoorahPayment",
+                                     new PayVm
+                                         {
+                                            InvoiceAmount = Model.CurrentCost,
+                                            TransactionId = Model.Id.ToString(),
+                                            TransactionType = (int)TransactionType.Course,
+                                            ReturnRoute = $"/Lives/liveDetails?liveId={Model.Id}"
+                                         })
                                 }
-
                                 <div class="preview-course-incentives">
                                     <h3 class="card-title fs-18 pb-2">معلومات البث</h3>
                                     <ul class="generic-list-item">
                                         <li><img class="mr-2" src="images/time.svg" width="14">@(Model.Duration) دقيقة  تشغيل</li>
-                                        <!-- <li><img class="mr-2" src="images/subscriber.svg" width="14">50 مشترك</li> -->
+                                        <li><img class="mr-2" src="images/subscriber.svg" width="14">@Model.SubscriptionCount مشترك</li>
                                     </ul>
                                 </div><!-- end preview-course-incentives -->
                             </div><!-- end preview-course-content -->

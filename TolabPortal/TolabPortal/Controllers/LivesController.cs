@@ -61,8 +61,16 @@ namespace TolabPortal.Controllers
                 {
                     var studentTransactions = await CommonUtilities.GetResponseModelFromJson<StudentTransactionsResponse>(studentTransactionsResponse);
                     var IsCurrentStudentSubscribedToLive = studentTransactions.studentTransactionsVM.studentTransactions.Any(t => t.LiveId == liveDetails.LiveDetails.Id);
-                    liveDetails.LiveDetails.IsCurrentStudentSubscribed = IsCurrentStudentSubscribedToLive;
+                    liveDetails.LiveDetails.IsCurrentStudentSubscribedToLive = IsCurrentStudentSubscribedToLive;
                 }
+
+                //// getting teacher image
+                //var teacherProfileResponse = await _courseService.GetTeacherById(trackDetails.CoursesByTrackId.Courses.FirstOrDefault().TeacherId);
+                //if (teacherProfileResponse.IsSuccessStatusCode)
+                //{
+                //    var teacherProfile = await CommonUtilities.GetResponseModelFromJson<TeacherResponse>(teacherProfileResponse);
+                //    liveDetails.LiveDetails.TeacherPhoto = teacherProfile.Teacher.Photo;
+                //}
 
                 return View("LiveDetails", liveDetails.LiveDetails);
             }

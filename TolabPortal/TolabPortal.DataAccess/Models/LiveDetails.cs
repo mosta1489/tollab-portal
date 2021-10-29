@@ -12,6 +12,7 @@ namespace TolabPortal.DataAccess.Models
         public long Id { get; set; }
         public string LiveName { get; set; }
         public string TeacherName { get; set; }
+        public string TeacherPhoto { get; set; }
         public int? SubscriptionCount { get; set; }
         public double Duration { get; set; }
         public decimal CurrentCost { get; set; }
@@ -93,7 +94,7 @@ namespace TolabPortal.DataAccess.Models
         public decimal? OldSKUPrice { get; set; }
         public decimal? SKUPrice { get; set; }
         public IEnumerable<LiveAttachment> Attachments { get; set; }
-        public bool IsCurrentStudentSubscribed { get; set; }
+        public bool IsCurrentStudentSubscribedToLive { get; set; }
 
         public ItemDetails ItemDetails { get; set; }
     }
