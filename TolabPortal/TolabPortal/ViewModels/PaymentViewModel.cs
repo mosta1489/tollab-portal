@@ -19,12 +19,6 @@ namespace TolabPortal.ViewModels
         
         public string DisplayCurrencyIso { get; set; }
         
-        public string MobileCountryCode { get; set; }
-         
-        
-        public string CustomerMobile { get; set; }
-        
-        public string CustomerEmail { get; set; }
         public decimal InvoiceValue { get; set; }
         public string CustomerReference  { get; set; }
         public int TransactionType { get; set; }

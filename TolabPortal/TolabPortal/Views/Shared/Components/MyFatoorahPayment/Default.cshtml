@@ -1,0 +1,11 @@
+﻿@model PayVm
+<form asp-action="InitiatePayment" asp-controller="MyFatoorahPayment" method="post">
+    @Html.HiddenFor(a => a.TransactionId)
+    @Html.HiddenFor(a => a.InvoiceAmount)
+    @Html.HiddenFor(a => a.TransactionType)
+    @Html.HiddenFor(a => a.ReturnRoute)
+
+    @*<a ty href="#" class="btn theme-btn">اشترك</a>*@
+    <input type="submit" class="btn theme-btn" value="اشترك" />
+</form>
+ 

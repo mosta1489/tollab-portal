@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tolab.Common;
 using TolabPortal.DataAccess.Models.Payment;
 using TolabPortal.DataAccess.Services;
 using TolabPortal.DataAccess.Services.Payment;
@@ -14,44 +15,46 @@ using TolabPortal.ViewModels;
 
 namespace TolabPortal.Controllers
 {
- [AllowAnonymous]
+ 
     public class MyFatoorahPaymentController : Controller
     {
         private readonly IMyFatoorahPaymentService _paymentService;
-        private readonly ISubscribeService subscribeService;
-        private readonly ILogger<MyFatoorahPaymentController> logger;
-        private readonly IConfiguration config;
+        private readonly ISubscribeService _subscribeService;
+        private readonly ISessionManager _sessionManager;
+        private readonly ILogger<MyFatoorahPaymentController> _logger;
+        private readonly IConfiguration _config;
 
-        public MyFatoorahPaymentController(IMyFatoorahPaymentService paymentService, ISubscribeService subscribeService, ILogger<MyFatoorahPaymentController> logger,IConfiguration config)
+        public MyFatoorahPaymentController(IMyFatoorahPaymentService paymentService, ISubscribeService subscribeService,
+            ISessionManager sessionManager, ILogger<MyFatoorahPaymentController> logger,IConfiguration config)
         {
             _paymentService = paymentService;
-            this.subscribeService = subscribeService;
-            this.logger = logger;
-            this.config = config;
+            this._subscribeService = subscribeService;
+            this._sessionManager = sessionManager;
+            this._logger = logger;
+            this._config = config;
         }
 
 
          
-        [Route("~/InitiatePayment/{amount}")]
-        public async Task<IActionResult> InitiatePayment(decimal amount)
+       // [Route("~/InitiatePayment/{amount}")]
+       [HttpPost]
+        public async Task<IActionResult> InitiatePayment(PayVm payViewmodel)
         {
 
             var response = await _paymentService.InitiatePayment(new InitiatePaymentRequest
             {
-                InvoiceAmount = amount,
+                InvoiceAmount = payViewmodel.InvoiceAmount,
                 CurrencyIso = "kwd"
 
             }).ConfigureAwait(false); 
             if (response.IsSuccess)
                 return View(new PaymentViewModel() {
-                    InvoiceValue=amount,
+                    InvoiceValue= payViewmodel.InvoiceAmount,
                     PaymentMethods=response.Data.PaymentMethods,
-                    CustomerMobile= "01282200866",
-                    MobileCountryCode= "+2",
-                    CustomerName= "41781",
-                    CustomerReference = "10420",
-                    TransactionType=(int)TransactionType.Course,
-                    ReturnUrl= "https://f5e9-46-153-75-72.ngrok.io/Subjects/Track/Course?courseId=10420"
+                    CustomerName=_sessionManager.UserId??"",
+                    CustomerReference = payViewmodel.TransactionId,
+                    TransactionType=payViewmodel.TransactionType,
+                    ReturnUrl = $"{_config["CallBackPayemntRoot"]}{payViewmodel.ReturnRoute}"
                 });
             return View("ErrorPayment");
         }
@@ -66,10 +69,9 @@ namespace TolabPortal.Controllers
                     PaymentMethodId = paymentVm.PaymentMethodId,
                     InvoiceValue = paymentVm.InvoiceValue,
                     CustomerReference = paymentVm.CustomerReference,
-                    MobileCountryCode = paymentVm.MobileCountryCode,
                     UserDefinedField = $"{paymentVm.TransactionType},{paymentVm.ReturnUrl}",
-                    CallBackUrl = $"{config["CallBackPayemntRoot"]}/CompletePayment",
-                    ErrorUrl = $"{config["CallBackPayemntRoot"]}/ErrorPayment",
+                    CallBackUrl = $"{_config["CallBackPayemntRoot"]}/CompletePayment",
+                    ErrorUrl = $"{_config["CallBackPayemntRoot"]}/ErrorPayment",
                     Language = "AR",
                     ExpiryDate = DateTime.Now.AddYears(1)
                 }).ConfigureAwait(false);
@@ -113,13 +115,13 @@ namespace TolabPortal.Controllers
                         switch (computedFiled[0])
                         {
                             case string transaction when int.Parse(transaction) == (int)TransactionType.Course:
-                                await subscribeService.SubscribeCourse(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                await _subscribeService.SubscribeCourse(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
                                 break;
                             case string transaction when int.Parse(transaction) == (int)TransactionType.Live:
-                                await subscribeService.SubscribeLive(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                await _subscribeService.SubscribeLive(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
                                 break;
                             case string transaction when int.Parse(transaction) == (int)TransactionType.Track:
-                                await subscribeService.SubscribeTrack(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                await _subscribeService.SubscribeTrack(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
                                 break;
                         }
 
@@ -137,7 +139,7 @@ namespace TolabPortal.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError($"Complete payment :{ex.Message} ||StackTrace : {ex.StackTrace} ");
+                _logger.LogError($"Complete payment :{ex.Message} ||StackTrace : {ex.StackTrace} ");
                 return View("ErrorPayment");
             }
 

@@ -12,16 +12,11 @@
         <form method="post" asp-action="ExecutePayment" class="pt-2">
 
             <input hidden asp-for="InvoiceValue" />
-            <input hidden asp-for="MobileCountryCode" />
-            <input hidden asp-for="CustomerMobile" />
-            <input hidden asp-for="MobileCountryCode" />
             <input hidden asp-for="CustomerName" />
             <input hidden asp-for=" CustomerReference" />
             <input hidden asp-for=" TransactionType" />
             <input hidden asp-for=" ReturnUrl" />
-            @*<input hidden id="InvoiceValue" asp-for="CallBackUrl" />
-                <input hidden id="ErrorUrl" asp-for="ErrorUrl" />*@
-
+       
             <p class="mb-4">قم باختيار طريقة الدفع المناسبة لك</p>
             <div class="row">
                 @foreach (var method in Model.PaymentMethods)
