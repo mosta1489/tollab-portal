@@ -10798,7 +10798,6 @@ div.datedropper .picker .pick-lg-b li {
 
 
 .teachername {
-    margin-bottom: 118px;
 	position: absolute;
 	bottom: 0;
 	display: block;
@@ -11219,6 +11218,24 @@ div.datedropper .picker .pick-lg-b li {
 
 
 
+@media (min-width:1200px){	
+	.img404 {
+		width: 77%;
+		margin:auto;
+}
+
+	.img404 img{
+		width: 100%;
+		max-width:100%;
+	}
+
+}
 
 
+	.img404 img{
+		max-width:100%;
+	}
 
+.page_height{
+	min-height:100vh;
+}

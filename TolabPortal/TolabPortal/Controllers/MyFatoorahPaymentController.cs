@@ -69,6 +69,7 @@ namespace TolabPortal.Controllers
                     PaymentMethodId = paymentVm.PaymentMethodId,
                     InvoiceValue = paymentVm.InvoiceValue,
                     CustomerReference = paymentVm.CustomerReference,
+                    CustomerName = _sessionManager.UserId ?? "",
                     UserDefinedField = $"{paymentVm.TransactionType},{paymentVm.ReturnUrl}",
                     CallBackUrl = $"{_config["CallBackPayemntRoot"]}/CompletePayment",
                     ErrorUrl = $"{_config["CallBackPayemntRoot"]}/ErrorPayment",
@@ -77,8 +78,7 @@ namespace TolabPortal.Controllers
                 }).ConfigureAwait(false);
                 if (response.IsSuccess)
                 {
-                    var url = response.Data.PaymentURL;
-                    var invoiceId = response.Data.InvoiceId;
+                   
                     return Redirect(response.Data.PaymentURL);
                 }
                 
@@ -102,11 +102,12 @@ namespace TolabPortal.Controllers
 
             try
             {
-                var response = await _paymentService.LogTransaction(new GetPaymentStatusRequest
+                var message = await _paymentService.LogTransaction(new GetPaymentStatusRequest
                 {
                     Key = paymentId,
                     KeyType = "paymentId"
                 }).ConfigureAwait(false);
+                var response = JsonConvert.DeserializeObject<GenericResponse<GetPaymentStatusResponse>>(message);
                 if (response.IsSuccess)
                 {
                     if (response.Data.InvoiceStatus.ToLower() == "paid")
@@ -115,10 +116,10 @@ namespace TolabPortal.Controllers
                         switch (computedFiled[0])
                         {
                             case string transaction when int.Parse(transaction) == (int)TransactionType.Course:
-                                await _subscribeService.SubscribeCourse(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                await _subscribeService.SubscribeCourse(message,!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
                                 break;
                             case string transaction when int.Parse(transaction) == (int)TransactionType.Live:
-                                await _subscribeService.SubscribeLive(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                await _subscribeService.SubscribeLive(message,!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
                                 break;
                             case string transaction when int.Parse(transaction) == (int)TransactionType.Track:
                                 await _subscribeService.SubscribeTrack(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);

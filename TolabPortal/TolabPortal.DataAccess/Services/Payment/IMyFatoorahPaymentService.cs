@@ -13,6 +13,6 @@ namespace TolabPortal.DataAccess.Services.Payment
         Task<GenericResponse<GetPaymentStatusResponse>> GetPaymentStatus(GetPaymentStatusRequest getPaymentStatusRequest);
         Task<GenericResponse<InitiatePaymentResponse>> InitiatePayment(InitiatePaymentRequest intiatePaymentRequest);
         Task<GenericResponse<SendPaymentResponse>> SendPayment(SendPaymentRequest request);
-        Task<GenericResponse<GetPaymentStatusResponse>> LogTransaction(GetPaymentStatusRequest getPaymentStatusRequest);
+        Task<string> LogTransaction(GetPaymentStatusRequest getPaymentStatusRequest);
     }
 }
