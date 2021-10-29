@@ -82,8 +82,7 @@ namespace TolabPortal.DataAccess.Services.Payment
 
             var GetPaymentStatusRequestJSON = JsonConvert.SerializeObject(getPaymentStatusRequest);
             var response = await _client.PerformRequest(GetPaymentStatusRequestJSON, endPoint: "GetPaymentStatus").ConfigureAwait(false);
-            var content = new StringContent(response, Encoding.UTF8, "application/json");
-            var transactionResponse = await _httpClient.PostAsync($"/api/LogTransaction", content).ConfigureAwait(false);
+            var transactionResponse = await _httpClient.GetAsync($"/api/LogTransaction?response={response}");
             if (!transactionResponse.IsSuccessStatusCode)
                 logger.LogError($"logTransaction :{response}");
             return JsonConvert.DeserializeObject<GenericResponse<GetPaymentStatusResponse>>(response);
