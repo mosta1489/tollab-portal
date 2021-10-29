@@ -13,8 +13,8 @@ namespace TolabPortal.DataAccess.Services
     public interface ISubscribeService
     {
 
-        Task<HttpResponseMessage> SubscribeCourse(long courseId, string promoCode = "");
-        Task<HttpResponseMessage> SubscribeLive(long liveId, string promoCode = "");
+        Task<HttpResponseMessage> SubscribeCourse(string message, long courseId, string promoCode = "");
+        Task<HttpResponseMessage> SubscribeLive(string message, long liveId, string promoCode = "");
         Task<HttpResponseMessage> SubscribeTrack(long trackId, string promoCode = "");
         Task<HttpResponseMessage> GetAllStudentTransactions(int page = 0);
     }
@@ -38,12 +38,12 @@ namespace TolabPortal.DataAccess.Services
             _httpClient?.Dispose();
         }
 
-        public async Task<HttpResponseMessage> SubscribeCourse(long courseId, string promoCode = "")
+        public async Task<HttpResponseMessage> SubscribeCourse(string message, long courseId, string promoCode = "")
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/BuyNow?CourseId={courseId}&PromocodeText={promoCode}");
-                return response;
+                var result = await _httpClient.GetAsync($"/api/buy-course-from-web?message={message}&CourseId={courseId}&PromocodeText={promoCode}");
+                return result;
             }
             catch (Exception ex)
             {
@@ -52,11 +52,11 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
-        public async Task<HttpResponseMessage> SubscribeLive(long liveId, string promoCode = "")
+        public async Task<HttpResponseMessage> SubscribeLive(string message, long liveId, string promoCode = "")
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/BuyNow?liveId={liveId}&PromocodeText={promoCode}");
+                var response = await _httpClient.GetAsync($"/api/buy-live-from-web?message={message}&liveId={liveId}&PromocodeText={promoCode}");
                 return response;
             }
             catch (Exception ex)

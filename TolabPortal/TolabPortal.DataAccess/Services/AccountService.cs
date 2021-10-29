@@ -45,7 +45,7 @@ namespace TolabPortal.DataAccess.Services
         {
             try
             {
-                var studentLoginResponse = await _httpClient.GetAsync($"/api/StudentLogin?PhoneNumberWithKey={loginPhone}");
+                var studentLoginResponse = await _httpClient.GetAsync($"/api/login-web?PhoneNumberWithKey={loginPhone}");
                 return studentLoginResponse;
             }
             catch (Exception ex)
