@@ -39,8 +39,8 @@
                                 @foreach (var group in Model.Groups)
                                 {
 
-                                    var accordionButtonId = group.Id.ToString();
-                                    var accordionCollapseKey = group.Id.ToString() + (iterator++).ToString();
+                                    var accordionButtonId = "heading_" + group.Id.ToString();
+                                    var accordionCollapseKey = "collapse_" + group.Id.ToString() + (iterator++).ToString();
 
                                     <div class="card">
                                         <div class="card-header" id="@accordionButtonId">
