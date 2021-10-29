@@ -58,26 +58,56 @@
                                                     {
                                                         if (groupContent.ContentTypeId == 1) // video
                                                         {
+
                                                             <li>
-                                                                <a href="@groupContent.VideoUri" class="d-flex align-items-center justify-content-between text-color">
-                                                                    <span>
-                                                                        <i class="la la-play-circle mr-1"></i>
-                                                                        @groupContent.NameLT
-                                                                    </span>
-                                                                    <span> @groupContent.Duration دقيقة </span>
-                                                                </a>
+                                                                @if (Model.IsCurrentStudentSubscribedToCourse)
+                                                                {
+                                                                    <a href="@options.Value.MediaBaseUrl/ws/CourseVideos/@groupContent.VideoUri" class="d-flex align-items-center justify-content-between text-color">
+                                                                        <span>
+                                                                            <i class="la la-play-circle mr-1"></i>
+                                                                            @groupContent.NameLT
+                                                                        </span>
+                                                                        <span> @groupContent.Duration دقيقة </span>
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a class="d-flex align-items-center justify-content-between">
+                                                                        <span>
+                                                                            <i class="la la-lock mr-1"></i>
+                                                                            @groupContent.NameLT
+                                                                        </span>
+                                                                        <span>@groupContent.Duration دقيقة</span>
+                                                                    </a>
+                                                                }
                                                             </li>
+
                                                         }
                                                         else if (groupContent.ContentTypeId == 2)
                                                         {
+                                                            var url = Model.IsCurrentStudentSubscribedToCourse ? groupContent.Path : "#";
+
                                                             <li>
-                                                                <a href="@groupContent.Path" class="d-flex align-items-center justify-content-between text-color">
-                                                                    <span>
-                                                                        <i class="la la-file-pdf-o mr-1"></i>
-                                                                        @groupContent.NameLT
-                                                                    </span>
-                                                                    <span>  </span>
-                                                                </a>
+                                                                @if (Model.IsCurrentStudentSubscribedToCourse)
+                                                                {
+                                                                    //TODO: @hussein fix files path
+                                                                    <a href="@options.Value.MediaBaseUrl/ws/CourseVideos/@groupContent.Path" class="d-flex align-items-center justify-content-between text-color">
+                                                                        <span>
+                                                                            <i class="la la-file-pdf-o mr-1"></i>
+                                                                            @groupContent.NameLT
+                                                                        </span>
+                                                                        <span> </span>
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a class="d-flex align-items-center justify-content-between">
+                                                                        <span>
+                                                                            <i class="la la-lock mr-1"></i>
+                                                                            @groupContent.NameLT
+                                                                        </span>
+                                                                    </a>
+                                                                }
                                                             </li>
                                                         }
                                                     }

@@ -13,6 +13,7 @@ namespace Tolab.Common
         public string CountryCode { get; }
         public bool? HasInterests { get; }
         public string UserPhoto { get; }
+        public string UserName { get; }
     }
 
     public class SessionManager : ISessionManager
