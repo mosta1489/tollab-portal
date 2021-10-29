@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Options
+@using Tolab.Common
+@inject IOptions<ApplicationConfig> options;
+@{
+    var config = options.Value;
+
+}
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -81,7 +88,7 @@
                                                             }
                                                             else
                                                             {
-                                                                <img class="rounded-full img-fluid" src="https://tollab.azurewebsites.net/ws/Images/StudentImages/@(User.Claims.First(c => c.Type == "UserPhoto").Value)" alt="Avatar image">
+                                                                <img class="rounded-full img-fluid" src="@config.MediaBaseUrl//ws/Images/StudentImages/@(User.Claims.First(c => c.Type == "UserPhoto").Value)" alt="Avatar image">
                                                             }
                                                         </div>
                                                         <div class="fs-14 lh-18 text-left ml-2">
@@ -191,7 +198,6 @@
                             <li><a href="#"> @itemDetails.SubCategoryName </a></li>
                             <li><a href="#"> @itemDetails.TrackName </a></li>
                         }
-
                     </ul>
                     @if (!string.IsNullOrEmpty(itemDetails.CourseName))
                     {
@@ -205,7 +211,6 @@
                             <h2 class="section__title txtwhite"> @itemDetails.LiveName </h2>
                         </div><!-- end section-heading -->
                     }
-
 
                     @if (!string.IsNullOrEmpty(Model.ItemDetails.LiveRemainingTime)) // ========== For live details page ==========
                     {
@@ -230,7 +235,6 @@
                     </div>-->
                     <!-- end d-flex -->
 
-
                     <p class="pt-2 pb-1 text-ligpur">مقدم من <a class="text-color-9">@itemDetails.TeacherName</a></p>
 
                     <!--<div class="bread-btn-box pt-3">
@@ -245,7 +249,6 @@
                             <i class="la la-flag mr-1"></i>بلغ عن سوء معاملة
                         </button>
                     </div> -->
-
                 </div><!-- end breadcrumb-content -->
             </div><!-- end col-lg-8 -->
         </div><!-- end container -->

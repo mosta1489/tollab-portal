@@ -3,5 +3,6 @@
     public class ApplicationConfig
     {
         public string ApiUrl { get; set; }
+        public string MediaBaseUrl { get; set; }
     }
 }

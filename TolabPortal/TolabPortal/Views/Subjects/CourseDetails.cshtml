@@ -1,12 +1,16 @@
-﻿
-@{
+﻿@{
     Layout = "_DetailsLayout";
 }
 
+@using Microsoft.Extensions.Options
+@using Tolab.Common
 @model TolabPortal.DataAccess.Models.Course
+@inject IOptions<ApplicationConfig> options;
 
 @{
     ViewBag.itemDetails = Model.ItemDetails;
+    var config = options.Value;
+
 }
 
 <!--======================================
@@ -77,7 +81,6 @@
                                                             </li>
                                                         }
                                                     }
-
                                                 </ul>
                                             </div><!-- end card-body -->
                                         </div><!-- end collapse -->
@@ -99,14 +102,11 @@
                                             <ul class="generic-list-item">
 
                                                 // loop on exams here...
-
                                             </ul>
                                         </div>-->
                                 <!-- end card-body -->
                                 <!--</div>--><!-- end collapse -->
                                 <!--</div>--><!-- end card -->
-
-
                             </div><!-- end generic-accordion -->
                         </div><!-- end curriculum-content -->
                     </div><!-- end course-overview-card -->
@@ -120,14 +120,12 @@
                                     <div class="media-img mr-4 rounded-full borderonew">
                                         @if (!string.IsNullOrEmpty(@videoQuestion.StudentPhoto))
                                         {
-                                            <img class="rounded-full lazy" src="/images/img-loading-ar.png" data-src="https://tollapi.azurewebsites.net/ws/Images/StudentImages/@videoQuestion.StudentPhoto">
+                                            <img class="rounded-full lazy" src="/images/img-loading-ar.png" data-src="@config.MediaBaseUrl/ws/Images/StudentImages/@videoQuestion.StudentPhoto">
                                         }
-
                                     </div>
                                     <div class="media-body">
                                         <div class="d-flex flex-wrap align-items-center justify-content-between pb-1">
                                             <h5> @videoQuestion.StudentName </h5>
-
                                         </div>
                                         <span class="d-block lh-18 pb-2"> @videoQuestion.CreationDate </span>
                                         <p class="pb-2">
@@ -136,13 +134,10 @@
                                     </div>
                                 </div><!-- end media -->
                             }
-
-
                         </div><!-- end review-wrap -->
                         @*<div class="see-more-review-btn text-center">
                                 <button type="button" class="btn theme-btn theme-btn-transparent">عرض مزيد من الاسئلة</button>
                             </div>*@
-
                     </div><!-- end course-overview-card -->
                     <div class="course-overview-card pt-4">
                         <h3 class="fs-23 txtbold pb-4">اضف سؤال جديد</h3>
@@ -157,8 +152,6 @@
                             </div><!-- end btn-box -->
                         </form>
                     </div><!-- end course-overview-card -->
-
-
                 </div><!-- end course-details-content-wrap -->
             </div><!-- end col-lg-8 -->
             <div class="col-lg-4">
@@ -166,8 +159,8 @@
                     <div class="card card-item">
                         <div class="card-body">
                             <div class="preview-course-video">
-                                <a href="https://tollab.azurewebsites.net/ws/CourseVideos/@Model.IntroVideoUri" data-toggle="modal" data-target="#previewModal">
-                                    <img src="images/img-loading.png" data-src="https://tollapi.azurewebsites.net/ws/Images/CourseImages/@Model.Image" class="w-100 rounded lazy screensh">
+                                <a href="@config.MediaBaseUrl/ws/CourseVideos/@Model.IntroVideoUri" data-toggle="modal" data-target="#previewModal">
+                                    <img src="images/img-loading.png" data-src="@config.MediaBaseUrl/ws/Images/CourseImages/@Model.Image" class="w-100 rounded lazy screensh">
                                     <div class="preview-course-video-content">
                                         <div class="overlay"></div>
                                         <div class="play-button">
