@@ -61,7 +61,7 @@ namespace TolabPortal.Controllers
                 var response = await _paymentService.ExecutePayment(new ExecutePaymentRequest()
                 {
                     PaymentMethodId = paymentVm.PaymentMethodId,
-                    InvoiceValue = paymentVm.InvoiceValue,
+                    InvoiceValue = paymentVm.InvoiceValue==0?1: paymentVm.InvoiceValue,
                     CustomerReference = paymentVm.CustomerReference,
                     CustomerName = _sessionManager.UserId ?? "",
                     UserDefinedField = $"{paymentVm.TransactionType},{paymentVm.ReturnUrl}",
