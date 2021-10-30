@@ -1,13 +1,22 @@
-﻿
-@{
+﻿@{
     Layout = "_DetailsLayout";
 }
 
+@using System.Collections.Specialized
+@using Microsoft.Extensions.Options
+@using Tolab.Common
 @model TolabPortal.DataAccess.Models.LiveDetails;
+@inject ISessionManager sessionManager;
+@inject IOptions<ApplicationConfig> options;
 
 @{
     ViewBag.itemDetails = Model.ItemDetails;
+    var config = options.Value;
+
 }
+
+<link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.0.1/css/bootstrap.css" />
+<link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.0.1/css/react-select.css" />
 
 <!--======================================
         START COURSE DETAILS AREA
@@ -19,16 +28,72 @@
                 <div class="course-details-content-wrap pt-50px">
                     @if (Model.IsCurrentStudentSubscribedToLive)
                     {
+
                         // ========== Remove below code that rendering a video from remote url and use ZOOM SDK instead ==========
 
                         <!--<div class="course-overview-card">
                             <video controls crossorigin playsinline id="player">-->
-                                <!-- Video files -->
-                                <!--<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" />
+                        <!-- Video files -->
+                        <!--<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" />
                                 <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4" type="video/mp4" />
                                 <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4" type="video/mp4" />
                             </video>
-                        </div>--><!-- end course-overview-card -->
+                        </div>-->
+                        <!-- end course-overview-card -->
+
+                        <div id="meetingSDKElement">
+                            <!-- Zoom Meeting SDK Rendered Here -->
+                        </div>
+
+                        <script>
+
+                            var client = ZoomMtgEmbedded.createClient();
+
+                            var meetingSDKElement = document.getElementById('meetingSDKElement');
+
+                            client.init({
+                                debug: true,
+                                zoomAppRoot: meetingSDKElement,
+                                language: 'en-US',
+                                customize: {
+                                    meetingInfo: ['topic', 'host', 'mn', 'pwd', 'telPwd', 'invite', 'participant', 'dc', 'enctype'],
+                                    toolbar: {
+                                        buttons: [
+                                            {
+                                                text: 'Custom Button',
+                                                className: 'CustomButton',
+                                                onClick: () => {
+                                                    console.log('custom button');
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            });
+
+                            var meetingNumber = '@Model.MeetingId';
+                            var userName = @sessionManager.UserName;
+                            var apiKey = '@config.ZoomApiKey';
+                            var userEmail = "";
+                            var password = '@Model.MeetingPassword';
+
+                            $.ajax({
+                                method: "POST",
+                                url: "https://tollab-signature.herokuapp.com/",
+                                data: { meetingNumber: meetingNumber, role: 0 }
+                            })
+                                .done(function (msg) {
+                                    var signature = msg.signature;
+                                    console.log(signature);
+                                    client.join({
+                                        apiKey: apiKey,
+                                        signature: signature,
+                                        meetingNumber: meetingNumber,
+                                        password: password,
+                                        userName: userName
+                                    });
+                                });
+                        </script>
                     }
                     else
                     {
@@ -199,8 +264,6 @@
                     <!--</form>
                     </div>-->
                     <!-- end course-overview-card -->
-
-
                 </div><!-- end course-details-content-wrap -->
             </div><!-- end col-lg-8 -->
             <div class="col-lg-4">
@@ -226,7 +289,6 @@
                                             </div>
                                             <p class="fs-15 font-weight-bold text-white pt-3"> @Model.LiveRemainingTime </p>
                                         }
-
                                     </div>
                                 </a>
                             </div><!-- end preview-course-video -->
@@ -264,7 +326,6 @@
                             </div><!-- end preview-course-content -->
                         </div>
                     </div><!-- end card -->
-
                 </div><!-- end sidebar -->
             </div><!-- end col-lg-4 -->
         </div><!-- end row -->
@@ -273,3 +334,12 @@
 <!--======================================
         END COURSE DETAILS AREA
 ======================================-->
+
+@section scripts{
+    <script src="https://source.zoom.us/2.0.1/lib/vendor/react.min.js"></script>
+    <script src="https://source.zoom.us/2.0.1/lib/vendor/react-dom.min.js"></script>
+    <script src="https://source.zoom.us/2.0.1/lib/vendor/redux.min.js"></script>
+    <script src="https://source.zoom.us/2.0.1/lib/vendor/redux-thunk.min.js"></script>
+    <script src="https://source.zoom.us/2.0.1/lib/vendor/lodash.min.js"></script>
+    <script src="https://source.zoom.us/2.0.1/zoom-meeting-embedded-2.0.1.min.js"></script>
+}
