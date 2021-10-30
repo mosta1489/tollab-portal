@@ -3470,7 +3470,8 @@ div.datedropper .picker .pick-lg-b li {
 .member-card .card-image .card-img-top {
 	-webkit-border-radius: 100%;
 	-moz-border-radius: 100%;
-	border-radius: 100%
+    border-radius: 100%;
+    /*height: 240px;*/
 }
 
 .member-card:after {
@@ -6029,7 +6030,9 @@ div.datedropper .picker .pick-lg-b li {
 }
 
 .card-image {
-	position: relative
+    position: relative;
+    min-height: 250px;
+    max-height: 250px;
 }
 
 .card-image .card-img-top {
@@ -10807,6 +10810,7 @@ div.datedropper .picker .pick-lg-b li {
 	background: rgba(0,0,0,0.5);
 	padding-top: 7px;
 	padding-bottom: 7px;
+    margin-bottom: 118px;
 }
 
 
