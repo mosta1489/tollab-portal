@@ -23,8 +23,8 @@
 <script src="https://source.zoom.us/2.0.1/lib/vendor/redux.min.js"></script>
 <script src="https://source.zoom.us/2.0.1/lib/vendor/redux-thunk.min.js"></script>
 <script src="https://source.zoom.us/2.0.1/lib/vendor/lodash.min.js"></script>
-@*<script src="https://source.zoom.us/2.0.1/zoom-meeting-embedded-2.0.1.min.js"></script>*@
-<script src="https://source.zoom.us/zoom-meeting-2.0.1.min.js"></script>
+<script src="https://source.zoom.us/2.0.1/zoom-meeting-embedded-2.0.1.min.js"></script>
+@*<script src="https://source.zoom.us/zoom-meeting-2.0.1.min.js"></script>*@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -54,65 +54,37 @@
                         <button id="btnJoinMeeting" class="btn btn-primary">Join Meeting</button>
 
 
-                        <!--<div id="meetingSDKElement">-->
-                        <!-- Zoom Meeting SDK Rendered Here -->
-                        <!--</div>-->
+                        <div id="meetingSDKElement" style="width: 500px;height: 500px">
+                        </div>
 
-                        <div id="zmmtg-root"></div>
-                        <div id="aria-notify-area"></div>
+
 
                         <script>
 
-                            var zoomMeetingSDK = document.getElementById("zmmtg-root")
-                            zoomMeetingSDK.style.display = 'none';
                             $('#btnJoinMeeting').click(function() {
 
-                                zoomMeetingSDK.style.display = 'block';
-
-                                ZoomMtg.preLoadWasm();
-                                ZoomMtg.prepareWebSDK();
-// loads language files, also passes any error messages to the ui
-                                ZoomMtg.i18n.load('en-US');
-                                ZoomMtg.i18n.reload('en-US');
-                                ZoomMtg.setZoomJSLib('https://source.zoom.us/2.0.1/lib', '/av');
-                                ZoomMtg.init();
 
 
-                                var meetingNumber = '@Model.MeetingId';
-                                var userName = '@sessionManager.UserName';
-                                var apiKey = '@config.ZoomApiKey';
-                                var userEmail = "";
-                                var password = '@Model.MeetingPassword';
-
-                                ZoomMtg.join({
-                                    apiKey: apiKey,
-                                    signature: '@Model.MeetingSignature',
-                                    meetingNumber: meetingNumber,
-                                    password: password,
-                                    userName: userName
-                                });
-
-
-                                @*var client = ZoomMtgEmbedded.createClient();
+                                var client = ZoomMtgEmbedded.createClient();
 
                                 var meetingSDKElement = document.getElementById('meetingSDKElement');
 
                                 client.init({
                                     debug: true,
+                                    disableInvite: true,
+                                    disableCallOut: true,
+                                    disableRecord: true,
+                                    videoDrag: false,
                                     zoomAppRoot: meetingSDKElement,
                                     language: 'en-US',
+                                    meetingInfo: [
+                                        'topic',
+                                        'host',
+                                        'enctype',
+                                    ],
                                     customize: {
-                                        meetingInfo: ['topic', 'host', 'mn', 'pwd', 'telPwd', 'invite', 'dc', 'enctype'],
+                                        meetingInfo: ['topic', 'host'],
                                         toolbar: {
-                                            buttons: [
-                                                {
-                                                    text: 'Custom Button',
-                                                    className: 'CustomButton',
-                                                    onClick: () => {
-                                                        console.log('custom button');
-                                                    }
-                                                }
-                                            ]
                                         }
                                     }
                                 });
@@ -129,7 +101,7 @@
                                     meetingNumber: meetingNumber,
                                     password: password,
                                     userName: userName
-                                });*@
+                                });
                             });
 
 

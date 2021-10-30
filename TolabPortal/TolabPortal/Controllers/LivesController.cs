@@ -85,7 +85,7 @@ namespace TolabPortal.Controllers
             string apiKey = "ZU2qefs0Rp6rLTwOsPq9lQ";
             string apiSecret = "JTpmaAaDaTtlJcjLw7pTDId899RydwLrVQ8R";
             String ts = (ToTimestamp(DateTime.UtcNow.ToUniversalTime()) - 30000).ToString();
-            string role = "1";
+            string role = "0";
             string token = GenerateToken(apiKey, apiSecret, meetingNumber, ts, role);
             return token;
         }
