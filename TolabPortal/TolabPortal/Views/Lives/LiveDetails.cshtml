@@ -41,29 +41,24 @@
 
                         // ========== Remove below code that rendering a video from remote url and use ZOOM SDK instead ==========
 
-                        <!--<div class="course-overview-card">
-                            <video controls crossorigin playsinline id="player">-->
-                        <!-- Video files -->
-                        <!--<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" />
-                                <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4" type="video/mp4" />
-                                <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4" type="video/mp4" />
-                            </video>
-                        </div>-->
-                        <!-- end course-overview-card -->
+                    <!--<div class="course-overview-card">
+                        <video controls crossorigin playsinline id="player">-->
+ <!-- Video files -->
+                    <!--<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" />
+                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4" type="video/mp4" />
+                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4" type="video/mp4" />
+                        </video>
+                    </div>-->
+ <!-- end course-overview-card -->
 
-                        <button id="btnJoinMeeting" class="btn btn-primary">Join Meeting</button>
+                    <button id="btnJoinMeeting" class="btn btn-primary">Join Meeting</button>
 
+                    <div id="meetingSDKElement" style="width: 500px;height: 500px">
+                    </div>
 
-                        <div id="meetingSDKElement" style="width: 500px;height: 500px">
-                        </div>
-
-
-
-                        <script>
+                    <script>
 
                             $('#btnJoinMeeting').click(function() {
-
-
 
                                 var client = ZoomMtgEmbedded.createClient();
 
@@ -103,9 +98,7 @@
                                     userName: userName
                                 });
                             });
-
-
-                        </script>
+                    </script>
                     }
                     else
                     {
@@ -289,17 +282,17 @@
                                         <div class="overlay"></div>
                                         @if (Model.LiveRemainingTime == "يعرض الآن")
                                         {
-                                            <div class="play-button">
-                                                <img class="soonlive" src="/images/live-active.svg">
-                                            </div>
-                                            <p class="fs-15 font-weight-bold text-white pt-3"> @Model.LiveRemainingTime </p>
+                                        <div class="play-button">
+                                            <img class="soonlive" src="/images/live-active.svg">
+                                        </div>
+                                        <p class="fs-15 font-weight-bold text-white pt-3"> @Model.LiveRemainingTime </p>
                                         }
                                         else
                                         {
-                                            <div class="play-button">
-                                                <img class="soonlive" src="/images/live-inactive.svg">
-                                            </div>
-                                            <p class="fs-15 font-weight-bold text-white pt-3"> @Model.LiveRemainingTime </p>
+                                        <div class="play-button">
+                                            <img class="soonlive" src="/images/live-inactive.svg">
+                                        </div>
+                                        <p class="fs-15 font-weight-bold text-white pt-3"> @Model.LiveRemainingTime </p>
                                         }
                                     </div>
                                 </a>
@@ -311,28 +304,29 @@
                                 </p>
                                 @if (Model.IsCurrentStudentSubscribedToLive)
                                 {
-                                    <div class="buy-course-btn-box pb-4">
-                                        <div class="regdone">
-                                            <img src="/images/check.svg" width="28"> تم الاشتراك
-                                        </div>
+                                <div class="buy-course-btn-box pb-4">
+                                    <div class="regdone">
+                                        <img src="/images/check.svg" width="28"> تم الاشتراك
                                     </div>
+                                </div>
                                 }
                                 else
                                 {
-                                    @await Component.InvokeAsync("MyFatoorahPayment",
-                                     new PayVm
-                                         {
-                                            InvoiceAmount = Model.CurrentCost,
-                                            TransactionId = Model.Id.ToString(),
-                                            TransactionType = (int)TransactionType.Course,
-                                            ReturnRoute = $"/Lives/liveDetails?liveId={Model.Id}"
-                                         })
+                                @await Component.InvokeAsync("MyFatoorahPayment",
+                                 new PayVm
+                                     {
+                                        InvoiceAmount = Model.CurrentCost,
+                                        TransactionId = Model.Id.ToString(),
+                                        TransactionType = (int)TransactionType.Course,
+                                        ReturnRoute = $"/Lives/liveDetails?liveId={Model.Id}",
+                                         CssClassName = "btn-block"
+                                     })
                                 }
                                 <div class="preview-course-incentives">
                                     <h3 class="card-title fs-18 pb-2">معلومات البث</h3>
                                     <ul class="generic-list-item">
-                                        <li><img class="mr-2" src="images/time.svg" width="14">@(Model.Duration) دقيقة  تشغيل</li>
-                                        <li><img class="mr-2" src="images/subscriber.svg" width="14">@Model.SubscriptionCount مشترك</li>
+                                        <li><img class="mr-2" src="/images/time.svg" width="14">@(Model.Duration) دقيقة  تشغيل</li>
+                                        <li><img class="mr-2" src="/images/subscriber.svg" width="14">@Model.SubscriptionCount مشترك</li>
                                     </ul>
                                 </div><!-- end preview-course-incentives -->
                             </div><!-- end preview-course-content -->

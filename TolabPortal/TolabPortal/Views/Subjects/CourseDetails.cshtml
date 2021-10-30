@@ -148,10 +148,7 @@
                             {
                                 <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
                                     <div class="media-img mr-4 rounded-full borderonew">
-                                        @if (!string.IsNullOrEmpty(@videoQuestion.StudentPhoto))
-                                        {
-                                            <img class="rounded-full lazy" src="/images/img-loading-ar.png" data-src="@config.MediaBaseUrl/ws/Images/StudentImages/@videoQuestion.StudentPhoto">
-                                        }
+                                        <img class="rounded-full lazy" src="/images/img-loading-ar.png" data-src="@config.MediaBaseUrl/ws/Images/StudentImages/@videoQuestion.StudentPhoto">
                                     </div>
                                     <div class="media-body">
                                         <div class="d-flex flex-wrap align-items-center justify-content-between pb-1">
@@ -168,19 +165,6 @@
                         @*<div class="see-more-review-btn text-center">
                                 <button type="button" class="btn theme-btn theme-btn-transparent">عرض مزيد من الاسئلة</button>
                             </div>*@
-                    </div><!-- end course-overview-card -->
-                    <div class="course-overview-card pt-4">
-                        <h3 class="fs-23 txtbold pb-4">اضف سؤال جديد</h3>
-                        <form class="row">
-                            <div class="input-box col-lg-12">
-                                <div class="form-group">
-                                    <textarea class="form-control form--control pl-3" name="message" placeholder="اكتب سؤال هنا..." rows="5"></textarea>
-                                </div>
-                            </div><!-- end input-box -->
-                            <div class="btn-box col-lg-12">
-                                <button type="submit" class="btn theme-btn">ارسال السؤال</button>
-                            </div><!-- end btn-box -->
-                        </form>
                     </div><!-- end course-overview-card -->
                 </div><!-- end course-details-content-wrap -->
             </div><!-- end col-lg-8 -->
