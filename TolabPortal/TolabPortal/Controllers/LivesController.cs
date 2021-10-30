@@ -72,7 +72,9 @@ namespace TolabPortal.Controllers
                 //    liveDetails.LiveDetails.TeacherPhoto = teacherProfile.Teacher.Photo;
                 //}
 
+#if DEBUG
                 liveDetails.LiveDetails.IsCurrentStudentSubscribedToLive = true;
+#endif
                 if (liveDetails.LiveDetails.MeetingId.HasValue)
                     liveDetails.LiveDetails.MeetingSignature = GenerateSignature(liveDetails.LiveDetails.MeetingId.ToString());
                 return View("LiveDetails", liveDetails.LiveDetails);
