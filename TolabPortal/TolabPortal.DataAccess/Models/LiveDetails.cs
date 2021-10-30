@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TolabPortal.DataAccess.Models
 {
@@ -17,6 +14,7 @@ namespace TolabPortal.DataAccess.Models
         public double Duration { get; set; }
         public decimal CurrentCost { get; set; }
         public decimal? PreviousCost { get; set; }
+
         public bool IsShowingNow
         {
             get
@@ -29,14 +27,17 @@ namespace TolabPortal.DataAccess.Models
                         var EgyptZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
                         countryNow = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, EgyptZone);
                         return countryNow >= MeetingDate;
+
                     case 3:
                         var KuwaitZone = TimeZoneInfo.FindSystemTimeZoneById("Arab Standard Time");
                         countryNow = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, KuwaitZone);
                         return countryNow >= MeetingDate;
+
                     case 20012:
                         var JordanZone = TimeZoneInfo.FindSystemTimeZoneById("Jordan Standard Time");
                         countryNow = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, JordanZone);
                         return countryNow >= MeetingDate;
+
                     case 20013:
                         var QatarZone = TimeZoneInfo.FindSystemTimeZoneById("Arab Standard Time");
                         countryNow = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, QatarZone);
@@ -45,6 +46,7 @@ namespace TolabPortal.DataAccess.Models
                 return false;
             }
         }
+
         public string LiveRemainingTime
         {
             get
@@ -61,16 +63,19 @@ namespace TolabPortal.DataAccess.Models
                         countryNow = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, EgyptZone);
                         subtractionValue = MeetingDate.Subtract(countryNow.Value);
                         return string.Format("يعرض بعد {0} ايام و {1} ساعات و {2} دقائق", subtractionValue.Value.Days, subtractionValue.Value.Hours, subtractionValue.Value.Minutes);
+
                     case 3:
                         var KuwaitZone = TimeZoneInfo.FindSystemTimeZoneById("Arab Standard Time");
                         countryNow = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, KuwaitZone);
                         subtractionValue = MeetingDate.Subtract(countryNow.Value);
                         return string.Format("يعرض بعد {0} ايام و {1} ساعات و {2} دقائق", subtractionValue.Value.Days, subtractionValue.Value.Hours, subtractionValue.Value.Minutes);
+
                     case 20012:
                         var JordanZone = TimeZoneInfo.FindSystemTimeZoneById("Jordan Standard Time");
                         countryNow = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, JordanZone);
                         subtractionValue = MeetingDate.Subtract(countryNow.Value);
                         return string.Format("يعرض بعد {0} ايام و {1} ساعات و {2} دقائق", subtractionValue.Value.Days, subtractionValue.Value.Hours, subtractionValue.Value.Minutes);
+
                     case 20013:
                         var QatarZone = TimeZoneInfo.FindSystemTimeZoneById("Arab Standard Time");
                         countryNow = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, QatarZone);
@@ -80,6 +85,7 @@ namespace TolabPortal.DataAccess.Models
                 return string.Empty;
             }
         }
+
         public string HostURL { get; set; }
         public string JoinURL { get; set; }
         public long? MeetingId { get; set; }
@@ -97,14 +103,15 @@ namespace TolabPortal.DataAccess.Models
         public bool IsCurrentStudentSubscribedToLive { get; set; }
 
         public ItemDetails ItemDetails { get; set; }
+        public string MeetingSignature { get; set; }
     }
 
     public class LiveDetailsResponse
     {
         [JsonProperty("model")]
         public LiveDetails LiveDetails { get; set; }
+
         public Metas Metas { get; set; }
         public Errors Errors { get; set; }
     }
-
 }
