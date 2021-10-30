@@ -18,6 +18,16 @@
 <link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.0.1/css/bootstrap.css" />
 <link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.0.1/css/react-select.css" />
 
+<script src="https://source.zoom.us/2.0.1/lib/vendor/react.min.js"></script>
+<script src="https://source.zoom.us/2.0.1/lib/vendor/react-dom.min.js"></script>
+<script src="https://source.zoom.us/2.0.1/lib/vendor/redux.min.js"></script>
+<script src="https://source.zoom.us/2.0.1/lib/vendor/redux-thunk.min.js"></script>
+<script src="https://source.zoom.us/2.0.1/lib/vendor/lodash.min.js"></script>
+@*<script src="https://source.zoom.us/2.0.1/zoom-meeting-embedded-2.0.1.min.js"></script>*@
+<script src="https://source.zoom.us/zoom-meeting-2.0.1.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <!--======================================
         START COURSE DETAILS AREA
 ======================================-->
@@ -41,58 +51,88 @@
                         </div>-->
                         <!-- end course-overview-card -->
 
-                        <div id="meetingSDKElement">
-                            <!-- Zoom Meeting SDK Rendered Here -->
-                        </div>
+                        <button id="btnJoinMeeting" class="btn btn-primary">Join Meeting</button>
+
+
+                        <!--<div id="meetingSDKElement">-->
+                        <!-- Zoom Meeting SDK Rendered Here -->
+                        <!--</div>-->
+
+                        <div id="zmmtg-root"></div>
+                        <div id="aria-notify-area"></div>
 
                         <script>
 
-                            var client = ZoomMtgEmbedded.createClient();
+                            var zoomMeetingSDK = document.getElementById("zmmtg-root")
+                            zoomMeetingSDK.style.display = 'none';
+                            $('#btnJoinMeeting').click(function() {
 
-                            var meetingSDKElement = document.getElementById('meetingSDKElement');
+                                zoomMeetingSDK.style.display = 'block';
 
-                            client.init({
-                                debug: true,
-                                zoomAppRoot: meetingSDKElement,
-                                language: 'en-US',
-                                customize: {
-                                    meetingInfo: ['topic', 'host', 'mn', 'pwd', 'telPwd', 'invite', 'participant', 'dc', 'enctype'],
-                                    toolbar: {
-                                        buttons: [
-                                            {
-                                                text: 'Custom Button',
-                                                className: 'CustomButton',
-                                                onClick: () => {
-                                                    console.log('custom button');
+                                ZoomMtg.preLoadWasm();
+                                ZoomMtg.prepareWebSDK();
+// loads language files, also passes any error messages to the ui
+                                ZoomMtg.i18n.load('en-US');
+                                ZoomMtg.i18n.reload('en-US');
+                                ZoomMtg.setZoomJSLib('https://source.zoom.us/2.0.1/lib', '/av');
+                                ZoomMtg.init();
+
+
+                                var meetingNumber = '@Model.MeetingId';
+                                var userName = '@sessionManager.UserName';
+                                var apiKey = '@config.ZoomApiKey';
+                                var userEmail = "";
+                                var password = '@Model.MeetingPassword';
+
+                                ZoomMtg.join({
+                                    apiKey: apiKey,
+                                    signature: '@Model.MeetingSignature',
+                                    meetingNumber: meetingNumber,
+                                    password: password,
+                                    userName: userName
+                                });
+
+
+                                @*var client = ZoomMtgEmbedded.createClient();
+
+                                var meetingSDKElement = document.getElementById('meetingSDKElement');
+
+                                client.init({
+                                    debug: true,
+                                    zoomAppRoot: meetingSDKElement,
+                                    language: 'en-US',
+                                    customize: {
+                                        meetingInfo: ['topic', 'host', 'mn', 'pwd', 'telPwd', 'invite', 'dc', 'enctype'],
+                                        toolbar: {
+                                            buttons: [
+                                                {
+                                                    text: 'Custom Button',
+                                                    className: 'CustomButton',
+                                                    onClick: () => {
+                                                        console.log('custom button');
+                                                    }
                                                 }
-                                            }
-                                        ]
+                                            ]
+                                        }
                                     }
-                                }
+                                });
+
+                                var meetingNumber = '@Model.MeetingId';
+                                var userName = '@sessionManager.UserName';
+                                var apiKey = '@config.ZoomApiKey';
+                                var userEmail = "";
+                                var password = '@Model.MeetingPassword';
+
+                                client.join({
+                                    apiKey: apiKey,
+                                    signature: '@Model.MeetingSignature',
+                                    meetingNumber: meetingNumber,
+                                    password: password,
+                                    userName: userName
+                                });*@
                             });
 
-                            var meetingNumber = '@Model.MeetingId';
-                            var userName = @sessionManager.UserName;
-                            var apiKey = '@config.ZoomApiKey';
-                            var userEmail = "";
-                            var password = '@Model.MeetingPassword';
 
-                            $.ajax({
-                                method: "POST",
-                                url: "https://tollab-signature.herokuapp.com/",
-                                data: { meetingNumber: meetingNumber, role: 0 }
-                            })
-                                .done(function (msg) {
-                                    var signature = msg.signature;
-                                    console.log(signature);
-                                    client.join({
-                                        apiKey: apiKey,
-                                        signature: signature,
-                                        meetingNumber: meetingNumber,
-                                        password: password,
-                                        userName: userName
-                                    });
-                                });
                         </script>
                     }
                     else
@@ -336,10 +376,5 @@
 ======================================-->
 
 @section scripts{
-    <script src="https://source.zoom.us/2.0.1/lib/vendor/react.min.js"></script>
-    <script src="https://source.zoom.us/2.0.1/lib/vendor/react-dom.min.js"></script>
-    <script src="https://source.zoom.us/2.0.1/lib/vendor/redux.min.js"></script>
-    <script src="https://source.zoom.us/2.0.1/lib/vendor/redux-thunk.min.js"></script>
-    <script src="https://source.zoom.us/2.0.1/lib/vendor/lodash.min.js"></script>
-    <script src="https://source.zoom.us/2.0.1/zoom-meeting-embedded-2.0.1.min.js"></script>
+
 }
