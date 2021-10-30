@@ -304,5 +304,19 @@ namespace TolabPortal.Controllers
             }
             return View("Index");
         }
+
+        #region Error pages
+        [Route("~/NotFound")]
+        public async Task<IActionResult> NotFound()
+        {
+            return View("Error404");
+        }
+
+        [Route("~/ServerError")]
+        public async Task<IActionResult> ServerError()
+        {
+            return View("Error500");
+        }
+        #endregion
     }
 }
