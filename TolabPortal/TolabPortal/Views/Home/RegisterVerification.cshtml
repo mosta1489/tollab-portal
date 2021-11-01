@@ -35,14 +35,11 @@
                         <input asp-for="VerificationCode" class="form-control form--control" type="text" required>
                         <span class="la la-comment input-icon"></span>
                     </div>
-                    <input asp-for="PhoneKey" value="@Model.PhoneKey" hidden />
                     <input asp-for="PhoneNumber" value="@Model.PhoneNumber" hidden />
-                    <input asp-for="ConditionsAgree" value="@Model.ConditionsAgree" hidden />
+                    <input asp-for="UserPoliciesAgreed" value="@Model.UserPoliciesAgreed" hidden />
 
-                    <input asp-for="Name" value="@Model.Name" hidden />
+                    <input asp-for="UserName" value="@Model.UserName" hidden />
                     <input asp-for="Email" value="@Model.Email" hidden />
-                    <input asp-for="Gender" value="@Model.Gender" hidden />
-                    <input asp-for="Bio" value="@Model.Bio" hidden />
                 </div><!-- end input-box -->
                 <div class="btn-box">
                     <div class="d-flex align-items-center justify-content-between dsmblock">

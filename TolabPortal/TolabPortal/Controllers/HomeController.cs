@@ -54,19 +54,18 @@ namespace TolabPortal.Controllers
         {
             if (!ModelState.IsValid) return View(loginModel);
 
-            var phoneNumberWithKey = $"{loginModel.PhoneKey}{loginModel.PhoneNumber}";
-            var loginResponse = await _accountService.StudentLogin(phoneNumberWithKey);
+            var loginResponse = await _accountService.StudentCredentialsLogin(loginModel.UserName, loginModel.Password, loginModel.RememberMe);
             if (loginResponse.IsSuccessStatusCode)
             {
                 var responseString = await loginResponse.Content.ReadAsStringAsync();
                 var studentInfo = JsonConvert.DeserializeObject<Student>(responseString);
 
-                var loginVerification = new LoginVerification
-                {
-                    PhoneKey = loginModel.PhoneKey,
-                    PhoneNumber = loginModel.PhoneNumber
-                };
-                return View("LoginVerification", loginVerification);
+                //var loginVerification = new LoginVerification
+                //{
+                //    PhoneKey = loginModel.PhoneKey,
+                //    PhoneNumber = loginModel.PhoneNumber
+                //};
+                //return View("LoginVerification", loginVerification);
             }
             else
             {
@@ -75,6 +74,7 @@ namespace TolabPortal.Controllers
                 ViewBag.ErrorMessage = errorModel.errors.message;
                 return View(loginModel);
             }
+            return Ok();
         }
 
         [Route("~/login/Verification")]
@@ -86,13 +86,13 @@ namespace TolabPortal.Controllers
         [Route("~/login/ReSendVerificationCode")]
         public async Task<IActionResult> ReSendVerificationCode(string phoneKey, string phoneNumber)
         {
-            Login login = new Login()
-            {
-                ConditionsAgree = true,
-                PhoneKey = phoneKey,
-                PhoneNumber = phoneNumber
-            };
-            await Login(login);
+            //Login login = new Login()
+            //{
+            //    ConditionsAgree = true,
+            //    PhoneKey = phoneKey,
+            //    PhoneNumber = phoneNumber
+            //};
+            //await Login(login);
             var loginVerification = new LoginVerification
             {
                 PhoneKey = phoneKey,
@@ -134,36 +134,37 @@ namespace TolabPortal.Controllers
         [Route("~/login/Verification/Success")]
         public IActionResult LoginVerificationSuccess()
         {
-            return View("LoginVerificationSuccess");
+            return View("LoginVerificationSuccess");n 
         }
 
         #endregion Login
 
         #region Register
 
-        [Route("~/Registerphone")]
-        public IActionResult Registerphone()
+        [Route("~/Register")]
+        public IActionResult Register()
         {
-            return View("RegisterPhone");
+            return View("Register");
         }
 
         [HttpPost]
-        [Route("~/Registerphone")]
-        public IActionResult Registerphone(RegisterPhone registerPhone)
+        [Route("~/Register")]
+        public IActionResult Register(RegisterModel registerModel)
         {
-            if (ModelState.IsValid)
+            if (registerModel.Password != registerModel.RePassword)
             {
-                RegisterInfo registerInfo = new RegisterInfo();
-                registerInfo.PhoneKey = registerPhone.PhoneKey;
-                registerInfo.PhoneNumber = registerPhone.PhoneNumber;
-                registerInfo.ConditionsAgree = registerPhone.ConditionsAgree;
-                return View("RegisterInfo", registerInfo);
+                ViewBag.InvalidDataError = "كلمتى المرور غير متطابقتين";
+                return View();
             }
-            else
+
+            if (!registerModel.UserPoliciesAgreed)
             {
-                ViewBag.InvalidPhoneNumber = true;
+                ViewBag.InvalidDataError = "برجاء الموافقة على الشروط والأحكام";
+                return View();
             }
-            return View(registerPhone);
+
+            
+            return View("RegisterVerification", new RegisterVerification(registerModel.UserName, registerModel.Email, registerModel.PhoneNumber, registerModel.Password, registerModel.UserPoliciesAgreed));
         }
 
         [Route("~/RegisterInfo")]
