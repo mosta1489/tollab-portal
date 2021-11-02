@@ -70,7 +70,6 @@ namespace TolabPortal.Controllers
                 ViewBag.ErrorMessage = errorModel.errors.message;
                 return View(loginModel);
             }
-            return Ok();
         }
 
         [Route("~/login/Verification")]
