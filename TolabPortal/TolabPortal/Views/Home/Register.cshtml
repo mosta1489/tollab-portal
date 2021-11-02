@@ -1,9 +1,9 @@
 ﻿
-@model TolabPortal.Models.RegisterPhone
+@model TolabPortal.Models.RegisterModel
 
 @{
     ViewBag.CurrentPageTitle = "انشاء حساب جديد";
-    var items = new string[] { "الرئيسية", "اشتراك" };
+    var items = new[] { "الرئيسية", "اشتراك" };
     ViewBag.MenuItems = items;
 }
 <div class="col-lg-7 mx-auto">
@@ -31,6 +31,20 @@
                         </div>
                     </div><!-- end input-box -->
                     <div class="input-box">
+                        <label class="label-text txtbold"> النوع</label>
+                        <div class="form-group">
+                            <input required asp-for="Gender" type="radio" name="gender" id="male" value="true"> ذكر <br />
+                            <input required asp-for="Gender" type="radio" name="gender" id="female" value="false"> انثي <br />
+                        </div>
+                    </div><!-- end input-box -->
+                    <div class="input-box">
+                        <label class="label-text txtbold"> عن الشخص</label>
+                        <div class="form-group">
+                            <input asp-for="Bio" class="form-control form--control" type="text">
+                            <span class="la la-biohazard input-icon"></span>
+                        </div>
+                    </div><!-- end input-box -->
+                    <div class="input-box">
                         <label class="label-text txtbold">البريد الإلكتروني</label>
                         <div class="form-group">
                             <input name="email" class="form-control form--control" type="text">
@@ -40,7 +54,8 @@
                     <div class="input-box">
                         <label class="label-text txtbold">رقم الموبايل</label>
                         <div class="form-group">
-                            <input name="phoneNumber" class="form-control form--control" type="text">
+                            <input name="phoneNumber" id="phone" class="form-control form--control" type="text">
+                            <input hidden id="phoneKey" asp-for="PhoneKey" />
                             <span class="la la-mobile input-icon"></span>
                         </div>
                     </div><!-- end input-box -->

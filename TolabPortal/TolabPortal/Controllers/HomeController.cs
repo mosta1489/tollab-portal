@@ -58,14 +58,10 @@ namespace TolabPortal.Controllers
             if (loginResponse.IsSuccessStatusCode)
             {
                 var responseString = await loginResponse.Content.ReadAsStringAsync();
-                var studentInfo = JsonConvert.DeserializeObject<Student>(responseString);
+                var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
 
-                //var loginVerification = new LoginVerification
-                //{
-                //    PhoneKey = loginModel.PhoneKey,
-                //    PhoneNumber = loginModel.PhoneNumber
-                //};
-                //return View("LoginVerification", loginVerification);
+                await LoginUser(studentInfo);
+                return RedirectToAction("LoginVerificationSuccess");
             }
             else
             {
@@ -134,7 +130,7 @@ namespace TolabPortal.Controllers
         [Route("~/login/Verification/Success")]
         public IActionResult LoginVerificationSuccess()
         {
-            return View("LoginVerificationSuccess");n 
+            return View("LoginVerificationSuccess"); 
         }
 
         #endregion Login
@@ -149,7 +145,7 @@ namespace TolabPortal.Controllers
 
         [HttpPost]
         [Route("~/Register")]
-        public IActionResult Register(RegisterModel registerModel)
+        public async Task<IActionResult> Register(RegisterModel registerModel)
         {
             if (registerModel.Password != registerModel.RePassword)
             {
@@ -163,8 +159,21 @@ namespace TolabPortal.Controllers
                 return View();
             }
 
-            
-            return View("RegisterVerification", new RegisterVerification(registerModel.UserName, registerModel.Email, registerModel.PhoneNumber, registerModel.Password, registerModel.UserPoliciesAgreed));
+
+            var student = new Student(registerModel.PhoneKey, registerModel.PhoneNumber, registerModel.UserName, registerModel.Email,
+                bool.Parse(registerModel.Gender ?? "false"), registerModel.Bio, GetCountryIdByCode(registerModel.PhoneKey), registerModel.Password);
+
+            var registerVerificationResponse = await _accountService.RegisterStudent(student);
+            if (registerVerificationResponse.IsSuccessStatusCode)
+            {
+                var studentInfo = CommonUtilities.GetResponseModelFromJson<LoginVerificationSuccessResponseModel>(registerVerificationResponse);
+                return View("RegisterVerification", new RegisterVerification(registerModel.UserName, registerModel.Email, registerModel.PhoneNumber, registerModel.Password, registerModel.UserPoliciesAgreed, registerModel.PhoneKey, registerModel.Gender, registerModel.Bio));
+            }
+
+            var responseString = await registerVerificationResponse.Content.ReadAsStringAsync();
+            var errorModel = JsonConvert.DeserializeObject<ApiErrorModel>(responseString);
+            ViewBag.InvalidDataError = errorModel?.errors?.message;
+            return View();
         }
 
         [Route("~/RegisterInfo")]
@@ -177,43 +186,44 @@ namespace TolabPortal.Controllers
         [Route("~/RegisterInfo")]
         public async Task<IActionResult> RegisterInfo(RegisterInfo registerInfo)
         {
-            if (ModelState.IsValid)
-            {
-                var registerVerification = new RegisterVerification
-                {
-                    PhoneKey = registerInfo.PhoneKey,
-                    PhoneNumber = registerInfo.PhoneNumber,
-                    ConditionsAgree = registerInfo.ConditionsAgree,
-                    Name = registerInfo.Name,
-                    Email = registerInfo.Email,
-                    Gender = bool.Parse(registerInfo?.Gender ?? "false"),
-                    Bio = registerInfo.Bio,
-                    CountryId = GetCountryIdByCode(registerInfo.PhoneKey)
-                };
+            return Ok();
+            //if (ModelState.IsValid)
+            //{
+            //    var registerVerification = new RegisterVerification
+            //    {
+            //        PhoneKey = registerInfo.PhoneKey,
+            //        PhoneNumber = registerInfo.PhoneNumber,
+            //        ConditionsAgree = registerInfo.ConditionsAgree,
+            //        Name = registerInfo.Name,
+            //        Email = registerInfo.Email,
+            //        Gender = bool.Parse(registerInfo?.Gender ?? "false"),
+            //        Bio = registerInfo.Bio,
+            //        CountryId = GetCountryIdByCode(registerInfo.PhoneKey)
+            //    };
 
-                var student = new Student(registerVerification.PhoneKey, registerVerification.PhoneNumber, registerVerification.Name, registerVerification.Email,
-                    registerVerification.Gender, registerVerification.Bio, registerVerification.CountryId);
+            //    var student = new Student(registerVerification.PhoneKey, registerVerification.PhoneNumber, registerVerification.Name, registerVerification.Email,
+            //        registerVerification.Gender, registerVerification.Bio, registerVerification.CountryId);
 
-                var registerVerificationResponse = await _accountService.RegisterStudent(student);
-                if (registerVerificationResponse.IsSuccessStatusCode)
-                {
-                    var studentInfo = CommonUtilities.GetResponseModelFromJson<LoginVerificationSuccessResponseModel>(registerVerificationResponse);
-                    return View("RegisterVerification", registerVerification);
-                }
-                else
-                {
-                    var responseString = await registerVerificationResponse.Content.ReadAsStringAsync();
-                    var errorModel = JsonConvert.DeserializeObject<ApiErrorModel>(responseString);
-                    ViewBag.ErrorMessage = errorModel.errors.message;
+            //    var registerVerificationResponse = await _accountService.RegisterStudent(student);
+            //    if (registerVerificationResponse.IsSuccessStatusCode)
+            //    {
+            //        var studentInfo = CommonUtilities.GetResponseModelFromJson<LoginVerificationSuccessResponseModel>(registerVerificationResponse);
+            //        return View("RegisterVerification", registerVerification);
+            //    }
+            //    else
+            //    {
+            //        var responseString = await registerVerificationResponse.Content.ReadAsStringAsync();
+            //        var errorModel = JsonConvert.DeserializeObject<ApiErrorModel>(responseString);
+            //        ViewBag.ErrorMessage = errorModel.errors.message;
 
-                    return View(registerInfo);
-                }
-            }
-            else
-            {
-                ViewBag.ErrorMessage = "من فضلك ادخل البيانات المطلوبه";
-                return View(registerInfo);
-            }
+            //        return View(registerInfo);
+            //    }
+            //}
+            //else
+            //{
+            //    ViewBag.ErrorMessage = "من فضلك ادخل البيانات المطلوبه";
+            //    return View(registerInfo);
+            //}
         }
 
         [HttpPost]
@@ -232,37 +242,32 @@ namespace TolabPortal.Controllers
                     await LoginUser(studentInfo);
                     return RedirectToAction("LoginVerificationSuccess");
                 }
-                else
-                {
-                    ViewBag.ErrorMessage = "كود التفعيل غير صحيح";
-                    return View("RegisterVerification", registerVerification);
-                }
+
+                ViewBag.ErrorMessage = "كود التفعيل غير صحيح";
+                return View("RegisterVerification", registerVerification);
             }
-            else
-            {
-                ViewBag.ErrorMessage = "حدث خطا اثناء العمليه ";
-            }
+
+            ViewBag.ErrorMessage = "حدث خطا اثناء العمليه ";
             return View();
         }
 
         private async Task LoginUser(LoginVerificationSuccessResponseModel user)
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsIdentity identity = new ClaimsIdentity(await GetUserClaims(user), CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            var identity = new ClaimsIdentity(GetUserClaims(user), CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
         }
 
-        private async Task<IEnumerable<Claim>> GetUserClaims(LoginVerificationSuccessResponseModel user)
+        private IEnumerable<Claim> GetUserClaims(LoginVerificationSuccessResponseModel user)
         {
-            List<Claim> claims = new List<Claim>
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.model.Id.ToString()),
-                new Claim("AccessToken", user.model.Token.First().access_token),
-                new Claim("CountryId", user.model.CountryId.ToString()),
-                new Claim("CountryCode", user.model.CountryCode),
-                new Claim("HasInterests", user.model.Interests.Any().ToString())
+                new (ClaimTypes.NameIdentifier, user.model.Id.ToString()),
+                new ("AccessToken", user.model.Token.First().access_token),
+                new ("CountryId", user.model.CountryId.ToString()),
+                new ("CountryCode", user.model.CountryCode)
             };
 
             return claims;

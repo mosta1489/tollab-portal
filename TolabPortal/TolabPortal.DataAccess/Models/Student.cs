@@ -44,8 +44,9 @@ namespace TolabPortal.DataAccess.Models
         public string CurrencyLT { get; set; }
         public string CountryCode { get; set; }
         public string UserType { get; set; }
+        public string Password { get; set; }
 
-        public Student(string phoneKey, string phone, string name, string email, bool? gender, string bio, int countryId)
+        public Student(string phoneKey, string phone, string name, string email, bool? gender, string bio, int countryId, string password)
         {
             this.PhoneKey = phoneKey;
             this.Phone = phone;
@@ -54,6 +55,7 @@ namespace TolabPortal.DataAccess.Models
             this.Gender = gender;
             this.Bio = bio;
             CountryId = countryId;
+            Password = password;
         }
     }
 }
