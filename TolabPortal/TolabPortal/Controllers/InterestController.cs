@@ -140,13 +140,13 @@ namespace TolabPortal.Controllers
             }
 
             var subCategoriesResponse = await _interestService.AddDepartmentToStudent(departmentIds.ToList());
-
-            //await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            //ClaimsIdentity identity = new ClaimsIdentity(await GetUserClaims(), CookieAuthenticationDefaults.AuthenticationScheme);
-            //ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-            //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
-
-            return RedirectToAction("Index", "Subjects");
+            return RedirectToAction("Index", "Courses");
+            }
+            else
+            {
+                var errorMessage = "لم يتم اختيار مرحلة";
+                return RedirectToAction("RegisterSubCategory", new { errorMessage = errorMessage });
+            }
         }
 
         [Route("RegisterDepartment")]
