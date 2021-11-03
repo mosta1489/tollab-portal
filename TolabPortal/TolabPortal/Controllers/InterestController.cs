@@ -140,7 +140,7 @@ namespace TolabPortal.Controllers
             }
 
             var subCategoriesResponse = await _interestService.AddDepartmentToStudent(departmentIds.ToList());
-            return RedirectToAction("Index", "Courses");
+            return RedirectToAction("Index", "Subjects");
         }
 
         [Route("RegisterDepartment")]
