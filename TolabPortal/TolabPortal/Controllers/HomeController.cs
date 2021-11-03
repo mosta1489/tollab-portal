@@ -340,7 +340,6 @@ namespace TolabPortal.Controllers
             return View("EditProfile");
         }
 
-
         [HttpPost]
         [Route("~/Profile/Edit")]
         public async Task<IActionResult> EditProfileAsync(StudentProfileViewModel studentProfileViewModel)
@@ -376,20 +375,38 @@ namespace TolabPortal.Controllers
         }
 
         #region Used by Modals in user profile page
+
         [Route("~/GetCategoriesById")]
-        public async Task<IActionResult> GetCategoriesById(long? categoryId)
+        public async Task<IActionResult> GetCategoriesById(int categoryId)
         {
-            if (categoryId == null)
-                return Json("");
-
-            var interestsResponse = await _interestService.GetInterestsBeforeEdit();
-            if (interestsResponse.IsSuccessStatusCode)
+            var studentProfileResponse = await _accountService.GetStudentProfile();
             {
-                var studentInterests = await CommonUtilities.GetResponseModelFromJson<CategoryResponse>(interestsResponse);
-                return Json(studentInterests.Categories.FirstOrDefault(c => c.Id == categoryId.Value));
-            }
+                var studentProfile =
+                    await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentProfileResponse);
 
-            return Json("");
+                StudentProfileViewModel studentProfileViewModel =
+                    _mapper.Map<StudentProfileViewModel>(studentProfile.Student);
+
+                var interestsResponse = await _interestService.GetInterestsBeforeEdit();
+                if (interestsResponse.IsSuccessStatusCode)
+                {
+                    var studentInterests =
+                        await CommonUtilities.GetResponseModelFromJson<CategoryResponse>(interestsResponse);
+                    var category = studentInterests.Categories.FirstOrDefault(x => x.Id == categoryId);
+
+                    var model = new EditInterestModel()
+                    {
+                        Sections = studentProfile.Student.Sections.ToList(),
+                        SelectedCategoryId = categoryId,
+                        SelectedSubCategoryId = category.SubCategories.First().Id,
+                        SelectedDepartmentId = category.SubCategories.FirstOrDefault().Departments.First().Id
+                    };
+
+                    return PartialView("_EditInterest", model);
+                }
+
+                return Json("");
+            }
         }
 
         [Route("~/DeleteInterestyBysubCategoryId")]
@@ -410,12 +427,12 @@ namespace TolabPortal.Controllers
                     var departmentsDelete = await CommonUtilities.GetResponseModelFromJson<DepartmentResponse>(departmentsDeleteResponse);
                     return Json("deleted Successfully");
                 }
-
             }
 
             return Json("");
         }
-        #endregion
+
+        #endregion Used by Modals in user profile page
 
         #endregion Edit Profile
 

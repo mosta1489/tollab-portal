@@ -1,0 +1,30 @@
+﻿@model TolabPortal.DataAccess.Models.EditInterestModel
+
+@{
+    var category = Model.Sections.SelectMany(s => s.Categories).FirstOrDefault(x => x.Id == Model.SelectedCategoryId);
+}
+
+<p id="editInterestsModalHeader" class="mb-4 fontbb">@category.NameLT</p>
+<div class="payment-option-wrap">
+    @foreach (var subCategory in category.SubCategories)
+    {
+
+        <div class="payment-tab noshadbord @(subCategory.Id == Model.SelectedSubCategoryId?"active":"")">
+            <div class="payment-tab-toggle">
+                <input id="levelone" name="radio" type="radio" value="levelone">
+                <label for="levelone">@subCategory.NameLT</label>
+            </div>
+            <div class="payment-tab-content">
+                @foreach (var department in subCategory.Departments)
+                {
+                    <div class="custom-control custom-checkbox fs-15">
+                        <input type="checkbox" @(department.Id == Model.SelectedDepartmentId ? "checked" : "") class="custom-control-input" id="sublevelone">
+                        <label class="custom-control-label custom--control-label w-100" for="sublevelone">@department.NameLT</label>
+                    </div>
+                    <!-- end custom-control -->
+                }
+            </div>
+        </div>
+        <!-- end payment-tab -->
+    }
+</div>

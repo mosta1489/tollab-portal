@@ -65,8 +65,8 @@
                             </div>
                             <input id="category@(category.Id)" value="@category.Id" hidden />
                             <div class="my-course-info-action ml-2">
-                                <span id="editInterest" class="la la-edit icon-element icon-element-xs cursor-pointer shadow-sm mb-1 mr-1" data-target="#editactModal" data-id="@(category.Id)"></span>
-                                <span id="deleteInterest" class="la la-trash icon-element icon-element-xs cursor-pointer shadow-sm text-color-6" data-toggle="modal" data-target="#deleteModal" data-id="@(category.SubCategories.FirstOrDefault().Id)" title="Delete"></span>
+                                @*<span id="editInterest" class="la la-edit icon-element icon-element-xs cursor-pointer shadow-sm mb-1 mr-1" data-target="#editactModal" data-id="@(category.Id)"></span>*@
+                                <span id="deleteInterest" class="la la-trash icon-element icon-element-xs cursor-pointer shadow-sm text-color-6" data-target="#deleteModal" data-id="@(category.SubCategories.FirstOrDefault().Id)" title="Delete"></span>
                             </div>
                         </div>
                     }
@@ -181,22 +181,7 @@
             </div><!-- end modal-header -->
             <div class="modal-body">
                 <form class="pt-2" method="POST">
-                    <p id="editInterestsModalHeader" class="mb-4 fontbb">  </p>
-                    <div class="payment-option-wrap">
-                        <div class="payment-tab noshadbord">
-                            <div class="payment-tab-toggle">
-                                <input id="levelone" name="radio" type="radio" value="levelone">
-                                <label for="levelone">الصف الأول الثانوي</label>
-                            </div>
-                            <div class="payment-tab-content">
-
-                                <div class="custom-control custom-checkbox fs-15">
-                                    <input type="checkbox" class="custom-control-input" id="sublevelone">
-                                    <label class="custom-control-label custom--control-label w-100" for="sublevelone">العامة</label>
-                                </div><!-- end custom-control -->
-                            </div>
-                        </div><!-- end payment-tab -->
-                    </div>
+                    <div id="editInterestContent"></div>
                     <div class="btn-box align-items-center justify-content-between mt-2 pullone">
                         <button type="button" class="btn font-weight-medium mr-3" data-dismiss="modal">الغاء</button>
                         <button type="submit" class="btn theme-btn theme-btn-sm lh-30">حفظ التغييرات  <i class="la la-arrow-right icon ml-1"></i></button>
@@ -240,14 +225,16 @@
         //        });
         //});
 
+        var numberOfInterests = '@Model.Interests.Count';
+
         $(document).on("click", "#editInterest", function () {
 
             var categoryId = $(this).data('id');
 
             $.get("/GetCategoriesById?categoryId=" + categoryId,
                 function (data) {
-                    console.log(data);
-                    $('.modal-body #editInterestsModalHeader').html(data.NameLT);
+                    $('#editInterestContent').html(data);
+                    //$('.modal-body #editInterestsModalHeader').html(data.NameLT);
                     $('#editactModal').modal('show');
                 });
         });
@@ -255,6 +242,13 @@
         // });
 
         $(document).on("click", "#deleteInterest", function () {
+            if (numberOfInterests == '1') {
+                alert('لا يمكن حذف جميع النشاطات');
+                return;
+            }
+
+            $('#deleteModal').modal('toggle')
+
             var subCategoryId = $(this).data('id');
             $("#deleteBtn").click(function (e) {
                 $.get("/DeleteInterestyBysubCategoryId?subCategoryId=" + subCategoryId,
