@@ -48,17 +48,18 @@ namespace TolabPortal.Controllers
                 departmentsIds.AddRange(department.Departments.Select(d => d.Id));
             }
 
-            List<SubjectResponse> subjects = new List<SubjectResponse>();
+            List<Subject> subjects = new List<Subject>();
             foreach (var departmentsId in departmentsIds)
             {
                 var subjectsResponse = await _courseService.GetSubjectsWithTracksByDepartmentId(departmentsId);
                 if (subjectsResponse.IsSuccessStatusCode)
                 {
                     var subject = await CommonUtilities.GetResponseModelFromJson<SubjectResponse>(subjectsResponse);
-                    subjects.Add(subject);
+                    subjects.AddRange(subject.Subjects);
                 }
             }
-            return View("Index", subjects.SelectMany(s => s.Subjects).SelectMany(s => s.Tracks));
+            var allSubjects = subjects.SelectMany(s => s.Tracks).ToList();
+            return View("Index", allSubjects);
         }
 
         [Route("Track")]
@@ -74,14 +75,6 @@ namespace TolabPortal.Controllers
                 var student = await CommonUtilities.GetResponseModelFromJson<GetStudentProfileModel>(studentProfileResponse);
                 var interest = student.model.Interests.FirstOrDefault();
                 ViewBag.Interest = interest;
-
-                // getting teacher image
-                var teacherProfileResponse = await _courseService.GetTeacherById(trackDetails.CoursesByTrackId.Courses.FirstOrDefault().TeacherId);
-                if (teacherProfileResponse.IsSuccessStatusCode)
-                {
-                    var teacherProfile = await CommonUtilities.GetResponseModelFromJson<TeacherResponse>(teacherProfileResponse);
-                    trackDetails.CoursesByTrackId.TeacherPhoto = teacherProfile.Teacher.Photo;
-                }
 
                 // getting user transactions / subscribtions to check whether it contains the id of each course in this track
                 var studentTransactionsResponse = await _subscribeService.GetAllStudentTransactions();

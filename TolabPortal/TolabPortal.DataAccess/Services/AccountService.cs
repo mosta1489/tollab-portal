@@ -19,6 +19,7 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> RegisterStudent(Student student);
 
         Task<HttpResponseMessage> GetStudentProfile();
+        Task<HttpResponseMessage> UpdateStudentProfile(Student student);
         Task<HttpResponseMessage> LogoutStudent();
     }
 
@@ -60,7 +61,7 @@ namespace TolabPortal.DataAccess.Services
         {
             try
             {
-               
+
                 var studentLoginVerificationResponse = await _httpClient.GetAsync($"/api/Verify?PhoneKey={phoneKey}&Phone={phone}&vcode={verificationCode}");
                 return studentLoginVerificationResponse;
             }
@@ -118,7 +119,23 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
+        public async Task<HttpResponseMessage> UpdateStudentProfile(Student student)
+        {
+            try
+            {
+                if (student == null)
+                    throw new ArgumentNullException();
 
-        
+                var sectionsResponse = await _httpClient.PostAsync("/api/EditProfile", new StringContent(JsonConvert.SerializeObject(student), Encoding.UTF8, "application/json"));
+                return sectionsResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
     }
 }

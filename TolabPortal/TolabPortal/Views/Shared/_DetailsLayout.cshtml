@@ -1,5 +1,6 @@
 ﻿@using Microsoft.Extensions.Options
 @using Tolab.Common
+@using System.Security.Claims; 
 @inject IOptions<ApplicationConfig> options;
 @{
     var config = options.Value;
@@ -101,6 +102,11 @@
                                                     <ul class="cart-dropdown-menu after-none px-0 notification-dropdown-menu" style="right:-24px">
                                                         <li>
                                                             <ul class="generic-list-item">
+                                                                <li>
+                                                                    <a class="d-block" href="~/Profile/Edit?userId=@User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value">
+                                                                        <i class="la la-user mr-1"></i>الملف الشحصي
+                                                                    </a>
+                                                                </li>
                                                                 <li>
                                                                     <a href="~/logout" class="font-weight-bold">
                                                                         <i class="la la-power-off mr-1 la-lg"></i>تسجيل خروج

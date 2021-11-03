@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,7 @@ using System;
 using Tolab.Common;
 using TolabPortal.DataAccess.Services.Payment;
 using TolabPortal.Infrastructure;
+using TolabPortal.Mapping;
 
 namespace TolabPortal
 {
@@ -35,8 +37,14 @@ namespace TolabPortal
                 options.ExpireTimeSpan = TimeSpan.FromDays(1);
                 options.LoginPath = "/login";
             });
-            
-          
+
+            // Auto Mapper Configurations  
+            var mappingConfig = new MapperConfiguration(mc => {
+                mc.AddProfile(new MappingProfile());
+            });
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddControllersWithViews();
         }
 

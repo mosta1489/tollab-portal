@@ -1,0 +1,282 @@
+﻿@using Microsoft.Extensions.Options
+@using Tolab.Common
+@model TolabPortal.ViewModels.StudentProfileViewModel;
+@inject IOptions<ApplicationConfig> options;
+
+@{
+    var config = options.Value;
+
+    ViewBag.CurrentPageTitle = "الملف الشحصي";
+    var items = new string[] { "الرئيسية", "الملف الشحصي" };
+    ViewBag.MenuItems = items;
+}
+
+
+
+<section class="breadcrumb-area breadprof">
+    <div class="container">
+        <div class="breadcrumb-content text-left">
+            <div class="media media-card align-items-center">
+                <div class="media-img media--img media-img-md rounded-full">
+                    <img class="rounded-full lazy" src="images/student-1.jpg">
+                </div>
+                <div class="media-body">
+                    <h2 class="section__title fs-30">@Model.Name</h2>
+                    <span class="d-block lh-18 pt-1 pb-2">@Model.CreationDate منضم في </span>
+                </div>
+            </div><!-- end media -->
+        </div><!-- end breadcrumb-content -->
+    </div><!-- end container -->
+</section><!-- end breadcrumb-area -->
+
+
+<section class="course-area section--padding  pt-30px pb-30px bg-grligh">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="d-flex align-items-center pb-3">
+                    <h3 class="fs-23 txtbold">بيانات شخصية </h3>
+                    <div class="my-course-info-action ml-2">
+                        <span class="la la-edit icon-element icon-element-xs cursor-pointer shadow-sm" data-toggle="modal" data-target="#editprofileModal" title="Edit"></span>
+                    </div>
+                </div>
+                <div class="teacher-bar">
+                    <ul class="ntonelist">
+                        <li><i class="la la-envelope fs-17 mr-1"></i> البريد الإلكتروني : @Model.Email</li>
+                        <li><i class="la la-mobile fs-17 mr-1"></i>الموبايل : @Model.Phone</li>
+                        <li><i class="la la-file-video-o fs-17 mr-1"></i>عدد الكورسات : (@Model.NumberOfCourses)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="d-flex align-items-center pb-3 justify-content-between">
+                    <h3 class="fs-23 txtbold">نشاطاتي</h3>
+                    <a href="#" class="btn theme-btn theme-btn-sm" data-toggle="modal" data-target="#newactModal">اضف نشاط جديد</a>
+                </div>
+                <div class="teacher-bar">
+                    @foreach (var category in Model.Categories)
+                    {
+                        <div class="actdiv justify-content-between d-flex align-items-center">
+                            <div class="text-left">
+                                <p class="txtbold text-darbl"> @category.NameLT </p>
+                                <p> @category.SubCategories.FirstOrDefault().NameLT </p>
+                                <p> @category.SubCategories.FirstOrDefault().Departments.FirstOrDefault().NameLT </p>
+                            </div>
+                            <input id="category@(category.Id)" value="@category.Id" hidden />
+                            <div class="my-course-info-action ml-2">
+                                <span class="la la-edit icon-element icon-element-xs cursor-pointer shadow-sm mb-1 mr-1" data-toggle="modal" data-target="#editactModal" data-selector="@(category.Id)"></span>
+                                <span class="la la-trash icon-element icon-element-xs cursor-pointer shadow-sm text-color-6" data-toggle="modal" data-target="#deleteModal" title="Delete"></span>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div><!-- end container -->
+</section><!-- end courses-area -->
+<!-- Modal -->
+<div class="modal fade modal-container" id="editprofileModal" tabindex="-1" role="dialog" aria-labelledby="editprofileModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-gray">
+                <div class="pr-2">
+                    <h5 class="modal-title fs-19 lh-24 txtbold" id="editprofileModalTitle">تعديل بياناتك الشخصية</h5>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="la la-times"></span>
+                </button>
+            </div><!-- end modal-header -->
+            <div class="modal-body">
+                <form method="post" asp-action="EditProfile" asp-controller="Home">
+                    <div class="input-box">
+                        <label class="label-text fs-13 txtbold">اسم الطالب</label>
+                        <div class="form-group">
+                            <input class="form-control form--control pl-3" type="text" name="Name" value="@Model.Name">
+                        </div>
+                    </div>
+                    <div class="input-box">
+                        <label class="label-text fs-13 txtbold">البريد الإلكتروني</label>
+                        <div class="form-group">
+                            <input class="form-control form--control pl-3" type="text" name="Email" value="@Model.Email">
+                        </div>
+                    </div>
+                    <div class="input-box">
+                        <label class="label-text fs-13 txtbold">النوع</label>
+                        <div class="form-group d-flex align-items-center">
+                            <div class="custom-control custom-radio fs-15 mr-3">
+                                <input type="radio" class="custom-control-input" id="maleRadioCheck" name="Gender" value="true" required checked="@(Model.Gender == true ? "checked" : null)">
+                                <label class="custom-control-label custom--control-label" for="maleRadioCheck">ذكر</label>
+                            </div>
+                            <div class="custom-control custom-radio fs-15">
+                                <input type="radio" class="custom-control-input" id="femaleRadioCheck" name="Gender" value="false" required checked="@(Model.Gender == false ? "checked" : null)">
+                                <label class="custom-control-label custom--control-label" for="femaleRadioCheck">أنثى</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-box">
+                        <label class="label-text fs-13 txtbold">نبذة عنك</label>
+                        <div class="form-group">
+                            <textarea class="form-control form--control pl-3" rows="4" name="Bio">@Model.Bio</textarea>
+                        </div>
+                    </div>
+                    <div class="btn-box text-right pt-2">
+                        <button type="button" class="btn font-weight-medium mr-3" data-dismiss="modal">الغاء</button>
+                        <button type="submit" class="btn theme-btn theme-btn-sm lh-30">حفظ التغييرات <i class="la la-arrow-right icon ml-1"></i></button>
+                    </div>
+                </form>
+            </div><!-- end modal-body -->
+        </div><!-- end modal-content -->
+    </div><!-- end modal-dialog -->
+</div><!-- end modal -->
+<!-- Modal -->
+<div class="modal fade modal-container" id="newactModal" tabindex="-1" role="dialog" aria-labelledby="newactModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-gray">
+                <div class="pr-2">
+                    <h5 class="modal-title fs-19 lh-24 txtbold" id="newactModalTitle">اضف نشاط جديد</h5>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="la la-times"></span>
+                </button>
+            </div><!-- end modal-header -->
+            <div class="modal-body">
+                <form class="pt-2">
+                    <p class="mb-4">قم بتخصيص حسابك واختيار اهتمامتك</p>
+                    <div class="row">
+                        @foreach (var interest in Model.Interests)
+                        {
+                            <div class="col-lg-12 responsive-column-half">
+                                <div class="custom-control custom-radio mb-3 ml-0 pl-0">
+                                    <input type="radio" class="custom-control-input" id="school" name="radio-stacked">
+                                    <label class="custom-control-label custom--control-label custom--control-label-boxed noshadbord" for="school">
+                                        <img src="@config.MediaBaseUrl/ws/Images/SectionImages/@(interest.SectionImage)" class="chosimg">
+                                        <span class="font-weight-semi-bold text-black d-block">@interest.SectionNameLT</span>
+                                    </label>
+                                </div>
+                            </div><!-- end col-lg-2 -->
+                        }
+
+                    </div>
+                    <div class="btn-box text-right pt-2">
+                        <button type="button" class="btn font-weight-medium mr-3" data-dismiss="modal">الغاء</button>
+                        <button type="submit" class="btn theme-btn theme-btn-sm lh-30">التالي <i class="la la-arrow-right icon ml-1"></i></button>
+                    </div>
+                </form>
+            </div><!-- end modal-body -->
+        </div><!-- end modal-content -->
+    </div><!-- end modal-dialog -->
+</div><!-- end modal -->
+<!-- Modal -->
+<div class="modal fade modal-container" id="editactModal" tabindex="-1" role="dialog" aria-labelledby="editactModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-gray">
+                <div class="pr-2">
+                    <h5 class="modal-title fs-19 lh-24 txtbold" id="editactModalTitle">تعديل النشاط</h5>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="la la-times"></span>
+                </button>
+            </div><!-- end modal-header -->
+
+
+            @section Scripts
+            {
+                <script>
+                    $(function () {
+                        $('span[data-toggle="modal"]').click(function (event) {
+                            var categoryId = $(this).data('selector');
+                            console.log("category id: " + categoryId);
+                            
+                        })
+                    })
+                </script>
+            }
+
+
+            <div class="modal-body">
+                <form class="pt-2">
+                    <p class="mb-4 fontbb"> test test test </p>
+                    <div class="payment-option-wrap">
+                        <div class="payment-tab noshadbord">
+                            <div class="payment-tab-toggle">
+                                <input id="levelone" name="radio" type="radio" value="levelone">
+                                <label for="levelone">الصف الأول الثانوي</label>
+                            </div>
+                            <div class="payment-tab-content">
+
+                                <div class="custom-control custom-checkbox fs-15">
+                                    <input type="checkbox" class="custom-control-input" id="sublevelone">
+                                    <label class="custom-control-label custom--control-label w-100" for="sublevelone">العامة</label>
+                                </div><!-- end custom-control -->
+
+                            </div>
+                        </div><!-- end payment-tab -->
+                        <div class="payment-tab noshadbord">
+                            <div class="payment-tab-toggle">
+                                <input id="leveltwo" name="radio" type="radio" value="leveltwo">
+                                <label for="leveltwo">الصف الثاني الثانوي</label>
+                            </div>
+                            <div class="payment-tab-content">
+                                <div class="custom-control custom-checkbox fs-15">
+                                    <input type="checkbox" class="custom-control-input" id="subleve2lone">
+                                    <label class="custom-control-label custom--control-label w-100" for="subleve2lone">العامة</label>
+                                </div><!-- end custom-control -->
+                                <div class="custom-control custom-checkbox fs-15">
+                                    <input type="checkbox" class="custom-control-input" id="subleve2ltwo">
+                                    <label class="custom-control-label custom--control-label w-100" for="subleve2ltwo">العامة</label>
+                                </div><!-- end custom-control -->
+                                <div class="custom-control custom-checkbox fs-15">
+                                    <input type="checkbox" class="custom-control-input" id="sublevel2three">
+                                    <label class="custom-control-label custom--control-label w-100" for="sublevel2three">العامة</label>
+                                </div><!-- end custom-control -->
+                            </div>
+                        </div><!-- end payment-tab -->
+                        <div class="payment-tab noshadbord">
+                            <div class="payment-tab-toggle">
+                                <input type="radio" name="radio" id="levelthree" value="levelthree">
+                                <label for="levelthree">الصف الثالث الثانوي</label>
+                            </div>
+                            <div class="payment-tab-content">
+                                <div class="custom-control custom-checkbox fs-15">
+                                    <input type="checkbox" class="custom-control-input" id="subleve3lone">
+                                    <label class="custom-control-label custom--control-label w-100" for="subleve3lone">العامة</label>
+                                </div><!-- end custom-control -->
+                                <div class="custom-control custom-checkbox fs-15">
+                                    <input type="checkbox" class="custom-control-input" id="subleve3ltwo">
+                                    <label class="custom-control-label custom--control-label w-100" for="subleve3ltwo">العامة</label>
+                                </div><!-- end custom-control -->
+                                <div class="custom-control custom-checkbox fs-15">
+                                    <input type="checkbox" class="custom-control-input" id="sublevel3three">
+                                    <label class="custom-control-label custom--control-label w-100" for="sublevel3three">العامة</label>
+                                </div><!-- end custom-control -->
+                            </div>
+                        </div><!-- end payment-tab -->
+                    </div>
+                    <div class="btn-box align-items-center justify-content-between mt-2 pullone">
+                        <button type="button" class="btn font-weight-medium mr-3" data-dismiss="modal">الغاء</button>
+                        <button type="submit" class="btn theme-btn theme-btn-sm lh-30">حفظ التغييرات  <i class="la la-arrow-right icon ml-1"></i></button>
+                    </div><!-- end btn-box -->
+                </form>
+            </div><!-- end modal-body -->
+        </div><!-- end modal-content -->
+    </div><!-- end modal-dialog -->
+</div><!-- end modal -->
+<!-- Modal -->
+<div class="modal fade modal-container" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <span class="la la-exclamation-circle fs-60 text-warning"></span>
+                <h4 class="modal-title fs-19 font-weight-semi-bold pt-2 pb-1" id="deleteModalTitle">حذف النشاط</h4>
+                <p>هل أنت متأكد من الحذف ؟</p>
+                <div class="btn-box pt-4">
+                    <button type="button" class="btn font-weight-medium mr-3" data-dismiss="modal">لا</button>
+                    <button type="submit" class="btn theme-btn theme-btn-sm lh-30">حسنًا ، احذف</button>
+                </div>
+            </div><!-- end modal-body -->
+        </div><!-- end modal-content -->
+    </div><!-- end modal-dialog -->
+</div><!-- end modal -->

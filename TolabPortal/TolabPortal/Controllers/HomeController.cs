@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,16 +12,21 @@ using Tolab.Common;
 using TolabPortal.DataAccess.Models;
 using TolabPortal.DataAccess.Services;
 using TolabPortal.Models;
+using TolabPortal.ViewModels;
 
 namespace TolabPortal.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IInterestService _interestService;
+        private readonly IMapper _mapper;
 
-        public HomeController(IAccountService loginService)
+        public HomeController(IAccountService loginService, IInterestService interestService, IMapper mapper)
         {
             _accountService = loginService;
+            _interestService = interestService;
+            _mapper = mapper;
         }
 
         #region Home and Terms
@@ -292,7 +298,7 @@ namespace TolabPortal.Controllers
 
         #endregion Register
 
-
+        #region Logout
         [Route("~/logout")]
         public async Task<IActionResult> Logout()
         {
@@ -304,6 +310,67 @@ namespace TolabPortal.Controllers
             }
             return View("Index");
         }
+        #endregion
+
+        #region Edit Profile
+
+        [Route("~/Profile/Edit")]
+        public async Task<IActionResult> EditProfileAsync()
+        {
+            var studentProfileResponse = await _accountService.GetStudentProfile();
+            if (studentProfileResponse.IsSuccessStatusCode)
+            {
+                var studentProfile = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentProfileResponse);
+
+                StudentProfileViewModel studentProfileViewModel = _mapper.Map<StudentProfileViewModel>(studentProfile.Student);
+
+                var interestsResponse = await _interestService.GetInterestsBeforeEdit();
+                if (interestsResponse.IsSuccessStatusCode)
+                {
+                    var studentInterests = await CommonUtilities.GetResponseModelFromJson<CategoryResponse>(interestsResponse);
+                    studentProfileViewModel.Categories = studentInterests.Categories;
+                }
+
+                return View("EditProfile", studentProfileViewModel);
+            }
+            return View("EditProfile");
+        }
+
+        [HttpPost]
+        [Route("~/Profile/Edit")]
+        public async Task<IActionResult> EditProfileAsync(StudentProfileViewModel studentProfileViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var studentProfileResponse = await _accountService.GetStudentProfile();
+                if (studentProfileResponse.IsSuccessStatusCode)
+                {
+                    var studentProfile = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentProfileResponse);
+                    var currentStudentProfileViewModel = _mapper.Map<StudentProfileViewModel>(studentProfile.Student);
+
+                    Student updatedStudent = studentProfile.Student;
+                    updatedStudent.Name = studentProfileViewModel.Name;
+                    updatedStudent.Gender = studentProfileViewModel.Gender;
+                    updatedStudent.Bio = studentProfileViewModel.Bio;
+
+                    var updatedStudentProfileResponse = await _accountService.UpdateStudentProfile(updatedStudent);
+                    if (updatedStudentProfileResponse.IsSuccessStatusCode)
+                    {
+                        var updatedStudentProfile = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(updatedStudentProfileResponse);
+                        var updatedStudentProfileViewModel = _mapper.Map<StudentProfileViewModel>(updatedStudentProfile.Student);
+                        return View("EditProfile", updatedStudentProfileViewModel);
+                    }
+                    return View("EditProfile", currentStudentProfileViewModel);
+                }
+                else // couldn't get user profile casuse of some server error
+                {
+                    return View("Error500");
+                }
+            }
+            return RedirectToAction("EditProfile");
+        }
+
+        #endregion
 
         #region Error pages
         [Route("~/NotFound")]

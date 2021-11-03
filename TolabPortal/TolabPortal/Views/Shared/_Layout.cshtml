@@ -1,5 +1,6 @@
 ﻿@using Microsoft.Extensions.Options
 @using Tolab.Common
+@using System.Security.Claims;
 @inject IOptions<ApplicationConfig> options;
 @{
     var config = options.Value;
@@ -103,6 +104,11 @@
                                                         <li>
                                                             <ul class="generic-list-item">
                                                                 <li>
+                                                                    <a class="d-block" href="~/Profile/Edit?userId=@User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value">
+                                                                        <i class="la la-user mr-1"></i>الملف الشحصي
+                                                                    </a>
+                                                                </li>
+                                                                <li>
                                                                     <a href="~/logout" class="font-weight-bold">
                                                                         <i class="la la-power-off mr-1 la-lg"></i>تسجيل خروج
                                                                     </a>
@@ -179,8 +185,8 @@
     END HEADER AREA
     ======================================-->
     <!-- ================================
-    START BREADCRUMB AREA
-    ================================= -->
+       START BREADCRUMB AREA
+       ================================= -->
     <section class="breadcrumb-area section-padding img-bg-4">
         <div class="overlay"></div>
         <div class="container">
@@ -209,34 +215,43 @@
     <!-- ================================
     END BREADCRUMB AREA
     ================================= -->
-    <!-- ================================
-    START CONTACT AREA
-    ================================= -->
-    <section class="contact-area section--padding position-relative  pt-60px pb-40px bg-grligh">
-        <span class="ring-shape ring-shape-1"></span>
-        <span class="ring-shape ring-shape-2"></span>
-        <span class="ring-shape ring-shape-3"></span>
-        <span class="ring-shape ring-shape-4"></span>
-        <span class="ring-shape ring-shape-5"></span>
-        <span class="ring-shape ring-shape-6"></span>
-        <span class="ring-shape ring-shape-7"></span>
-        <div class="container">
-            @if (IsSectionDefined(name: "LivesPageCustomSection"))
-            {
-                @RenderSection(name: "LivesPageCustomSection")
-                @RenderBody()
-            }
-            else
-            {
-                <div class="row">
+
+    @if (ViewBag.CurrentPageTitle != "الملف الشحصي")
+    {
+        <!-- ================================
+        START CONTACT AREA
+        ================================= -->
+        <section class="contact-area section--padding position-relative  pt-60px pb-40px bg-grligh">
+            <span class="ring-shape ring-shape-1"></span>
+            <span class="ring-shape ring-shape-2"></span>
+            <span class="ring-shape ring-shape-3"></span>
+            <span class="ring-shape ring-shape-4"></span>
+            <span class="ring-shape ring-shape-5"></span>
+            <span class="ring-shape ring-shape-6"></span>
+            <span class="ring-shape ring-shape-7"></span>
+            <div class="container">
+                @if (IsSectionDefined(name: "LivesPageCustomSection"))
+                {
+                    @RenderSection(name: "LivesPageCustomSection")
                     @RenderBody()
-                </div>
-            }
-        </div><!-- end container -->
-    </section><!-- end contact-area -->
-    <!-- ================================
-    END CONTACT AREA
-    ================================= -->
+                }
+                else
+                {
+                    <div class="row">
+                        @RenderBody()
+                    </div>
+                }
+            </div><!-- end container -->
+        </section><!-- end contact-area -->
+        <!-- ================================
+        END CONTACT AREA
+        ================================= -->
+    }
+    else
+    {
+        @RenderBody()
+    }
+
     <!-- ================================
              END FOOTER AREA
     ================================= -->

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -24,7 +25,7 @@ namespace TolabPortal.DataAccess.Models
         public long CountryId { get; set; }
         public bool? Enabled { get; set; }
 
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public int Vcode { get; set; }
 
         public DateTime? ExpirationVCodeDate { get; set; }
@@ -55,5 +56,14 @@ namespace TolabPortal.DataAccess.Models
             this.Bio = bio;
             CountryId = countryId;
         }
+        public Student() { }
+    }
+
+    public class StudentResponse
+    {
+        [JsonProperty("model")]
+        public Student Student { get; set; }
+        public Metas Metas { get; set; }
+        public Errors Errors { get; set; }
     }
 }

@@ -21,6 +21,7 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> GetDepartmentsBySubCategoryId(long ubCategoryId);
 
         Task<HttpResponseMessage> AddDepartmentToStudent(List<long> departmentIds);
+        Task<HttpResponseMessage> GetInterestsBeforeEdit();
     }
 
     public class InterestService : IInterestService, IDisposable
@@ -108,7 +109,7 @@ namespace TolabPortal.DataAccess.Services
             {
                 if (departmentIds == null)
                     throw new ArgumentNullException();
-                
+
                 var sectionsResponse = await _httpClient.PostAsync("/api/AddDepartmentToStudent", new StringContent(JsonConvert.SerializeObject(departmentIds), Encoding.UTF8, "application/json"));
                 return sectionsResponse;
             }
@@ -118,6 +119,21 @@ namespace TolabPortal.DataAccess.Services
                 {
                     ReasonPhrase = ex.Message
                 };
+                return errorResponse;
+            }
+        }
+
+        public async Task<HttpResponseMessage> GetInterestsBeforeEdit()
+        {
+            try
+            {
+                var sectionsResponse = await _httpClient.GetAsync($"/api/GetInterestsBeforeEdit");
+                return sectionsResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
                 return errorResponse;
             }
         }

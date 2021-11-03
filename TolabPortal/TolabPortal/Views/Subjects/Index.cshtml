@@ -19,8 +19,8 @@
                 <div class="row">
                     @foreach (var track in Model)
                     {
-                        if (track.CountCourse <= 0)
-                            continue;
+                        //if (track.CountCourse <= 0)
+                        //    continue;
 
                         var trackDetailsEndPoint = $"/Subjects/Track?trackId={track.Id}";
                         <div class="col-lg-4 responsive-column-half">
