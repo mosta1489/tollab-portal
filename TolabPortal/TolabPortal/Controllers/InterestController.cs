@@ -139,12 +139,6 @@ namespace TolabPortal.Controllers
                 var departments = await CommonUtilities.GetResponseModelFromJson<DepartmentResponse>(departmenResponse);
                 var subCategoriesResponse = await _interestService.AddDepartmentToStudent(departments.Departments.Select(d => d.Id).ToList());
 
-                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                ClaimsIdentity identity = new ClaimsIdentity(await GetUserClaims(), CookieAuthenticationDefaults.AuthenticationScheme);
-                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
-
                 return RedirectToAction("Index", "Courses");
             }
             else
