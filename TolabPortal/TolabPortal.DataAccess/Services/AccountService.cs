@@ -14,14 +14,16 @@ namespace TolabPortal.DataAccess.Services
     {
         Task<HttpResponseMessage> StudentLogin(string loginPhone);
 
-        Task<HttpResponseMessage> VerifyStudentLogin(string phoneKey, string phone, string verificationCode);
+        Task<HttpResponseMessage> VerifyStudentLogin(string phoneKey, string phone, string verificationCode, string password);
 
         Task<HttpResponseMessage> RegisterStudent(Student student);
 
         Task<HttpResponseMessage> GetStudentProfile();
 
         Task<HttpResponseMessage> StudentCredentialsLogin(string userName, string password, bool rememberMe);
+
         Task<HttpResponseMessage> UpdateStudentProfile(Student student);
+
         Task<HttpResponseMessage> LogoutStudent();
     }
 
@@ -59,12 +61,11 @@ namespace TolabPortal.DataAccess.Services
             }
         }
 
-        public async Task<HttpResponseMessage> VerifyStudentLogin(string phoneKey, string phone, string verificationCode)
+        public async Task<HttpResponseMessage> VerifyStudentLogin(string phoneKey, string phone, string verificationCode, string password)
         {
             try
             {
-
-                var studentLoginVerificationResponse = await _httpClient.GetAsync($"/api/Verify?PhoneKey={phoneKey}&Phone={phone}&vcode={verificationCode}");
+                var studentLoginVerificationResponse = await _httpClient.GetAsync($"/api/VerifyWeb?PhoneKey={phoneKey}&Phone={phone}&vcode={verificationCode}&password={password}");
                 return studentLoginVerificationResponse;
             }
             catch (Exception ex)
@@ -112,7 +113,7 @@ namespace TolabPortal.DataAccess.Services
         {
             try
             {
-                return await _httpClient.PostAsync("api/students/credentials/login", new StringContent(JsonConvert.SerializeObject(new { userName, password, rememberMe}), Encoding.UTF8, "application/json"));
+                return await _httpClient.PostAsync("api/students/credentials/login", new StringContent(JsonConvert.SerializeObject(new { userName, password, rememberMe }), Encoding.UTF8, "application/json"));
             }
             catch (Exception ex)
             {
@@ -124,6 +125,7 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
+
         public async Task<HttpResponseMessage> LogoutStudent()
         {
             try
@@ -138,6 +140,7 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
+
         public async Task<HttpResponseMessage> UpdateStudentProfile(Student student)
         {
             try
@@ -155,6 +158,5 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
-
     }
 }
