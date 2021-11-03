@@ -12,14 +12,12 @@
     ViewBag.MenuItems = items;
 }
 
-
-
 <section class="breadcrumb-area breadprof">
     <div class="container">
         <div class="breadcrumb-content text-left">
             <div class="media media-card align-items-center">
                 <div class="media-img media--img media-img-md rounded-full">
-                    <img class="rounded-full lazy" src="images/student-1.jpg">
+                    <img class="rounded-full lazy" src="/images/student-1.jpg" data-src="/images/student-1.jpg">
                 </div>
                 <div class="media-body">
                     <h2 class="section__title fs-30">@Model.Name</h2>
@@ -29,7 +27,6 @@
         </div><!-- end breadcrumb-content -->
     </div><!-- end container -->
 </section><!-- end breadcrumb-area -->
-
 
 <section class="course-area section--padding  pt-30px pb-30px bg-grligh">
     <div class="container">
@@ -52,7 +49,7 @@
             <div class="col-lg-12">
                 <div class="d-flex align-items-center pb-3 justify-content-between">
                     <h3 class="fs-23 txtbold">نشاطاتي</h3>
-                    <a href="/interest/registersection" target="_blank" class="btn theme-btn theme-btn-sm">اضف نشاط جديد</a>
+                    <a href="/interest/registersection" class="btn theme-btn theme-btn-sm">اضف نشاط جديد</a>
                 </div>
                 <div class="teacher-bar">
                     @foreach (var category in Model.Categories)
@@ -65,7 +62,6 @@
                                 {
                                     <p> @department.NameLT </p>
                                 }
-
                             </div>
                             <input id="category@(category.Id)" value="@category.Id" hidden />
                             <div class="my-course-info-action ml-2">
@@ -74,7 +70,6 @@
                             </div>
                         </div>
                     }
-
                 </div>
             </div>
         </div>
@@ -103,7 +98,7 @@
                     <div class="input-box">
                         <label class="label-text fs-13 txtbold">البريد الإلكتروني</label>
                         <div class="form-group">
-                            <input class="form-control form--control pl-3" type="text" name="Email" value="@Model.Email">
+                            <input class="form-control form--control pl-3" type="text" name="Email" disabled="disabled" value="@Model.Email">
                         </div>
                     </div>
                     <div class="input-box">
@@ -162,7 +157,6 @@
                                 </div>
                             </div><!-- end col-lg-2 -->
                         }
-
                     </div>
                     <div class="btn-box text-right pt-2">
                         <button type="button" class="btn font-weight-medium mr-3" data-dismiss="modal">الغاء</button>
@@ -200,7 +194,6 @@
                                     <input type="checkbox" class="custom-control-input" id="sublevelone">
                                     <label class="custom-control-label custom--control-label w-100" for="sublevelone">العامة</label>
                                 </div><!-- end custom-control -->
-
                             </div>
                         </div><!-- end payment-tab -->
                     </div>
@@ -230,7 +223,6 @@
     </div><!-- end modal-dialog -->
 </div><!-- end modal -->
 
-
 @section Scripts
 {
 
@@ -248,7 +240,6 @@
         //        });
         //});
 
-
         $(document).on("click", "#editInterest", function () {
 
             var categoryId = $(this).data('id');
@@ -263,7 +254,6 @@
 
         // });
 
-
         $(document).on("click", "#deleteInterest", function () {
             var subCategoryId = $(this).data('id');
             $("#deleteBtn").click(function (e) {
@@ -275,9 +265,5 @@
                     });
             });
         });
-
-
-
-
     </script>
 }

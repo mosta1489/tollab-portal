@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +7,7 @@ using System.Threading.Tasks;
 using Tolab.Common;
 using TolabPortal.DataAccess.Models;
 using TolabPortal.DataAccess.Services;
+using TolabPortal.Models;
 
 namespace TolabPortal.Controllers
 {
@@ -18,12 +17,15 @@ namespace TolabPortal.Controllers
     {
         private readonly IInterestService _interestService;
         private readonly ISessionManager _sessionManager;
+        private readonly IAccountService _accountService;
 
         public InterestController(IInterestService interestService,
-            ISessionManager sessionManager)
+            ISessionManager sessionManager,
+            IAccountService accountService)
         {
             _interestService = interestService;
             _sessionManager = sessionManager;
+            _accountService = accountService;
         }
 
         public IActionResult Index()
@@ -139,7 +141,17 @@ namespace TolabPortal.Controllers
                 return RedirectToAction("RegisterSubCategory", new { errorMessage = errorMessage });
             }
 
+            var redirectToMyProfile = false;
+            var studentProfileResponse = await _accountService.GetStudentProfile();
+            var studentProfile = await CommonUtilities.GetResponseModelFromJson<GetStudentProfileModel>(studentProfileResponse);
+            if (studentProfile.model.Interests.Any())
+                redirectToMyProfile = true;
+
             var subCategoriesResponse = await _interestService.AddDepartmentToStudent(departmentIds.ToList());
+
+            if (redirectToMyProfile)
+                return RedirectToAction("EditProfile", "Home");
+
             return RedirectToAction("Index", "Subjects");
         }
 
