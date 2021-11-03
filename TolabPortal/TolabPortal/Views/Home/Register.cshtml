@@ -26,7 +26,7 @@
                     <div class="input-box">
                         <label class="label-text txtbold">اسم المستخدم</label>
                         <div class="form-group">
-                            <input name="userName" class="form-control form--control" type="text">
+                            <input name="userName" class="form-control form--control" type="text" value="@Model?.UserName">
                             <span class="la la-user input-icon"></span>
                         </div>
                     </div><!-- end input-box -->
@@ -40,22 +40,22 @@
                     <div class="input-box">
                         <label class="label-text txtbold"> عن الشخص</label>
                         <div class="form-group">
-                            <input asp-for="Bio" class="form-control form--control" type="text">
+                            <input asp-for="Bio" class="form-control form--control" type="text" value="@Model?.Bio">
                             <span class="la la-biohazard input-icon"></span>
                         </div>
                     </div><!-- end input-box -->
                     <div class="input-box">
                         <label class="label-text txtbold">البريد الإلكتروني</label>
                         <div class="form-group">
-                            <input name="email" class="form-control form--control" type="text">
+                            <input name="email" class="form-control form--control" type="text" value="@Model?.Email">
                             <span class="la la-envelope input-icon"></span>
                         </div>
                     </div><!-- end input-box -->
                     <div class="input-box">
                         <label class="label-text txtbold">رقم الموبايل</label>
                         <div class="form-group">
-                            <input name="phoneNumber" id="phone" class="form-control form--control" type="text">
-                            <input hidden id="phoneKey" asp-for="PhoneKey" />
+                            <input name="phoneNumber" id="phone" class="form-control form--control" type="text" value="@Model?.PhoneNumber">
+                            <input hidden id="phoneKey" asp-for="PhoneKey" value="@Model?.PhoneKey"/>
                             <span class="la la-mobile input-icon"></span>
                         </div>
                     </div><!-- end input-box -->
@@ -63,7 +63,7 @@
                         <label class="label-text txtbold">كلمة المرور</label>
                         <div class="input-group">
                             <span class="la la-lock input-icon"></span>
-                            <input name="password" class="form-control form--control password-field" type="password">
+                            <input name="password" class="form-control form--control password-field" type="password" value="@Model?.Password">
                             <div class="input-group-append">
                                 <button class="btn theme-btn theme-btn-transparent toggle-password" type="button">
                                     <svg class="eye-on" xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 0 24 24" width="22px" fill="#7f8897"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z" /></svg>
@@ -76,7 +76,7 @@
                         <label class="label-text txtbold">اعادة كلمة المرور</label>
                         <div class="input-group">
                             <span class="la la-lock input-icon"></span>
-                            <input name="rePassword" class="form-control form--control password-field" type="password">
+                            <input name="rePassword" class="form-control form--control password-field" type="password" value="@Model?.RePassword">
                             <div class="input-group-append">
                                 <button class="btn theme-btn theme-btn-transparent toggle-password" type="button">
                                     <svg class="eye-on" xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 0 24 24" width="22px" fill="#7f8897"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z" /></svg>

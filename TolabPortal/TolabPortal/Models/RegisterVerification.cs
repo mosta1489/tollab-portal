@@ -14,6 +14,18 @@
 
         public RegisterVerification() { }
 
+        public RegisterVerification(RegisterModel registerModel)
+        {
+            UserName = registerModel.UserName;
+            Email = registerModel.Email;
+            PhoneNumber = registerModel.PhoneNumber;
+            Password = registerModel.Password;
+            UserPoliciesAgreed = registerModel.UserPoliciesAgreed;
+            PhoneKey = registerModel.PhoneKey;
+            Gender = registerModel.Gender;
+            Bio = registerModel.Bio;
+        }
+
         public RegisterVerification(string userName, string email, string phoneNumber, string password, bool userPoliciesAgreed, string phoneKey, string gender, string bio)
         {
             UserName = userName;

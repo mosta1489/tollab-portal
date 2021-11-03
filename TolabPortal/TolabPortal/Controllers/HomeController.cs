@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Tolab.Common;
@@ -78,22 +79,19 @@ namespace TolabPortal.Controllers
             return View("LoginVerification");
         }
 
-        [Route("~/login/ReSendVerificationCode")]
+        [Route("~/register/ReSendVerificationCode")]
         public async Task<IActionResult> ReSendVerificationCode(string phoneKey, string phoneNumber)
         {
-            //Login login = new Login()
-            //{
-            //    ConditionsAgree = true,
-            //    PhoneKey = phoneKey,
-            //    PhoneNumber = phoneNumber
-            //};
-            //await Login(login);
-            var loginVerification = new LoginVerification
+            TempData.TryGetValue("RegisterModel", out var registerModelJson);
+            if (registerModelJson == null)
             {
-                PhoneKey = phoneKey,
-                PhoneNumber = phoneNumber
-            };
-            return View("LoginVerification", loginVerification);
+                ViewBag.InvalidDataError = "حدث خطأ ما اعد المحاولة";
+                return RedirectToAction("Register");
+            }
+            
+            var registerModel = JsonConvert.DeserializeObject<RegisterModel>(registerModelJson.ToString());
+            await _accountService.StudentLogin(phoneKey + phoneNumber);
+            return View("RegisterVerification", new RegisterVerification(registerModel));
         }
 
         [HttpPost]
@@ -149,13 +147,13 @@ namespace TolabPortal.Controllers
             if (registerModel.Password != registerModel.RePassword)
             {
                 ViewBag.InvalidDataError = "كلمتى المرور غير متطابقتين";
-                return View();
+                return View(registerModel);
             }
 
             if (!registerModel.UserPoliciesAgreed)
             {
                 ViewBag.InvalidDataError = "برجاء الموافقة على الشروط والأحكام";
-                return View();
+                return View(registerModel);
             }
 
 
@@ -166,13 +164,15 @@ namespace TolabPortal.Controllers
             if (registerVerificationResponse.IsSuccessStatusCode)
             {
                 var studentInfo = CommonUtilities.GetResponseModelFromJson<LoginVerificationSuccessResponseModel>(registerVerificationResponse);
+
+                TempData["RegisterModel"] = JsonConvert.SerializeObject(registerModel);
                 return View("RegisterVerification", new RegisterVerification(registerModel.UserName, registerModel.Email, registerModel.PhoneNumber, registerModel.Password, registerModel.UserPoliciesAgreed, registerModel.PhoneKey, registerModel.Gender, registerModel.Bio));
             }
 
             var responseString = await registerVerificationResponse.Content.ReadAsStringAsync();
             var errorModel = JsonConvert.DeserializeObject<ApiErrorModel>(responseString);
             ViewBag.InvalidDataError = errorModel?.errors?.message;
-            return View();
+            return View(registerModel);
         }
 
         [Route("~/RegisterInfo")]
@@ -232,7 +232,6 @@ namespace TolabPortal.Controllers
             if (ModelState.IsValid)
             {
                 var loginVerificationResponse = await _accountService.VerifyStudentLogin(registerVerification.PhoneKey, registerVerification.PhoneNumber, registerVerification.VerificationCode);
-
                 if (loginVerificationResponse.IsSuccessStatusCode)
                 {
                     var responseString = await loginVerificationResponse.Content.ReadAsStringAsync();
