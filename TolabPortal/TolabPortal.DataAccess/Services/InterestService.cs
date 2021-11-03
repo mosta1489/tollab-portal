@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Tolab.Common;
+using System.Net.Http.Json;
 
 namespace TolabPortal.DataAccess.Services
 {
@@ -18,9 +19,10 @@ namespace TolabPortal.DataAccess.Services
 
         Task<HttpResponseMessage> GetSubCategoriesByCategoryId(long categoryId);
 
-        Task<HttpResponseMessage> GetDepartmentsBySubCategoryId(long ubCategoryId);
+        Task<HttpResponseMessage> GetDepartmentsBySubCategoryId(long subCategoryId);
 
         Task<HttpResponseMessage> AddDepartmentToStudent(List<long> departmentIds);
+        Task<HttpResponseMessage> DeleteDepartmentByIds(List<long> departmentIds);
         Task<HttpResponseMessage> GetInterestsBeforeEdit();
     }
 
@@ -129,6 +131,27 @@ namespace TolabPortal.DataAccess.Services
             {
                 var sectionsResponse = await _httpClient.GetAsync($"/api/GetInterestsBeforeEdit");
                 return sectionsResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+        public async Task<HttpResponseMessage> DeleteDepartmentByIds(List<long> departmentIds)
+        {
+            try
+            {
+                HttpRequestMessage request = new HttpRequestMessage
+                {
+                    Content = JsonContent.Create(departmentIds),
+                    Method = HttpMethod.Delete,
+                    RequestUri = new Uri($"/api/DeleteDepartmentByIds", UriKind.Relative)
+                };
+                var deleteDepartmentsResponse = await _httpClient.SendAsync(request);
+                return deleteDepartmentsResponse;
             }
             catch (Exception ex)
             {

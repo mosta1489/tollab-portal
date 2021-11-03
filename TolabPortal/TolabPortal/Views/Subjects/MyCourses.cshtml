@@ -1,0 +1,178 @@
+﻿
+
+@using System.Net;
+@using System.Web
+@using Microsoft.Extensions.Options
+@using Tolab.Common
+@model IEnumerable<TolabPortal.DataAccess.Models.MyCourse>
+@inject IOptions<ApplicationConfig> options;
+
+@{
+    var config = options.Value;
+
+    ViewBag.CurrentPageTitle = "دوراتي";
+    var items = new string[] { "الرئيسية", "دوراتي" };
+    ViewBag.MenuItems = items;
+}
+<!-- ================================
+       START COURSE AREA
+================================= -->
+<section class="course-area section--padding  pt-60px pb-40px bg-grligh">
+    <div class="container">
+        <ul class="nav nav-tabs generic-tab" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link txtbold active" id="courses-tab" data-toggle="tab" href="#courses" role="tab" aria-controls="courses" aria-selected="false">
+                    دوراتي
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link txtbold" id="live-tab" data-toggle="tab" href="#live" role="tab" aria-controls="live" aria-selected="false">
+                    بث مباشر
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content pt-40px" id="myTabContent">
+            <div class="tab-pane fade show active" id="courses" role="tabpanel" aria-labelledby="courses-tab">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            @{
+                                var allStudentCourses = Model.SelectMany(c => c.Courses).ToList();
+                            }
+                            @foreach (var course in allStudentCourses)
+                            {
+                                var courseDetailsEndPoint = $"/Subjects/Track/Course?courseId={course.Id}&trackNameLT={HttpUtility.UrlEncode("test")}";
+
+                                <div class="col-lg-4 responsive-column-half">
+                                    <div class="card card-item card-preview full-height">
+                                        <div class="card-image">
+                                            <a href="@courseDetailsEndPoint" class="d-block">
+                                                <img class="card-img-top lazy catimg" src="/images/img-loading-ar.png" data-src="@options.Value.MediaBaseUrl/ws/Images/CourseImages/@(course.Image)">
+                                            </a>
+                                        </div><!-- end card-image -->
+                                        <div class="card-body">
+                                            <h6 class="ribbon ribbon-purpl-bg fs-14 mb-3">@course.VideoCount فيديوهات</h6>
+                                            <h6 class="ribbon ribbon-grlight-bg fs-14 mb-3"><img src="images/check.svg" width="14"> تم الاشتراك</h6>
+                                            <h5 class="card-title"><a href="@courseDetailsEndPoint"> @course.NameLT </a></h5>
+                                            <p class="card-text"> @course.TeacherName </p>
+
+                                            <!--<div class="rating-wrap d-flex align-items-center py-2">
+                                                <div class="review-stars">
+                                                    <span class="rating-number">4.4</span>
+                                                    <span class="la la-star"></span>
+                                                    <span class="la la-star"></span>
+                                                    <span class="la la-star"></span>
+                                                    <span class="la la-star"></span>
+                                                    <span class="la la-star-o"></span>
+                                                </div>
+                                                <span class="rating-total pl-1">(20,230)</span>
+                                            </div>-->
+                                            <!-- end rating-wrap -->
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <p class="card-price text-black font-weight-bold"> @course.CurrentCost <span class="before-price font-weight-medium"> @course.PreviousCost </span></p>
+                                                <div class="icon-element icon-element-sm shadow-sm cursor-pointer"><i class="la la-heart-o"></i></div>
+                                                <a href="@courseDetailsEndPoint" class="btn theme-btn">تفاصيل</a>
+                                            </div>
+                                        </div><!-- end card-body -->
+                                    </div><!-- end card -->
+                                </div><!-- end col-lg-6 -->
+                            }
+
+                        </div><!-- end row -->
+                    </div><!-- end col-lg-8 -->
+                </div><!-- end row -->
+            </div><!-- end tab-pane -->
+            <div class="tab-pane fade" id="live" role="tabpanel" aria-labelledby="live-tab">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card card-item card-preview card-preview card-item-list-layout">
+                                    <div class="card-image">
+                                        <a href="#" class="d-block">
+                                            <img class="card-img-top lazy" src="images/img-loading-ar.png" data-src="images/course001.jpg">
+                                        </a>
+                                        <div class="course-badge-labels">
+                                            <img src="images/live-active.svg" width="55">
+                                        </div>
+                                    </div><!-- end card-image -->
+                                    <div class="card-body">
+                                        <h6 class="ribbon ribbon-red-bg fs-14 mb-3">يعرض الآن</h6>
+                                        <h6 class="ribbon ribbon-grlight-bg fs-14 mb-3"><img src="images/check.svg" width="14"> تم الاشتراك</h6>
+                                        <h5 class="card-title mb-1"><a href="#">الحصة الاولى - أساسيات الإعراب</a></h5>
+                                        <p class="card-text text-color">أ.وليد الأحمدي</p>
+                                        <div class="rating-wrap d-flex align-items-center py-2">
+                                            <span class="rating-total"><img src="images/time.svg" width="14"> 120 دقيقة </span>
+                                            <span class="rating-total pl-3"><img src="images/viewer.svg" width="18">  24 مشاهد نشط  </span>
+                                        </div><!-- end rating-wrap -->
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="card-price text-black font-weight-bold">50 ج.م <span class="before-price font-weight-medium">60 ج.م</span></p>
+                                            <a href="#" class="btn theme-btn">تفاصيل</a>
+                                        </div>
+                                    </div><!-- end card-body -->
+                                </div><!-- end card -->
+                            </div><!-- end col-lg-6 -->
+                            <div class="col-lg-12">
+                                <div class="card card-item card-preview card-preview card-item-list-layout">
+                                    <div class="card-image">
+                                        <a href="#" class="d-block">
+                                            <img class="card-img-top lazy" src="images/img-loading-ar.png" data-src="images/course002.jpg">
+                                        </a>
+                                        <div class="course-badge-labels">
+                                            <img src="images/live-inactive.svg" width="55">
+                                        </div>
+                                    </div><!-- end card-image -->
+                                    <div class="card-body">
+                                        <h6 class="ribbon ribbon-gray-bg fs-14 mb-3">يعرض بعد 7 ساعات , 24 دقيقة</h6>
+                                        <h6 class="ribbon ribbon-grlight-bg fs-14 mb-3"><img src="images/check.svg" width="14"> تم الاشتراك</h6>
+                                        <h5 class="card-title mb-1"><a href="#">الحصة الاولى - أساسيات الإعراب</a></h5>
+                                        <p class="card-text text-color">أ.وليد الأحمدي</p>
+                                        <div class="rating-wrap d-flex align-items-center py-2">
+                                            <span class="rating-total"><img src="images/time.svg" width="14"> 120 دقيقة </span>
+                                            <span class="rating-total pl-3"><img src="images/subscriber.svg" width="16">  50 مشترك  </span>
+                                        </div><!-- end rating-wrap -->
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="card-price text-black font-weight-bold">50 ج.م <span class="before-price font-weight-medium">60 ج.م</span></p>
+                                            <a href="#" class="btn theme-btn">تفاصيل</a>
+                                        </div>
+                                    </div><!-- end card-body -->
+                                </div><!-- end card -->
+                            </div><!-- end col-lg-6 -->
+                            <div class="col-lg-12">
+                                <div class="card card-item card-preview card-preview card-item-list-layout">
+                                    <div class="card-image">
+                                        <a href="#" class="d-block">
+                                            <img class="card-img-top lazy" src="images/img-loading-ar.png" data-src="images/course003.jpg">
+                                        </a>
+                                        <div class="course-badge-labels">
+                                            <img src="images/live-active.svg" width="55">
+                                        </div>
+                                    </div><!-- end card-image -->
+                                    <div class="card-body">
+                                        <h6 class="ribbon ribbon-red-bg fs-14 mb-3">يعرض الآن</h6>
+                                        <h6 class="ribbon ribbon-grlight-bg fs-14 mb-3"><img src="images/check.svg" width="14"> تم الاشتراك</h6>
+                                        <h5 class="card-title mb-1"><a href="#">الحصة الاولى - أساسيات الإعراب</a></h5>
+                                        <p class="card-text text-color">أ.وليد الأحمدي</p>
+                                        <div class="rating-wrap d-flex align-items-center py-2">
+                                            <span class="rating-total"><img src="images/time.svg" width="14"> 120 دقيقة </span>
+                                            <span class="rating-total pl-3"><img src="images/viewer.svg" width="18">  24 مشاهد نشط  </span>
+                                        </div><!-- end rating-wrap -->
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="card-price text-black font-weight-bold">50 ج.م <span class="before-price font-weight-medium">60 ج.م</span></p>
+                                            <a href="#" class="btn theme-btn">تفاصيل</a>
+                                        </div>
+                                    </div><!-- end card-body -->
+                                </div><!-- end card -->
+                            </div><!-- end col-lg-6 -->
+                        </div><!-- end row -->
+                    </div><!-- end col-lg-8 -->
+                </div><!-- end row -->
+            </div><!-- end tab-pane -->
+        </div><!-- end tab-content -->
+
+    </div><!-- end container -->
+</section><!-- end courses-area -->
+<!-- ================================
+       END CONTACT AREA
+================================= -->

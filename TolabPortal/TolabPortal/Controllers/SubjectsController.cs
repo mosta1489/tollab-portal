@@ -163,6 +163,22 @@ namespace TolabPortal.Controllers
             }
         }
 
+        [Route("MyCourses")]
+        public async Task<IActionResult> GetStudentCourses()
+        {
+            var studentCoursesResponse = await _courseService.GetStudentCourses();
+            if (studentCoursesResponse.IsSuccessStatusCode)
+            {
+                var studentCourses = await CommonUtilities.GetResponseModelFromJson<MyCourseResponse>(studentCoursesResponse);
+                return View("MyCourses", studentCourses.MyCourses);
+
+            }
+            else
+            {
+                return View("TrackDetails", new CoursesByTrackIdModel());
+            }
+        }
+
         //[Route("Track/Course/VideQuestion")]
         //public async Task<IActionResult> AddCourseVideoQuestion()
         //{

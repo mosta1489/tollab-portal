@@ -339,19 +339,7 @@ namespace TolabPortal.Controllers
             }
             return View("EditProfile");
         }
-        
-        [Route("~/GetCategoryInterests")]
-        public async Task<IActionResult> GetCategoriesById(string categoryId)
-        {
-            var interestsResponse = await _interestService.GetInterestsBeforeEdit();
-            if (interestsResponse.IsSuccessStatusCode)
-            {
-                var studentInterests = await CommonUtilities.GetResponseModelFromJson<CategoryResponse>(interestsResponse);
-                return Json(studentInterests.Categories);
-            }
 
-            return Json("");
-        }
 
         [HttpPost]
         [Route("~/Profile/Edit")]
@@ -386,6 +374,48 @@ namespace TolabPortal.Controllers
             }
             return RedirectToAction("EditProfile");
         }
+
+        #region Used by Modals in user profile page
+        [Route("~/GetCategoriesById")]
+        public async Task<IActionResult> GetCategoriesById(long? categoryId)
+        {
+            if (categoryId == null)
+                return Json("");
+
+            var interestsResponse = await _interestService.GetInterestsBeforeEdit();
+            if (interestsResponse.IsSuccessStatusCode)
+            {
+                var studentInterests = await CommonUtilities.GetResponseModelFromJson<CategoryResponse>(interestsResponse);
+                return Json(studentInterests.Categories.FirstOrDefault(c => c.Id == categoryId.Value));
+            }
+
+            return Json("");
+        }
+
+        [Route("~/DeleteInterestyBysubCategoryId")]
+        public async Task<IActionResult> DeleteInterestyBysubCategoryId(long? subCategoryId)
+        {
+            if (subCategoryId == null)
+                return Json("");
+
+            var studentDepartmentsResponse = await _interestService.GetDepartmentsBySubCategoryId(subCategoryId.Value);
+            if (studentDepartmentsResponse.IsSuccessStatusCode)
+            {
+                var studentDepartments = await CommonUtilities.GetResponseModelFromJson<DepartmentResponse>(studentDepartmentsResponse);
+                var departmentsIdToDelete = studentDepartments.Departments.Select(d => d.Id).ToList();
+
+                var departmentsDeleteResponse = await _interestService.DeleteDepartmentByIds(departmentsIdToDelete);
+                if (departmentsDeleteResponse.IsSuccessStatusCode)
+                {
+                    var departmentsDelete = await CommonUtilities.GetResponseModelFromJson<DepartmentResponse>(departmentsDeleteResponse);
+                    return Json("deleted Successfully");
+                }
+
+            }
+
+            return Json("");
+        }
+        #endregion
 
         #endregion Edit Profile
 

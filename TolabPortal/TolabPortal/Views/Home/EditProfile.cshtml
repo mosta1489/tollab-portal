@@ -52,7 +52,7 @@
             <div class="col-lg-12">
                 <div class="d-flex align-items-center pb-3 justify-content-between">
                     <h3 class="fs-23 txtbold">نشاطاتي</h3>
-                    <a href="#" class="btn theme-btn theme-btn-sm" data-toggle="modal" data-target="#newactModal">اضف نشاط جديد</a>
+                    <a href="/interest/registersection" target="_blank" class="btn theme-btn theme-btn-sm">اضف نشاط جديد</a>
                 </div>
                 <div class="teacher-bar">
                     @foreach (var category in Model.Categories)
@@ -61,12 +61,16 @@
                             <div class="text-left">
                                 <p class="txtbold text-darbl"> @category.NameLT </p>
                                 <p> @category.SubCategories.FirstOrDefault().NameLT </p>
-                                <p> @category.SubCategories.FirstOrDefault().Departments.FirstOrDefault().NameLT </p>
+                                @foreach (var department in category.SubCategories.FirstOrDefault().Departments)
+                                {
+                                    <p> @department.NameLT </p>
+                                }
+
                             </div>
                             <input id="category@(category.Id)" value="@category.Id" hidden />
                             <div class="my-course-info-action ml-2">
-                                <span class="la la-edit icon-element icon-element-xs cursor-pointer shadow-sm mb-1 mr-1" data-toggle="modal" data-target="#editactModal" data-selector="@(category.Id)"></span>
-                                <span class="la la-trash icon-element icon-element-xs cursor-pointer shadow-sm text-color-6" data-toggle="modal" data-target="#deleteModal" title="Delete"></span>
+                                <span id="editInterest" class="la la-edit icon-element icon-element-xs cursor-pointer shadow-sm mb-1 mr-1" data-target="#editactModal" data-id="@(category.Id)"></span>
+                                <span id="deleteInterest" class="la la-trash icon-element icon-element-xs cursor-pointer shadow-sm text-color-6" data-toggle="modal" data-target="#deleteModal" data-id="@(category.SubCategories.FirstOrDefault().Id)" title="Delete"></span>
                             </div>
                         </div>
                     }
@@ -170,7 +174,7 @@
     </div><!-- end modal-dialog -->
 </div><!-- end modal -->
 <!-- Modal -->
-<div class="modal fade modal-container" id="editactModal" tabindex="-1" role="dialog" aria-labelledby="editactModalTitle" aria-hidden="true">
+<div class="modal fade modal-container hid" id="editactModal" tabindex="-1" role="dialog" aria-labelledby="editactModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header border-bottom-gray">
@@ -183,7 +187,7 @@
             </div><!-- end modal-header -->
             <div class="modal-body">
                 <form class="pt-2" method="POST">
-                    <p id="editInterestsModalHeader" class="mb-4 fontbb"> test test test </p>
+                    <p id="editInterestsModalHeader" class="mb-4 fontbb">  </p>
                     <div class="payment-option-wrap">
                         <div class="payment-tab noshadbord">
                             <div class="payment-tab-toggle">
@@ -197,46 +201,6 @@
                                     <label class="custom-control-label custom--control-label w-100" for="sublevelone">العامة</label>
                                 </div><!-- end custom-control -->
 
-                            </div>
-                        </div><!-- end payment-tab -->
-                        <div class="payment-tab noshadbord">
-                            <div class="payment-tab-toggle">
-                                <input id="leveltwo" name="radio" type="radio" value="leveltwo">
-                                <label for="leveltwo">الصف الثاني الثانوي</label>
-                            </div>
-                            <div class="payment-tab-content">
-                                <div class="custom-control custom-checkbox fs-15">
-                                    <input type="checkbox" class="custom-control-input" id="subleve2lone">
-                                    <label class="custom-control-label custom--control-label w-100" for="subleve2lone">العامة</label>
-                                </div><!-- end custom-control -->
-                                <div class="custom-control custom-checkbox fs-15">
-                                    <input type="checkbox" class="custom-control-input" id="subleve2ltwo">
-                                    <label class="custom-control-label custom--control-label w-100" for="subleve2ltwo">العامة</label>
-                                </div><!-- end custom-control -->
-                                <div class="custom-control custom-checkbox fs-15">
-                                    <input type="checkbox" class="custom-control-input" id="sublevel2three">
-                                    <label class="custom-control-label custom--control-label w-100" for="sublevel2three">العامة</label>
-                                </div><!-- end custom-control -->
-                            </div>
-                        </div><!-- end payment-tab -->
-                        <div class="payment-tab noshadbord">
-                            <div class="payment-tab-toggle">
-                                <input type="radio" name="radio" id="levelthree" value="levelthree">
-                                <label for="levelthree">الصف الثالث الثانوي</label>
-                            </div>
-                            <div class="payment-tab-content">
-                                <div class="custom-control custom-checkbox fs-15">
-                                    <input type="checkbox" class="custom-control-input" id="subleve3lone">
-                                    <label class="custom-control-label custom--control-label w-100" for="subleve3lone">العامة</label>
-                                </div><!-- end custom-control -->
-                                <div class="custom-control custom-checkbox fs-15">
-                                    <input type="checkbox" class="custom-control-input" id="subleve3ltwo">
-                                    <label class="custom-control-label custom--control-label w-100" for="subleve3ltwo">العامة</label>
-                                </div><!-- end custom-control -->
-                                <div class="custom-control custom-checkbox fs-15">
-                                    <input type="checkbox" class="custom-control-input" id="sublevel3three">
-                                    <label class="custom-control-label custom--control-label w-100" for="sublevel3three">العامة</label>
-                                </div><!-- end custom-control -->
                             </div>
                         </div><!-- end payment-tab -->
                     </div>
@@ -259,7 +223,7 @@
                 <p>هل أنت متأكد من الحذف ؟</p>
                 <div class="btn-box pt-4">
                     <button type="button" class="btn font-weight-medium mr-3" data-dismiss="modal">لا</button>
-                    <button type="submit" class="btn theme-btn theme-btn-sm lh-30">حسنًا ، احذف</button>
+                    <button type="submit" class="btn theme-btn theme-btn-sm lh-30" id="deleteBtn">حسنًا ، احذف</button>
                 </div>
             </div><!-- end modal-body -->
         </div><!-- end modal-content -->
@@ -271,22 +235,48 @@
 {
 
     <script>
-        $(function() {
-            $('span[data-toggle="modal"]').click(function(event) {
-                var categoryId = $(this).data('selector');
-                console.log("category id: " + categoryId);
 
-                $.get("/GetCategoryInterests",
-                    function(data) {
-                        console.log(data);
+        //triggered when modal is about to be shown
+
+        // $('span[data-toggle="modal"]').click(function (event) {
+
+        //$('#editactModal').on('show.bs.modal', function (e) {
+        //    $.get("/GetCategoriesById?categoryId=" + categoryId,
+        //        function (data) {
+        //            console.log(data);
+        //            $("#editInterestsModalHeader").html(data.NameLT);
+        //        });
+        //});
 
 
+        $(document).on("click", "#editInterest", function () {
+
+            var categoryId = $(this).data('id');
+
+            $.get("/GetCategoriesById?categoryId=" + categoryId,
+                function (data) {
+                    console.log(data);
+                    $('.modal-body #editInterestsModalHeader').html(data.NameLT);
+                    $('#editactModal').modal('show');
+                });
+        });
+
+        // });
 
 
-                        $("#editInterestsModalHeader").text(data.test);
+        $(document).on("click", "#deleteInterest", function () {
+            var subCategoryId = $(this).data('id');
+            $("#deleteBtn").click(function (e) {
+                $.get("/DeleteInterestyBysubCategoryId?subCategoryId=" + subCategoryId,
+                    function (data, success, errors) {
+                        if (data == "deleted Successfully") {
+                            location.reload();
+                        }
                     });
             });
         });
+
+
 
 
     </script>
