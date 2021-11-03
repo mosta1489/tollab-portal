@@ -4,8 +4,9 @@ namespace TolabPortal.Models
 {
     public class Login
     {
-        public string PhoneKey { get; set; }
-        public string PhoneNumber { get; set; }
-        public bool ConditionsAgree { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string RememberMeString { get; set; }
+        public bool RememberMe => RememberMeString == "on";
     }
 }

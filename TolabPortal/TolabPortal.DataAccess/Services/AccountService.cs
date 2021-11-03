@@ -19,6 +19,8 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> RegisterStudent(Student student);
 
         Task<HttpResponseMessage> GetStudentProfile();
+
+        Task<HttpResponseMessage> StudentCredentialsLogin(string userName, string password, bool rememberMe);
         Task<HttpResponseMessage> LogoutStudent();
     }
 
@@ -101,6 +103,23 @@ namespace TolabPortal.DataAccess.Services
             {
                 var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+        public async Task<HttpResponseMessage> StudentCredentialsLogin(string userName, string password, bool rememberMe)
+        {
+            try
+            {
+                return await _httpClient.PostAsync("api/students/credentials/login", new StringContent(JsonConvert.SerializeObject(new { userName, password, rememberMe}), Encoding.UTF8, "application/json"));
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = ex.Message
+                };
+
                 return errorResponse;
             }
         }
