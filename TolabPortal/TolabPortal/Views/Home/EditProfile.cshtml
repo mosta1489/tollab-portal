@@ -1,4 +1,5 @@
 ﻿@using Microsoft.Extensions.Options
+@using Newtonsoft.Json
 @using Tolab.Common
 @model TolabPortal.ViewModels.StudentProfileViewModel;
 @inject IOptions<ApplicationConfig> options;
@@ -180,25 +181,9 @@
                     <span aria-hidden="true" class="la la-times"></span>
                 </button>
             </div><!-- end modal-header -->
-
-
-            @section Scripts
-            {
-                <script>
-                    $(function () {
-                        $('span[data-toggle="modal"]').click(function (event) {
-                            var categoryId = $(this).data('selector');
-                            console.log("category id: " + categoryId);
-                            
-                        })
-                    })
-                </script>
-            }
-
-
             <div class="modal-body">
-                <form class="pt-2">
-                    <p class="mb-4 fontbb"> test test test </p>
+                <form class="pt-2" method="POST">
+                    <p id="editInterestsModalHeader" class="mb-4 fontbb"> test test test </p>
                     <div class="payment-option-wrap">
                         <div class="payment-tab noshadbord">
                             <div class="payment-tab-toggle">
@@ -280,3 +265,29 @@
         </div><!-- end modal-content -->
     </div><!-- end modal-dialog -->
 </div><!-- end modal -->
+
+
+@section Scripts
+{
+
+    <script>
+        $(function() {
+            $('span[data-toggle="modal"]').click(function(event) {
+                var categoryId = $(this).data('selector');
+                console.log("category id: " + categoryId);
+
+                $.get("/GetCategoryInterests",
+                    function(data) {
+                        console.log(data);
+
+
+
+
+                        $("#editInterestsModalHeader").text(data.test);
+                    });
+            });
+        });
+
+
+    </script>
+}

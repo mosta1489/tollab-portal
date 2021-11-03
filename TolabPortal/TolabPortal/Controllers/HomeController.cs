@@ -339,6 +339,19 @@ namespace TolabPortal.Controllers
             }
             return View("EditProfile");
         }
+        
+        [Route("~/GetCategoryInterests")]
+        public async Task<IActionResult> GetCategoriesById(string categoryId)
+        {
+            var interestsResponse = await _interestService.GetInterestsBeforeEdit();
+            if (interestsResponse.IsSuccessStatusCode)
+            {
+                var studentInterests = await CommonUtilities.GetResponseModelFromJson<CategoryResponse>(interestsResponse);
+                return Json(studentInterests.Categories);
+            }
+
+            return Json("");
+        }
 
         [HttpPost]
         [Route("~/Profile/Edit")]
@@ -374,6 +387,7 @@ namespace TolabPortal.Controllers
             return RedirectToAction("EditProfile");
         }
 
+        
         #endregion
 
         #region Error pages
