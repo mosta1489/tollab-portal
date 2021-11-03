@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using System.Linq;
 using System.Threading.Tasks;
 using Tolab.Common;
 using TolabPortal.DataAccess.Services;
@@ -31,7 +31,7 @@ namespace TolabPortal.Infrastructure
 
                 if (studentProfile.model.Interests.Any() && context.Request.Path.Value != null && context.Request.Path.Value.Contains("/Interest"))
                 {
-                    context.Response.Redirect("/Courses/Index");
+                    context.Response.Redirect("/Subjects/Index");
                     return;
                 }
             }
