@@ -23,7 +23,9 @@ namespace TolabPortal.Infrastructure
                 var studentProfileResponse = await accountService.GetStudentProfile();
                 var studentProfile = await CommonUtilities.GetResponseModelFromJson<GetStudentProfileModel>(studentProfileResponse);
 
-                if (!studentProfile.model.Interests.Any() && context.Request.Path.Value != null && !context.Request.Path.Value.Contains("/Interest"))
+                if (!studentProfile.model.Interests.Any() && context.Request.Path.Value != null
+                                                          && !context.Request.Path.Value.Contains("/Interest")
+                                                          && !context.Request.Path.Value.Contains("/logout"))
                 {
                     context.Response.Redirect("/Interest/RegisterSection");
                     return;

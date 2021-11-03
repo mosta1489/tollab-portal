@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Tolab.Common;
@@ -95,52 +94,52 @@ namespace TolabPortal.Controllers
                 ViewBag.InvalidDataError = "حدث خطأ ما اعد المحاولة";
                 return RedirectToAction("Register");
             }
-            
+
             var registerModel = JsonConvert.DeserializeObject<RegisterModel>(registerModelJson.ToString());
             await _accountService.StudentLogin(phoneKey + phoneNumber);
             return View("RegisterVerification", new RegisterVerification(registerModel));
         }
 
-        [HttpPost]
-        [Route("~/login/Verification")]
-        public async Task<IActionResult> LoginVerification(LoginVerification loginVerification)
-        {
-            if (ModelState.IsValid)
-            {
-                var loginVerificationResponse = await _accountService.VerifyStudentLogin(loginVerification.PhoneKey, loginVerification.PhoneNumber, loginVerification.ActivationCode);
+        //[HttpPost]
+        //[Route("~/login/Verification")]
+        //public async Task<IActionResult> LoginVerification(LoginVerification loginVerification)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var loginVerificationResponse = await _accountService.VerifyStudentLogin(loginVerification.PhoneKey, loginVerification.PhoneNumber, loginVerification.ActivationCode);
 
-                if (loginVerificationResponse.IsSuccessStatusCode)
-                {
-                    var responseString = await loginVerificationResponse.Content.ReadAsStringAsync();
-                    var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
+        //        if (loginVerificationResponse.IsSuccessStatusCode)
+        //        {
+        //            var responseString = await loginVerificationResponse.Content.ReadAsStringAsync();
+        //            var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
 
-                    await LoginUser(studentInfo);
-                    var claims = GetUserClaims(studentInfo);
+        //            await LoginUser(studentInfo);
+        //            var claims = GetUserClaims(studentInfo);
 
-                    if (studentInfo.model.Interests.Count > 0)
-                    {
-                        return RedirectToAction("Index", "Subjects");
-                    }
-                    return RedirectToAction("LoginVerificationSuccess");
-                }
-                else
-                {
-                    ViewBag.ErrorMessage = "كود التفعيل غير صحيح";
-                    return View("LoginVerification", loginVerification);
-                }
-            }
-            else
-            {
-                ViewBag.ErrorMessage = "حدث خطا اثناء العمليه ";
-            }
-            return View();
-        }
+        //            if (studentInfo.model.Interests.Count > 0)
+        //            {
+        //                return RedirectToAction("Index", "Subjects");
+        //            }
+        //            return RedirectToAction("LoginVerificationSuccess");
+        //        }
+        //        else
+        //        {
+        //            ViewBag.ErrorMessage = "كود التفعيل غير صحيح";
+        //            return View("LoginVerification", loginVerification);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        ViewBag.ErrorMessage = "حدث خطا اثناء العمليه ";
+        //    }
+        //    return View();
+        //}
 
         [Authorize]
         [Route("~/login/Verification/Success")]
         public IActionResult LoginVerificationSuccess()
         {
-            return View("LoginVerificationSuccess"); 
+            return View("LoginVerificationSuccess");
         }
 
         #endregion Login
@@ -168,7 +167,6 @@ namespace TolabPortal.Controllers
                 ViewBag.InvalidDataError = "برجاء الموافقة على الشروط والأحكام";
                 return View(registerModel);
             }
-
 
             var student = new Student(registerModel.PhoneKey, registerModel.PhoneNumber, registerModel.UserName, registerModel.Email,
                 bool.Parse(registerModel.Gender ?? "false"), registerModel.Bio, GetCountryIdByCode(registerModel.PhoneKey), registerModel.Password);
@@ -244,7 +242,7 @@ namespace TolabPortal.Controllers
         {
             if (ModelState.IsValid)
             {
-                var loginVerificationResponse = await _accountService.VerifyStudentLogin(registerVerification.PhoneKey, registerVerification.PhoneNumber, registerVerification.VerificationCode);
+                var loginVerificationResponse = await _accountService.VerifyStudentLogin(registerVerification.PhoneKey, registerVerification.PhoneNumber, registerVerification.VerificationCode, registerVerification.Password);
                 if (loginVerificationResponse.IsSuccessStatusCode)
                 {
                     var responseString = await loginVerificationResponse.Content.ReadAsStringAsync();
@@ -303,6 +301,7 @@ namespace TolabPortal.Controllers
         #endregion Register
 
         #region Logout
+
         [Route("~/logout")]
         public async Task<IActionResult> Logout()
         {
@@ -314,7 +313,8 @@ namespace TolabPortal.Controllers
             }
             return View("Index");
         }
-        #endregion
+
+        #endregion Logout
 
         #region Edit Profile
 
@@ -387,10 +387,10 @@ namespace TolabPortal.Controllers
             return RedirectToAction("EditProfile");
         }
 
-        
-        #endregion
+        #endregion Edit Profile
 
         #region Error pages
+
         [Route("~/NotFound")]
         public async Task<IActionResult> NotFound()
         {
@@ -402,6 +402,7 @@ namespace TolabPortal.Controllers
         {
             return View("Error500");
         }
-        #endregion
+
+        #endregion Error pages
     }
 }
