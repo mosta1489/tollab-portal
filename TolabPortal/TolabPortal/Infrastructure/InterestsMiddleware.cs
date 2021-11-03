@@ -34,27 +34,6 @@ namespace TolabPortal.Infrastructure
                     context.Response.Redirect("/Courses/Index");
                     return;
                 }
-
-                bool IsUserAccessingLoginOrRegisterPage = IsPathContainsValue(context, "login") || IsPathContainsValue(context, "Registerphone")
-                    || IsPathContainsValue(context, "RegisterInfo") || IsPathContainsValue(context, "RegisterVerification");
-
-                if (IsUserAccessingLoginOrRegisterPage)
-                {
-                    if (sessionManager.HasInterests == null || !sessionManager.HasInterests.Value)
-                    {
-                        if (!context.Request.Path.Value.Contains("/Interest"))
-                        {
-                            context.Response.Redirect("/Interest/RegisterSection");
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        context.Response.Redirect("/Subjects");
-                        return;
-                    }
-                }
-
             }
             await _next(context);
         }

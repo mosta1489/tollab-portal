@@ -115,7 +115,7 @@ namespace TolabPortal.Controllers
                     var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
 
                     await LoginUser(studentInfo);
-                    var claims = await GetUserClaims(studentInfo);
+                    var claims = GetUserClaims(studentInfo);
 
                     if (studentInfo.model.Interests.Count > 0)
                     {

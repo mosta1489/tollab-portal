@@ -141,12 +141,6 @@ namespace TolabPortal.Controllers
 
             var subCategoriesResponse = await _interestService.AddDepartmentToStudent(departmentIds.ToList());
             return RedirectToAction("Index", "Courses");
-            }
-            else
-            {
-                var errorMessage = "لم يتم اختيار مرحلة";
-                return RedirectToAction("RegisterSubCategory", new { errorMessage = errorMessage });
-            }
         }
 
         [Route("RegisterDepartment")]
