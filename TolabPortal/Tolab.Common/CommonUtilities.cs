@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Tolab.Common
@@ -17,6 +15,11 @@ namespace Tolab.Common
             var responseResult = JsonConvert.DeserializeObject<T>(responseString);
 
             return responseResult;
+        }
+
+        public static string DateFromEnglishToArabic(DateTime dateTime)
+        {
+            return dateTime.ToString("dd, MMMM, yyyy", new CultureInfo("ar-AE")).Replace(",", "");
         }
     }
 }

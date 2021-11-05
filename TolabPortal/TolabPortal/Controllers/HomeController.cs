@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -285,6 +286,7 @@ namespace TolabPortal.Controllers
             return claims;
         }
 
+
         public int GetCountryIdByCode(string code)
         {
             //kuwait
@@ -336,7 +338,6 @@ namespace TolabPortal.Controllers
                     var studentInterests = await CommonUtilities.GetResponseModelFromJson<CategoryResponse>(interestsResponse);
                     studentProfileViewModel.Categories = studentInterests.Categories;
                 }
-
                 return View("EditProfile", studentProfileViewModel);
             }
             return View("EditProfile");
@@ -371,9 +372,9 @@ namespace TolabPortal.Controllers
                             var studentInterests = await CommonUtilities.GetResponseModelFromJson<CategoryResponse>(interestsResponse);
                             updatedStudentProfileViewModel.Categories = studentInterests.Categories;
                         }
-
                         return View("EditProfile", updatedStudentProfileViewModel);
                     }
+
                     return View("EditProfile", currentStudentProfileViewModel);
                 }
                 else // couldn't get user profile casuse of some server error
@@ -382,6 +383,41 @@ namespace TolabPortal.Controllers
                 }
             }
             return RedirectToAction("EditProfile");
+        }
+
+        [HttpPost]
+        [Route("~/UploadPhoto")]
+        public async Task<IActionResult> UploadPhoto(IFormFile file)
+        {
+            try
+            {
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    string uploadedStudentPhoto = Convert.ToBase64String(fileBytes);
+
+                    var studentProfileResponse = await _accountService.GetStudentProfile();
+                    if (studentProfileResponse.IsSuccessStatusCode)
+                    {
+                        var studentProfile = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentProfileResponse);
+                        studentProfile.Student.Photo = uploadedStudentPhoto;
+
+                        var updatedStudentProfileResponse = await _accountService.ChangeStudentProfilePhoto(studentProfile.Student);
+                        if (updatedStudentProfileResponse.IsSuccessStatusCode)
+                        {
+                            var updatedStudentProfile = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(updatedStudentProfileResponse);
+                            return Json(updatedStudentProfile.Student.Photo);
+                        }
+                    }
+                    return Json("no photo");
+                }
+            }
+            catch (Exception)
+            {
+                return Json("no photo");
+            }
+
         }
 
         #region Used by Modals in user profile page

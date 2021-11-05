@@ -12,16 +12,32 @@
     ViewBag.MenuItems = items;
 }
 
+<style>
+
+    #imageUpload {
+        display: none;
+    }
+
+    #profileImage {
+        cursor: pointer;
+    }
+
+        #profileImage:hover {
+            opacity: 0.6;
+        }
+</style>
+
 <section class="breadcrumb-area breadprof">
     <div class="container">
         <div class="breadcrumb-content text-left">
             <div class="media media-card align-items-center">
                 <div class="media-img media--img media-img-md rounded-full">
-                    <img class="rounded-full lazy" src="/images/student-1.jpg" data-src="/images/student-1.jpg">
+                    <img id="profileImage" class="rounded-full lazy" src="/images/img-loading-ar.png" data-src="@config.ApiUrl/ws/Images/StudentImages/@Model.Photo">
+                    <input id="imageUpload" type="file" name="profile_photo" placeholder="Photo" accept="image/*">
                 </div>
                 <div class="media-body">
                     <h2 class="section__title fs-30">@Model.Name</h2>
-                    <span class="d-block lh-18 pt-1 pb-2">@Model.CreationDate منضم في </span>
+                    <span class="d-block lh-18 pt-1 pb-2">منضم في @Model.CreationDateInArabic </span>
                 </div>
             </div><!-- end media -->
         </div><!-- end breadcrumb-content -->
@@ -208,15 +224,93 @@
     </div><!-- end modal-dialog -->
 </div><!-- end modal -->
 
+
 @section Scripts
 {
-
     <script>
 
+        //#region Uploading user profile photo
+        $('body').on('click', '#profileImage', function () {
+            $("#imageUpload").click();
+        });
+
+        $('body').on('change', '#imageUpload', function () {
+
+            var fd = new FormData();
+            var files = this.files;
+
+            // Check if file selected + Validate image type and image file size
+            if (files.length > 0 && IsValidateImage(files[0])) {
+
+                img = new Image();
+                var _URL = window.URL || window.webkitURL;
+                img.src = _URL.createObjectURL(files[0]);
+
+                img.onload = function () {
+                    var imageWidth = this.width;
+                    var imageheight = this.height;
+
+                    // Only upload image when it's dimensions are less than 900
+                    if (imageWidth <= 900 && imageheight <= 900) {
+                        fd.append('file', files[0]);
+
+                        var currentImageUrl = $('#imageUpload').attr('src');
+
+                        // preview loading spinner
+                        $('#profileImage').attr('src', "/images/loading-waiting.gif");
+
+                        $.ajax({
+                            url: '/UploadPhoto',
+                            type: 'post',
+                            data: fd,
+                            contentType: false,
+                            processData: false,
+                            success: function (imageFileName) {
+                                if (imageFileName != "no photo") {
+                                    var imageFullPath = "https://tollaptestapi.azurewebsites.net/ws/Images/StudentImages/" + imageFileName;
+                                    console.log("image path: " + imageFullPath);
+                                    $('#profileImage').attr('src', imageFullPath);
+                                } else {
+                                    $('#profileImage').attr('src', currentImageUrl);
+                                    alert('Something went wrong while uploading image, Please try again.');
+                                }
+                            },
+                            error: function (request, status, error) {
+                                $('#profileImage').attr('src', currentImageUrl);
+                                alert('Something went wrong while uploading image, Please try again.');
+                            }
+                        });
+                    }
+                    else {
+                        alert('Image dimensions must be less than 900 X 900');
+                    }
+                };
+
+
+            }
+        });
+
+        function IsValidateImage(imageFile) {
+            var type = imageFile.type.split('/').pop().toLowerCase();
+            var supportedImageTypes = ["jpeg", "jpg", "png"];
+
+            if (supportedImageTypes.includes(type) == false) {
+                alert('Please select a valid image file');
+                return false;
+            }
+
+            var fileSize = (imageFile.size / 1024 / 1024).toFixed(2);
+            if (fileSize > 2) {
+                alert('Max Upload size is 2MB only');
+                return false;
+            }
+            return true;
+        }
+        //#endregion
+
+
         //triggered when modal is about to be shown
-
         // $('span[data-toggle="modal"]').click(function (event) {
-
         //$('#editactModal').on('show.bs.modal', function (e) {
         //    $.get("/GetCategoriesById?categoryId=" + categoryId,
         //        function (data) {
@@ -259,5 +353,6 @@
                     });
             });
         });
+
     </script>
 }

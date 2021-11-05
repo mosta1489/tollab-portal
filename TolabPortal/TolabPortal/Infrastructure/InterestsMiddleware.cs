@@ -31,11 +31,11 @@ namespace TolabPortal.Infrastructure
                     return;
                 }
 
-                //if (studentProfile.model.Interests.Any() && context.Request.Path.Value != null && context.Request.Path.Value.Contains("/Interest"))
-                //{
-                //    context.Response.Redirect("/Subjects");
-                //    return;
-                //}
+                if (studentProfile.model.Interests.Any() && context.Request.Path.Value != null && context.Request.Path.Value.Contains("/Interest"))
+                {
+                    context.Response.Redirect("/Subjects");
+                    return;
+                }
             }
             await _next(context);
         }
