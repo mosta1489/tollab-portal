@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using Tolab.Common;
-using TolabPortal.DataAccess.Services.Payment;
 using TolabPortal.Infrastructure;
 using TolabPortal.Mapping;
 
@@ -34,12 +33,13 @@ namespace TolabPortal
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             }).AddCookie(options =>
             {
-                options.ExpireTimeSpan = TimeSpan.FromDays(1);
+                options.ExpireTimeSpan = TimeSpan.FromDays(365);
                 options.LoginPath = "/login";
             });
 
-            // Auto Mapper Configurations  
-            var mappingConfig = new MapperConfiguration(mc => {
+            // Auto Mapper Configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
                 mc.AddProfile(new MappingProfile());
             });
             IMapper mapper = mappingConfig.CreateMapper();
