@@ -1,5 +1,10 @@
-﻿@model List<TolabPortal.DataAccess.Models.StudentLiveHome>
+﻿@using Microsoft.Extensions.Options
+@using Tolab.Common
+@inject IOptions<ApplicationConfig> options;
+
+@model TolabPortal.DataAccess.Models.PaginatedStudentLiveHome
 @{
+    var config = options.Value;
 
     var interest = (TolabPortal.Models.GetStudentProfileModel.Interest)ViewBag.Interest;
 
@@ -9,7 +14,7 @@
 }
 
 
-@foreach (var liveCategories in Model)
+@foreach (var liveCategories in Model.StudentLives)
 {
     @section LivesPageCustomSection {
         <div class="headinglist">
@@ -30,10 +35,10 @@
                         <div class="card card-item card-preview card-preview card-item-list-layout">
                             <div class="card-image">
                                 <a href="@liveDetailsEndPoint" class="d-block">
-                                    <img class="card-img-top lazy" src="images/img-loading-ar.png" data-src="images/course003.jpg">
+                                    <img class="card-img-top lazy" src="/images/img-loading-ar.png" data-src="@options.Value.MediaBaseUrl/ws/Images/CourseImages/@(live.CoverImage)">
                                 </a>
                                 <div class="course-badge-labels">
-                                    <img src="images/live-active.svg" width="55">
+                                    <img src="/images/live-active.svg" width="55">
                                 </div>
                             </div><!-- end card-image -->
                             <div class="card-body">
@@ -42,7 +47,7 @@
                                 <p class="card-text text-color">@live.TeacherName </p>
                                 <div class="rating-wrap d-flex align-items-center py-2">
                                     <span class="rating-total"><img src="images/time.svg" width="14"> @live.Duration </span>
-                                    <span class="rating-total pl-3"><img src="images/subscriber.svg" width="16">  @live.SubscriptionCount مشترك  </span>
+                                    <span class="rating-total pl-3"><img src="/images/subscriber.svg" width="16">  @live.SubscriptionCount مشترك  </span>
                                 </div><!-- end rating-wrap -->
                                 <div class="d-flex justify-content-between align-items-center">
                                     <p class="card-price text-black font-weight-bold">@live.CurrentCost <span class="before-price font-weight-medium"> @live.PreviousCost </span></p>
@@ -56,3 +61,22 @@
         </div><!-- end row -->
     }
 }
+
+
+<div class="text-center pt-3">
+    <nav aria-label="Page navigation example" class="pagination-box">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="@(Model.StudentLives.Count < 4 ?  null : $"Lives?page={Model.PageIndex + 1}")" aria-label="Next">
+                    <span aria-hidden="true"> التالي</span>
+                </a>
+            </li>
+            <li class="page-item active"><a class="page-link"> @Model.PageIndex </a></li>
+            <li class="page-item">
+                <a class="page-link" href="@(Model.PageIndex > 1 ? $"Lives?page={Model.PageIndex - 1}" : null)" aria-label="Previous">
+                    <span aria-hidden="true"> السابق </span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

@@ -30,13 +30,18 @@ namespace TolabPortal.Controllers
             _subscribeService = subscribeService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var livesResponse = await _courseService.GetLives();
+            var livesResponse = await _courseService.GetLives(page - 1); // page indices in db are 0-based
             if (livesResponse.IsSuccessStatusCode)
             {
                 var lives = await CommonUtilities.GetResponseModelFromJson<StudentLiveHomeResponse>(livesResponse);
-                return View("Index", lives.StudentLives);
+
+                var paginatedLives = new PaginatedStudentLiveHome();
+                paginatedLives.StudentLives = lives.StudentLives;
+                paginatedLives.PageIndex = page;
+
+                return View("Index", paginatedLives);
             }
             return View("Index", new StudentLiveHome());
         }

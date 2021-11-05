@@ -25,4 +25,10 @@ namespace TolabPortal.DataAccess.Models
         public Metas Metas { get; set; }
         public Errors Errors { get; set; }
     }
+
+    public class PaginatedStudentLiveHome
+    {
+        public List<StudentLiveHome> StudentLives { get; set; }
+        public int PageIndex { get; set; }
+    }
 }

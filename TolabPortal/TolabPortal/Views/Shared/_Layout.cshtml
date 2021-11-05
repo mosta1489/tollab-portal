@@ -189,39 +189,50 @@
     <!--======================================
     END HEADER AREA
     ======================================-->
-    <!-- ================================
-       START BREADCRUMB AREA
-       ================================= -->
-    <section class="breadcrumb-area section-padding img-bg-4">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="breadcrumb-content d-flex flex-wrap align-items-center justify-content-between">
-                <div class="section-heading">
-                    <h2 class="section__title text-white">@ViewBag.CurrentPageTitle</h2>
-                </div>
-                <ul class="generic-list-item generic-list-item-white generic-list-item-arrow d-flex flex-wrap align-items-center">
-                    @{
-                        var items = @ViewBag.MenuItems as string[];
+    @if (ViewBag.IsHomeCoursesPage == null)
+    {
+        <!-- ================================
+        START BREADCRUMB AREA
+        ================================= -->
 
-                        if (items != null)
-                        {
-                            foreach (var item in items)
+        <section class="breadcrumb-area section-padding img-bg-4">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="breadcrumb-content d-flex flex-wrap align-items-center justify-content-between">
+                    <div class="section-heading">
+                        <h2 class="section__title text-white">@ViewBag.CurrentPageTitle</h2>
+                    </div>
+                    <ul class="generic-list-item generic-list-item-white generic-list-item-arrow d-flex flex-wrap align-items-center">
+                        @{
+                            var items = @ViewBag.MenuItems as string[];
+
+                            if (items != null)
                             {
-                                <li>
-                                    <a href="#">@item</a>
-                                </li>
+                                foreach (var item in items)
+                                {
+                                    <li>
+                                        <a href="#">@item</a>
+                                    </li>
+                                }
                             }
                         }
-                    }
-                </ul>
-            </div><!-- end breadcrumb-content -->
-        </div><!-- end container -->
-    </section><!-- end breadcrumb-area -->
-    <!-- ================================
-    END BREADCRUMB AREA
-    ================================= -->
-
-    @if (ViewBag.CurrentPageTitle != "الملف الشحصي")
+                    </ul>
+                </div><!-- end breadcrumb-content -->
+            </div><!-- end container -->
+        </section><!-- end breadcrumb-area -->
+        <!-- ================================
+        END BREADCRUMB AREA
+        ================================= -->
+    }
+    @if (ViewBag.IsHomeCoursesPage != null)
+    {
+        @RenderBody()
+    }
+    else if (ViewBag.CurrentPageTitle == "الملف الشحصي")
+    {
+        @RenderBody()
+    }
+    else
     {
         <!-- ================================
         START CONTACT AREA
@@ -251,10 +262,7 @@
         <!-- ================================
         END CONTACT AREA
         ================================= -->
-    }
-    else
-    {
-        @RenderBody()
+
     }
 
     <!-- ================================

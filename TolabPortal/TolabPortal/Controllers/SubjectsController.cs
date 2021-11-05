@@ -32,34 +32,16 @@ namespace TolabPortal.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var studentProfileResponse = await _accountService.GetStudentProfile();
-            var student = await CommonUtilities.GetResponseModelFromJson<GetStudentProfileModel>(studentProfileResponse);
-
-            List<long> departmentsIds = new List<long>();
-            var interest = student.model.Interests.FirstOrDefault();
-            ViewBag.Interest = interest;
-
-            foreach (var modelInterest in student.model.Interests)
+            var homeCoursesResponse = await _courseService.GetHomeCourses();
+            if (homeCoursesResponse.IsSuccessStatusCode)
             {
-                var subCategoryId = modelInterest.SubCategoryId;
-                var departmentResponse = await _interestService.GetDepartmentsBySubCategoryId(subCategoryId);
-
-                var department = await CommonUtilities.GetResponseModelFromJson<DepartmentResponse>(departmentResponse);
-                departmentsIds.AddRange(department.Departments.Select(d => d.Id));
+                var homeCourses = await CommonUtilities.GetResponseModelFromJson<StudentHomeCourseResponse>(homeCoursesResponse);
+                return View("Index", homeCourses.StudentHomeCourses);
             }
-
-            List<Subject> subjects = new List<Subject>();
-            foreach (var departmentsId in departmentsIds)
+            else
             {
-                var subjectsResponse = await _courseService.GetSubjectsWithTracksByDepartmentId(departmentsId);
-                if (subjectsResponse.IsSuccessStatusCode)
-                {
-                    var subject = await CommonUtilities.GetResponseModelFromJson<SubjectResponse>(subjectsResponse);
-                    subjects.AddRange(subject.Subjects);
-                }
+                return View("Index", new List<StudentHomeCourse>());
             }
-            var allSubjects = subjects.SelectMany(s => s.Tracks).ToList();
-            return View("Index", allSubjects);
         }
 
         [Route("Track")]

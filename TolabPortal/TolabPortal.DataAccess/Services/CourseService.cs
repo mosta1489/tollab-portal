@@ -18,9 +18,11 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> GetCoursesByDepartmentId(long departmentId, int page = 0);
         Task<HttpResponseMessage> GetSubjectsWithTracksByDepartmentId(long departmentId, int page = 0);
         Task<HttpResponseMessage> GetHomeCourses(int page = 0);
+
         Task<HttpResponseMessage> GetTopLives();
         Task<HttpResponseMessage> GetLives(int page = 0);
         Task<HttpResponseMessage> GetLiveDetails(int liveId);
+        Task<HttpResponseMessage> GetStudentLives(long studentId, int page = 0);
 
         Task<HttpResponseMessage> GetTrackById(long trackId);
         Task<HttpResponseMessage> GetCourseWithOneContentForStudent(long courseId, long contentId, long videoQuestionId);
@@ -29,6 +31,7 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> GetStudentCourses(int page = 0);
         Task<HttpResponseMessage> GetGroupsWithContentsByCourseIdForCurrentStudent(long courseId, int page = 0, long contentId = 0);
         Task<HttpResponseMessage> ViewThisContent(long contentId);
+
         Task<HttpResponseMessage> GetQuestions(long courseId, int page = 0, long videoQuestionId = 0);
         Task<HttpResponseMessage> AddQuestion(string comment, float minute, string image, long contentId, long liveId, bool viewMyAccount);
         Task<HttpResponseMessage> AddStudentReply(string comment, long videoQuestionId, bool viewMyAccount, string image);
@@ -53,6 +56,8 @@ namespace TolabPortal.DataAccess.Services
         {
             _httpClient?.Dispose();
         }
+
+        #region Lives
         public async Task<HttpResponseMessage> GetTopLives()
         {
             try
@@ -95,6 +100,21 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
+        public async Task<HttpResponseMessage> GetStudentLives(long studentId, int page = 0)
+        {
+            try
+            {
+                var sectionsResponse = await _httpClient.GetAsync($"/api/GetStudentLives?studentId={studentId}&page={page}");
+                return sectionsResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        #endregion
 
         #region Subjects, Tracks and Courses Services
         public async Task<HttpResponseMessage> GetCoursesByDepartmentId(long departmentId, int page = 0)
@@ -125,7 +145,7 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
-        public async Task<HttpResponseMessage> GetHomeCourses(int page)
+        public async Task<HttpResponseMessage> GetHomeCourses(int page = 0)
         {
             try
             {

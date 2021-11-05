@@ -112,7 +112,7 @@ namespace TolabPortal.DataAccess.Services
                 if (departmentIds == null)
                     throw new ArgumentNullException();
 
-                var sectionsResponse = await _httpClient.PostAsync("/api/AddDepartmentToStudent", new StringContent(JsonConvert.SerializeObject(departmentIds), Encoding.UTF8, "application/json"));
+                var sectionsResponse = await _httpClient.PostAsync("/api/AddDepartmentToStudentForWeb", new StringContent(JsonConvert.SerializeObject(departmentIds), Encoding.UTF8, "application/json"));
                 return sectionsResponse;
             }
             catch (Exception ex)
