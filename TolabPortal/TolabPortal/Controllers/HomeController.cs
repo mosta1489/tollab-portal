@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -362,6 +364,14 @@ namespace TolabPortal.Controllers
                     {
                         var updatedStudentProfile = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(updatedStudentProfileResponse);
                         var updatedStudentProfileViewModel = _mapper.Map<StudentProfileViewModel>(updatedStudentProfile.Student);
+
+                        var interestsResponse = await _interestService.GetInterestsBeforeEdit();
+                        if (interestsResponse.IsSuccessStatusCode)
+                        {
+                            var studentInterests = await CommonUtilities.GetResponseModelFromJson<CategoryResponse>(interestsResponse);
+                            updatedStudentProfileViewModel.Categories = studentInterests.Categories;
+                        }
+
                         return View("EditProfile", updatedStudentProfileViewModel);
                     }
                     return View("EditProfile", currentStudentProfileViewModel);
