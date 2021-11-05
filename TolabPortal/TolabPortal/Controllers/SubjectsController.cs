@@ -36,6 +36,10 @@ namespace TolabPortal.Controllers
             if (homeCoursesResponse.IsSuccessStatusCode)
             {
                 var homeCourses = await CommonUtilities.GetResponseModelFromJson<StudentHomeCourseResponse>(homeCoursesResponse);
+                foreach (var homeCourse in homeCourses.StudentHomeCourses.Where(homeCourse => homeCourse.SubjectCourses == null))
+                {
+                    homeCourse.SubjectCourses = new List<SubjectCourse>();
+                }
                 return View("Index", homeCourses.StudentHomeCourses);
             }
             else
@@ -153,7 +157,6 @@ namespace TolabPortal.Controllers
             {
                 var studentCourses = await CommonUtilities.GetResponseModelFromJson<MyCourseResponse>(studentCoursesResponse);
                 return View("MyCourses", studentCourses.MyCourses);
-
             }
             else
             {
