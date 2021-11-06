@@ -124,6 +124,22 @@ namespace TolabPortal.Controllers
                 {
                     var groupsWithContents = await CommonUtilities.GetResponseModelFromJson<GroupResponse>(groupsWithContentsResponse);
                     courseDetails.Course.Groups = groupsWithContents.Groups;
+                    if (courseDetails.Course.Groups.Any())
+                    {
+                        courseDetails.Course.Groups.ForEach((g) =>
+                        {
+                            if (g.Contents.Any())
+                            {
+                                g.Contents.ForEach(async c => { 
+                                
+                                c.Path= (!string.IsNullOrEmpty(c.Path)) ? await VimeoConnector.GenerateEmbed(c.Path, "900", "600") : "";
+
+
+                                });
+                            }
+
+                        });
+                    }
                 }
 
                 // getting Course Questions
@@ -142,7 +158,7 @@ namespace TolabPortal.Controllers
                 //    courseDetails.Course.StudentExams = exams.StudentExamsToCorrect;
 
                 //}
-                courseDetails.Course.IntroVideo = (!string.IsNullOrEmpty(courseDetails.Course.IntroVideo)) ? await VimeoConnector.GenerateIntroEmbed(courseDetails.Course.IntroVideo) : "";
+                courseDetails.Course.IntroVideo = (!string.IsNullOrEmpty(courseDetails.Course.IntroVideo)) ? await VimeoConnector.GenerateEmbed(courseDetails.Course.IntroVideo, "400", "300") : "";
                 return View("CourseDetails", courseDetails.Course);
             }
             else
