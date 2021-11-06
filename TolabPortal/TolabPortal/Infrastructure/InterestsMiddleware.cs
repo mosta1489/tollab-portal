@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Tolab.Common;
-using TolabPortal.DataAccess.Services;
 using TolabPortal.DataAccess.Models;
-using TolabPortal.Models;
+using TolabPortal.DataAccess.Services;
 
 namespace TolabPortal.Infrastructure
 {
@@ -19,27 +21,36 @@ namespace TolabPortal.Infrastructure
 
         public async Task InvokeAsync(HttpContext context, IAccountService accountService)
         {
-            if (context.User.Identity != null && context.User.Identity.IsAuthenticated)
+            try
             {
-                var studentProfileResponse = await accountService.GetStudentProfile();
-                var studentProfile = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentProfileResponse);
-
-                if (!studentProfile.Student.Interests.Any() && context.Request.Path.Value != null
-                                                          && !context.Request.Path.Value.Contains("/Interest")
-                                                          && !context.Request.Path.Value.Contains("/logout"))
+                if (context.User.Identity != null && context.User.Identity.IsAuthenticated)
                 {
-                    context.Response.Redirect("/Interest/RegisterSection");
-                    return;
+                    var studentProfileResponse = await accountService.GetStudentProfile();
+                    var studentProfile =
+                        await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentProfileResponse);
+
+                    if (!studentProfile.Student.Interests.Any() && context.Request.Path.Value != null
+                                                                && !context.Request.Path.Value.Contains("/Interest")
+                                                                && !context.Request.Path.Value.Contains("/logout"))
+                    {
+                        context.Response.Redirect("/Interest/RegisterSection");
+                        return;
+                    }
                 }
 
-                if (studentProfile.Student.Interests.Any() && context.Request.Path.Value != null && context.Request.Path.Value.Contains("/Interest"))
-                {
-                    context.Response.Redirect("/Subjects");
-                    return;
-                }
-
+                await _next(context);
             }
-            await _next(context);
+            catch (UnauthorizedAccessException)
+            {
+                await context.Request.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                var logoutResponse = await accountService.LogoutStudent();
+                if (logoutResponse.IsSuccessStatusCode)
+                {
+                    var logoutResult = await CommonUtilities.GetResponseModelFromJson<StudentLogoutResponse>(logoutResponse);
+                }
+                context.Response.Redirect("/login");
+                return;
+            }
         }
 
         private bool IsPathContainsValue(HttpContext httpContext, string value)
