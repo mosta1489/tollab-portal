@@ -22,36 +22,20 @@ namespace TolabPortal.Infrastructure
             if (context.User.Identity != null && context.User.Identity.IsAuthenticated)
             {
                 var studentProfileResponse = await accountService.GetStudentProfile();
-                var studentProfileResult = await CommonUtilities.GetResponseModelFromJson<GenericStudentResponse>(studentProfileResponse);
+                var studentProfile = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentProfileResponse);
 
-                if (studentProfileResult.Errors != null)
+                if (!studentProfile.Student.Interests.Any() && context.Request.Path.Value != null
+                                                          && !context.Request.Path.Value.Contains("/Interest")
+                                                          && !context.Request.Path.Value.Contains("/logout"))
                 {
-                    if (studentProfileResult.Errors.Message == "Student not verified")
-                    {
-
-                    }
-                    else
-                    {
-
-                    }
+                    context.Response.Redirect("/Interest/RegisterSection");
+                    return;
                 }
-                else // get user profile response success
+
+                if (studentProfile.Student.Interests.Any() && context.Request.Path.Value != null && context.Request.Path.Value.Contains("/Interest"))
                 {
-                    var studentProfile = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentProfileResponse);
-
-                    if (!studentProfile.Student.Interests.Any() && context.Request.Path.Value != null
-                                                              && !context.Request.Path.Value.Contains("/Interest")
-                                                              && !context.Request.Path.Value.Contains("/logout"))
-                    {
-                        context.Response.Redirect("/Interest/RegisterSection");
-                        return;
-                    }
-
-                    if (studentProfile.Student.Interests.Any() && context.Request.Path.Value != null && context.Request.Path.Value.Contains("/Interest"))
-                    {
-                        context.Response.Redirect("/Subjects");
-                        return;
-                    }
+                    context.Response.Redirect("/Subjects");
+                    return;
                 }
 
             }
