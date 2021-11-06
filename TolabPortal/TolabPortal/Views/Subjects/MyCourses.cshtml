@@ -1,6 +1,4 @@
-﻿
-
-@using System.Net;
+﻿@using System.Net;
 @using System.Web
 @using Microsoft.Extensions.Options
 @using Tolab.Common
@@ -26,10 +24,10 @@
                 </a>
             </li>
             @*<li class="nav-item">
-                <a class="nav-link txtbold" id="live-tab" data-toggle="tab" href="#live" role="tab" aria-controls="live" aria-selected="false">
-                    بث مباشر
-                </a>
-            </li>*@
+                    <a class="nav-link txtbold" id="live-tab" data-toggle="tab" href="#live" role="tab" aria-controls="live" aria-selected="false">
+                        بث مباشر
+                    </a>
+                </li>*@
         </ul>
         <div class="tab-content pt-40px" id="myTabContent">
             <div class="tab-pane fade show active" id="courses" role="tabpanel" aria-labelledby="courses-tab">
@@ -38,6 +36,7 @@
                         <div class="row">
                             @{
                                 var allStudentCourses = Model.SelectMany(c => c.Courses).ToList();
+
                             }
                             @foreach (var course in allStudentCourses)
                             {
@@ -52,7 +51,7 @@
                                         </div><!-- end card-image -->
                                         <div class="card-body">
                                             <h6 class="ribbon ribbon-purpl-bg fs-14 mb-3">@course.VideoCount فيديوهات</h6>
-                                            <h6 class="ribbon ribbon-grlight-bg fs-14 mb-3"><img src="images/check.svg" width="14"> تم الاشتراك</h6>
+                                            <h6 class="ribbon ribbon-grlight-bg fs-14 mb-3"><img src="/images/check.svg" width="14"> تم الاشتراك</h6>
                                             <h5 class="card-title"><a href="@courseDetailsEndPoint"> @course.NameLT </a></h5>
                                             <p class="card-text"> @course.TeacherName </p>
 
@@ -78,7 +77,6 @@
                                     </div><!-- end card -->
                                 </div><!-- end col-lg-6 -->
                             }
-
                         </div><!-- end row -->
                     </div><!-- end col-lg-8 -->
                 </div><!-- end row -->
@@ -100,12 +98,12 @@
                                     </div><!-- end card-image -->
                                     <div class="card-body">
                                         <h6 class="ribbon ribbon-red-bg fs-14 mb-3">يعرض الآن</h6>
-                                        <h6 class="ribbon ribbon-grlight-bg fs-14 mb-3"><img src="images/check.svg" width="14"> تم الاشتراك</h6>
+                                        <h6 class="ribbon ribbon-grlight-bg fs-14 mb-3"><img src="/images/check.svg" width="14"> تم الاشتراك</h6>
                                         <h5 class="card-title mb-1"><a href="#">الحصة الاولى - أساسيات الإعراب</a></h5>
                                         <p class="card-text text-color">أ.وليد الأحمدي</p>
                                         <div class="rating-wrap d-flex align-items-center py-2">
-                                            <span class="rating-total"><img src="images/time.svg" width="14"> 120 دقيقة </span>
-                                            <span class="rating-total pl-3"><img src="images/viewer.svg" width="18">  24 مشاهد نشط  </span>
+                                            <span class="rating-total"><img src="/images/time.svg" width="14"> 120 دقيقة </span>
+                                            <span class="rating-total pl-3"><img src="/images/viewer.svg" width="18">  24 مشاهد نشط  </span>
                                         </div><!-- end rating-wrap -->
                                         <div class="d-flex justify-content-between align-items-center">
                                             <p class="card-price text-black font-weight-bold">50 ج.م <span class="before-price font-weight-medium">60 ج.م</span></p>
@@ -114,16 +112,23 @@
                                     </div><!-- end card-body -->
                                 </div><!-- end card -->
                             </div><!-- end col-lg-6 -->
-
-
                         </div><!-- end row -->
                     </div><!-- end col-lg-8 -->
                 </div><!-- end row -->
             </div><!-- end tab-pane -->
         </div><!-- end tab-content -->
-
     </div><!-- end container -->
 </section><!-- end courses-area -->
 <!-- ================================
-       END CONTACT AREA
+END CONTACT AREA
 ================================= -->
+
+@section scripts
+{
+    <script>
+        $(function () {
+            $('.course-area').parent().removeClass("row");
+        })
+    </script>
+
+}
