@@ -12,13 +12,13 @@ namespace TolabPortal.Controllers.Utils
     public static class VimeoConnector
     {
         private  const string VimeoToken = "3251e9876001f9b94a96b446bacdb6c2";
-        public static async Task<string> GenerateIntroEmbed(string introVideoUrl)
+        public static async Task<string> GenerateEmbed(string videoUrl, string height,string width)
         {
 
             try
             {
                 var client = new HttpClient();
-                string uri = $"https://vimeo.com/api/oembed.json?url={introVideoUrl}&width=400&height=300";
+                string uri = $"https://vimeo.com/api/oembed.json?url={videoUrl}&width={width}&height={height}";
                 client.DefaultRequestHeaders.Authorization
                 = new AuthenticationHeaderValue("Bearer", VimeoToken);
                 client.DefaultRequestHeaders.Add("Accept", "application/vnd.vimeo.*+json;version=3.4");
