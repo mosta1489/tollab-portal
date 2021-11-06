@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tolab.Common;
+using TolabPortal.Controllers.Utils;
 using TolabPortal.DataAccess.Models;
 using TolabPortal.DataAccess.Services;
 using TolabPortal.Models;
@@ -141,7 +142,7 @@ namespace TolabPortal.Controllers
                 //    courseDetails.Course.StudentExams = exams.StudentExamsToCorrect;
 
                 //}
-
+                courseDetails.Course.IntroVideo = (!string.IsNullOrEmpty(courseDetails.Course.IntroVideo)) ? await VimeoConnector.GenerateIntroEmbed(courseDetails.Course.IntroVideo) : "";
                 return View("CourseDetails", courseDetails.Course);
             }
             else

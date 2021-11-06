@@ -35,6 +35,10 @@ namespace TolabPortal.Controllers
         [HttpPost]
         public async Task<IActionResult> InitiatePayment(PayVm payViewmodel)
         {
+            if (payViewmodel.InvoiceAmount == 0)
+                return RedirectToAction("CompleteFreePayment", new { TransactionType = payViewmodel.TransactionType, tranactionId = payViewmodel.TransactionId,
+                    redirectUrl= $"{_config.CallBackPayemntRoot}{payViewmodel.ReturnRoute}"
+                });
             var response = await _paymentService.InitiatePayment(new InitiatePaymentRequest
             {
                 InvoiceAmount = payViewmodel.InvoiceAmount,
@@ -58,10 +62,12 @@ namespace TolabPortal.Controllers
         {
             if (ModelState.IsValid)
             {
+
+
                 var response = await _paymentService.ExecutePayment(new ExecutePaymentRequest()
                 {
                     PaymentMethodId = paymentVm.PaymentMethodId,
-                    InvoiceValue = paymentVm.InvoiceValue==0?1: paymentVm.InvoiceValue,
+                    InvoiceValue = paymentVm.InvoiceValue == 0 ? 1 : paymentVm.InvoiceValue,
                     CustomerReference = paymentVm.CustomerReference,
                     CustomerName = _sessionManager.UserId ?? "",
                     UserDefinedField = $"{paymentVm.TransactionType},{paymentVm.ReturnUrl}",
@@ -121,6 +127,42 @@ namespace TolabPortal.Controllers
                         return RedirectToAction("Index", "Home");
                     }
                 }
+
+                return View("ErrorPayment");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Complete payment :{ex.Message} ||StackTrace : {ex.StackTrace} ");
+                return View("ErrorPayment");
+            }
+        }
+
+        [Route("~/CompleteFreePayment")]
+        public async Task<IActionResult> CompleteFreePayment(string transactionType, string tranactionId, string redirectUrl)
+        {
+            try
+            {
+
+
+                switch (transactionType)
+                {
+                    case string transaction when int.Parse(transaction) == (int)TransactionType.Course:
+                        await _subscribeService.SubscribeCourse("", !string.IsNullOrEmpty(tranactionId) ? long.Parse(tranactionId) : 0);
+                        break;
+
+                    case string transaction when int.Parse(transaction) == (int)TransactionType.Live:
+                        await _subscribeService.SubscribeLive("", !string.IsNullOrEmpty(tranactionId) ? long.Parse(tranactionId) : 0);
+                        break;
+
+                    case string transaction when int.Parse(transaction) == (int)TransactionType.Track:
+                        await _subscribeService.SubscribeTrack(!string.IsNullOrEmpty(tranactionId) ? long.Parse(tranactionId) : 0);
+                        break;
+                }
+
+                if (!string.IsNullOrEmpty(redirectUrl))
+                    return Redirect(redirectUrl);
+                return RedirectToAction("Index", "Home");
+
 
                 return View("ErrorPayment");
             }
