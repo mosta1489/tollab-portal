@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tolab.Common;
 using TolabPortal.DataAccess.Services;
+using TolabPortal.DataAccess.Models;
 using TolabPortal.Models;
 
 namespace TolabPortal.Infrastructure
@@ -21,9 +22,9 @@ namespace TolabPortal.Infrastructure
             if (context.User.Identity != null && context.User.Identity.IsAuthenticated)
             {
                 var studentProfileResponse = await accountService.GetStudentProfile();
-                var studentProfile = await CommonUtilities.GetResponseModelFromJson<GetStudentProfileModel>(studentProfileResponse);
+                var studentProfile = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentProfileResponse);
 
-                if (!studentProfile.model.Interests.Any() && context.Request.Path.Value != null
+                if (!studentProfile.Student.Interests.Any() && context.Request.Path.Value != null
                                                           && !context.Request.Path.Value.Contains("/Interest")
                                                           && !context.Request.Path.Value.Contains("/logout"))
                 {
@@ -31,11 +32,12 @@ namespace TolabPortal.Infrastructure
                     return;
                 }
 
-                if (studentProfile.model.Interests.Any() && context.Request.Path.Value != null && context.Request.Path.Value.Contains("/Interest"))
+                if (studentProfile.Student.Interests.Any() && context.Request.Path.Value != null && context.Request.Path.Value.Contains("/Interest"))
                 {
                     context.Response.Redirect("/Subjects");
                     return;
                 }
+
             }
             await _next(context);
         }

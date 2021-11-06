@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TolabPortal.DataAccess.Models;
+using TolabPortal.Models;
 using TolabPortal.ViewModels;
 
 namespace TolabPortal.Mapping
@@ -14,7 +15,6 @@ namespace TolabPortal.Mapping
         {
             CreateMap<Student, StudentProfileViewModel>();
             CreateMap<Interest, InterestViewModel>();
-            //CreateMap<Department, DepartmentViewModel>();
         }
     }
 }
