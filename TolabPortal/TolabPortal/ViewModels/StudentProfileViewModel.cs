@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tolab.Common;
 using TolabPortal.DataAccess.Models;
 
 namespace TolabPortal.ViewModels
@@ -17,6 +18,13 @@ namespace TolabPortal.ViewModels
         public object Photo { get; set; }
         public string Bio { get; set; }
         public DateTime CreationDate { get; set; }
+        public string CreationDateInArabic
+        {
+            get
+            {
+                return CommonUtilities.DateFromEnglishToArabic(CreationDate);
+            }
+        }
         public long CountryId { get; set; }
         public string CountryCode { get; set; }
         public int NumberOfCourses { get; set; }

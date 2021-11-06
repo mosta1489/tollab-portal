@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tolab.Common;
 
 namespace TolabPortal.DataAccess.Models
 {
@@ -19,6 +20,13 @@ namespace TolabPortal.DataAccess.Models
         public long? ContentId { get; set; }
         public long? LiveId { get; set; }
         public DateTime? CreationDate { get; set; }
+        public string CreationDateInArabic
+        {
+            get
+            {
+                return CreationDate != null ? CommonUtilities.DateFromEnglishToArabic(CreationDate.Value) : string.Empty;
+            }
+        }
         public long? StudentId { get; set; }
         public string StudentName { get; set; }
         public string StudentPhoto { get; set; }

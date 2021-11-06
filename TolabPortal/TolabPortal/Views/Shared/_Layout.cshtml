@@ -90,7 +90,7 @@
                                                             }
                                                             else
                                                             {
-                                                                <img class="rounded-full img-fluid" src="@config.MediaBaseUrl/ws/Images/StudentImages/@(User.Claims.First(c => c.Type == "UserPhoto").Value)" alt="Avatar image">
+                                                                <img class="rounded-full img-fluid" src="@config.ApiUrl/ws/Images/StudentImages/@(User.Claims.First(c => c.Type == "UserPhoto").Value)" alt="Avatar image">
                                                             }
                                                         </div>
                                                         <div class="fs-14 lh-18 text-left ml-2">

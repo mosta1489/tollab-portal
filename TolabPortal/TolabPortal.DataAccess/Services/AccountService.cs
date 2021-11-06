@@ -25,6 +25,7 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> UpdateStudentProfile(Student student);
 
         Task<HttpResponseMessage> LogoutStudent();
+        Task<HttpResponseMessage> ChangeStudentProfilePhoto(Student student);
     }
 
     public class AccountService : IAccountService, IDisposable
@@ -149,6 +150,24 @@ namespace TolabPortal.DataAccess.Services
                     throw new ArgumentNullException();
 
                 var sectionsResponse = await _httpClient.PostAsync("/api/EditProfile", new StringContent(JsonConvert.SerializeObject(student), Encoding.UTF8, "application/json"));
+                return sectionsResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+        public async Task<HttpResponseMessage> ChangeStudentProfilePhoto(Student student)
+        {
+            try
+            {
+                if (student == null)
+                    throw new ArgumentNullException();
+
+                var sectionsResponse = await _httpClient.PostAsync("/api/ChangePhoto", new StringContent(JsonConvert.SerializeObject(student), Encoding.UTF8, "application/json"));
                 return sectionsResponse;
             }
             catch (Exception ex)
