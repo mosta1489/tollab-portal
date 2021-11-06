@@ -74,6 +74,7 @@ namespace TolabPortal.Controllers
                         course.IsCurrentStudentSubscribedToCourse = studentTransactions.studentTransactionsVM.studentTransactions.Any(t => t.CourseId == course.Id);
                     }
                 }
+                var coursesWithIntroVideos = trackDetails.CoursesByTrackId.Courses.Where(c => !string.IsNullOrEmpty(c.IntroVideoUri)).ToList();
                 return View("TrackDetails", trackDetails.CoursesByTrackId);
             }
             else

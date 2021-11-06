@@ -70,8 +70,14 @@ namespace TolabPortal.Controllers
                 var responseString = await loginResponse.Content.ReadAsStringAsync();
                 var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
 
+                if (!studentInfo.model.Verified)
+                {
+                    ViewBag.ErrorMessage = "Your account is Not Verified, Please verify it from Mob App";
+                    return View(loginModel);
+                }
+
                 await LoginUser(studentInfo);
-                return RedirectToAction("LoginVerificationSuccess");
+                return RedirectToAction("Index", "Subjects");
             }
             else
             {
@@ -278,7 +284,7 @@ namespace TolabPortal.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.model.Id.ToString()),
                 new Claim("AccessToken", user.model.Token.First().access_token),
                 new Claim("CountryId", user.model.CountryId.ToString()),
-                new Claim("CountryCode", user.model.CountryCode),
+                new Claim("CountryCode", user.model.CountryCode ?? string.Empty),
                 new Claim("UserName", user.model.Name),
                 new Claim("UserPhoto", user.model.Photo?.ToString() ?? string.Empty),
             };

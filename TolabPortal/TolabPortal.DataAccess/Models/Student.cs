@@ -68,4 +68,12 @@ namespace TolabPortal.DataAccess.Models
         public Metas Metas { get; set; }
         public Errors Errors { get; set; }
     }
+
+    public class GenericStudentResponse
+    {
+        [JsonProperty("model")]
+        public object Student { get; set; }
+        public Metas Metas { get; set; }
+        public Errors Errors { get; set; }
+    }
 }

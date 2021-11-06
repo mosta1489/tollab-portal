@@ -69,6 +69,19 @@
         $(function () {
             $('input[type=radio][name=subCategoryId]').change(function () {
                 console.log("selected");
+
+                var firstDepartment = $(this).next().children().find('input[type=checkbox][name=departmentIds]').first();
+
+
+                if (firstDepartment != null) {
+                    console.log("firstDepartment value: " + firstDepartment);
+                    $(firstDepartment).prop("checked", true);
+                }
+                else {
+                    console.log("no departments");
+                    console.log("firstDepartment value: " + firstDepartment);
+                }
+
                 $('input[type=checkbox]').prop('checked', false);
             });
         });
