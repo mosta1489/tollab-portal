@@ -74,6 +74,8 @@ namespace TolabPortal.DataAccess.Models
         public IEnumerable<StudentExamsToCorrect> StudentExams { get; set; }
         public bool IsCurrentStudentSubscribedToCourse { get; set; }
         public ItemDetails ItemDetails { get; set; }
+
+        public VimeoResponseModel vimeoResponse { get; set; }
     }
 
     public class CourseResponse
@@ -82,5 +84,21 @@ namespace TolabPortal.DataAccess.Models
         public Course Course { get; set; }
         public Metas Metas { get; set; }
         public Errors Errors { get; set; }
+    }
+
+    public class VimeoResponseModel
+    {
+        public string VideoUrl { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public string Title { get; set; }
+
+        public VimeoResponseModel(string videoUrl, int width, int hieght, string title)
+        {
+            VideoUrl = videoUrl;
+            Width = width;
+            Height = hieght;
+            Title = title;
+        }
     }
 }

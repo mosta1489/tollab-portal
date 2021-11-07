@@ -30,5 +30,6 @@ namespace TolabPortal.Controllers.Utils
         public string upload_date { get; set; }
         public int video_id { get; set; }
         public string uri { get; set; }
+        public string PlayerVideoUrl { get; set; }
     }
 }

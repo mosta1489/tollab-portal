@@ -57,24 +57,38 @@ namespace TolabPortal.Controllers
             {
                 var trackDetails = await CommonUtilities.GetResponseModelFromJson<CoursesByTrackIdModelResponse>(trackDetailsResponse);
 
-                // getting student interest to show in interests path
-                var studentProfileResponse = await _accountService.GetStudentProfile();
-                var student = await CommonUtilities.GetResponseModelFromJson<GetStudentProfileModel>(studentProfileResponse);
-                var interest = student.model.Interests.FirstOrDefault();
+                var interest = new GetStudentProfileModel.Interest();
+                interest.CategoryNameLT = trackDetails.CoursesByTrackId.CategoryNameLT.Replace("\t", "");
+                interest.SubCategoryNameLT = trackDetails.CoursesByTrackId.SubCategoryNameLT.Replace("\t","");
                 ViewBag.Interest = interest;
 
-                // getting user transactions / subscribtions to check whether it contains the id of each course in this track
-                var studentTransactionsResponse = await _subscribeService.GetAllStudentTransactions();
-                if (studentTransactionsResponse.IsSuccessStatusCode)
+                // getting student courses to know which courses to mark as paid
+                var studentCoursesResponse = await _courseService.GetStudentCourses();
+                if (studentCoursesResponse.IsSuccessStatusCode)
                 {
-                    var studentTransactions = await CommonUtilities.GetResponseModelFromJson<StudentTransactionsResponse>(studentTransactionsResponse);
+                    var studentCourses = await CommonUtilities.GetResponseModelFromJson<MyCourseResponse>(studentCoursesResponse);
+                    var allStudentCourses = studentCourses.MyCourses.SelectMany(c => c.Courses).Select(c => c.Id).ToList();
 
                     // update which course are paid for current student
                     foreach (var course in trackDetails.CoursesByTrackId.Courses)
                     {
-                        course.IsCurrentStudentSubscribedToCourse = studentTransactions.studentTransactionsVM.studentTransactions.Any(t => t.CourseId == course.Id);
+                        course.IsCurrentStudentSubscribedToCourse = allStudentCourses.Contains(course.Id);
                     }
                 }
+
+                // getting user transactions / subscribtions to check whether it contains the id of each course in this track
+                //var studentTransactionsResponse = await _subscribeService.GetAllStudentTransactions();
+                //if (studentTransactionsResponse.IsSuccessStatusCode)
+                //{
+                //    var studentTransactions = await CommonUtilities.GetResponseModelFromJson<StudentTransactionsResponse>(studentTransactionsResponse);
+
+                //    // update which course are paid for current student
+                //    foreach (var course in trackDetails.CoursesByTrackId.Courses)
+                //    {
+                //        course.IsCurrentStudentSubscribedToCourse = studentTransactions.studentTransactionsVM.studentTransactions.Any(t => t.CourseId == course.Id);
+                //    }
+                //}
+
                 var coursesWithIntroVideos = trackDetails.CoursesByTrackId.Courses.Where(c => !string.IsNullOrEmpty(c.IntroVideoUri)).ToList();
                 return View("TrackDetails", trackDetails.CoursesByTrackId);
             }
@@ -108,11 +122,20 @@ namespace TolabPortal.Controllers
                 abstractCourseInfo.TeacherName = courseDetails.Course.TeacherName;
 
                 // getting user transactions / subscribtions to check whether it contains the id of current course
-                var studentTransactionsResponse = await _subscribeService.GetAllStudentTransactions();
-                if (studentTransactionsResponse.IsSuccessStatusCode)
+                //var studentTransactionsResponse = await _subscribeService.GetAllStudentTransactions();
+                //if (studentTransactionsResponse.IsSuccessStatusCode)
+                //{
+                //    var studentTransactions = await CommonUtilities.GetResponseModelFromJson<StudentTransactionsResponse>(studentTransactionsResponse);
+                //    courseDetails.Course.IsCurrentStudentSubscribedToCourse = studentTransactions.studentTransactionsVM.studentTransactions.Any(t => t.CourseId == courseDetails.Course.Id);
+                //}
+
+                // getting student courses to know if this course is paid or not
+                var studentCoursesResponse = await _courseService.GetStudentCourses();
+                if (studentCoursesResponse.IsSuccessStatusCode)
                 {
-                    var studentTransactions = await CommonUtilities.GetResponseModelFromJson<StudentTransactionsResponse>(studentTransactionsResponse);
-                    courseDetails.Course.IsCurrentStudentSubscribedToCourse = studentTransactions.studentTransactionsVM.studentTransactions.Any(t => t.CourseId == courseDetails.Course.Id);
+                    var studentCourses = await CommonUtilities.GetResponseModelFromJson<MyCourseResponse>(studentCoursesResponse);
+                    var allStudentCourses = studentCourses.MyCourses.SelectMany(c => c.Courses).Select(c => c.Id).ToList();
+                    courseDetails.Course.IsCurrentStudentSubscribedToCourse = allStudentCourses.Contains(courseDetails.Course.Id);
                 }
 
                 // abstract course info is being used by details layout
@@ -130,11 +153,9 @@ namespace TolabPortal.Controllers
                         {
                             if (g.Contents.Any())
                             {
-                                g.Contents.ForEach(async c => { 
-                                
-                                c.Path= (!string.IsNullOrEmpty(c.Path)) ? await VimeoConnector.GenerateEmbed(c.Path, "900", "600") : "";
-
-
+                                g.Contents.ForEach(async c =>
+                                {
+                                    c.Path = (!string.IsNullOrEmpty(c.Path)) ? await VimeoConnector.GenerateEmbed(c.Path, "900", "600") : "";
                                 });
                             }
 
@@ -158,6 +179,10 @@ namespace TolabPortal.Controllers
                 //    courseDetails.Course.StudentExams = exams.StudentExamsToCorrect;
 
                 //}
+
+                //var vimeoResponse = await VimeoConnector.GenerateEmbed(courseDetails.Course.IntroVideo, "400", "300");
+                //courseDetails.Course.vimeoResponse = new VimeoResponseModel(vimeoResponse.PlayerVideoUrl, vimeoResponse.width, vimeoResponse.height, vimeoResponse.title);
+
                 courseDetails.Course.IntroVideo = (!string.IsNullOrEmpty(courseDetails.Course.IntroVideo)) ? await VimeoConnector.GenerateEmbed(courseDetails.Course.IntroVideo, "400", "300") : "";
                 return View("CourseDetails", courseDetails.Course);
             }
@@ -181,10 +206,5 @@ namespace TolabPortal.Controllers
                 return View("TrackDetails", new CoursesByTrackIdModel());
             }
         }
-
-        //[Route("Track/Course/VideQuestion")]
-        //public async Task<IActionResult> AddCourseVideoQuestion()
-        //{
-        //}
     }
 }

@@ -10,8 +10,8 @@
 
     var interest = (TolabPortal.Models.GetStudentProfileModel.Interest)ViewBag.Interest;
 
-    ViewBag.CurrentPageTitle = interest.SubCategoryName;
-    var items = new string[] { "الرئيسية", interest.SectionNameLT, interest.CategoryNameLT, interest.SubCategoryNameLT, Model.TrackNameLT };
+    ViewBag.CurrentPageTitle = interest.SubCategoryNameLT;
+    var items = new string[] { "الرئيسية", interest.CategoryNameLT, interest.SubCategoryNameLT, Model.TrackNameLT };
     ViewBag.MenuItems = items;
 }
 
