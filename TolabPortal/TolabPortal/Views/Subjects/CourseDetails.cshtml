@@ -13,6 +13,17 @@
 
 }
 
+<style>
+    .courseVideo:hover {
+        background-color: lightgray;
+        border-radius: 4px;
+    }
+
+    .contentVideo {
+        display: none;
+    }
+</style>
+
 <!--======================================
         START COURSE DETAILS AREA
 ======================================-->
@@ -59,31 +70,31 @@
                                                         if (groupContent.ContentTypeId == 1) // video
                                                         {
 
-                                                    <li>
-                                                        @if (Model.IsCurrentStudentSubscribedToCourse)
-                                                        {
-                                                            <a class="d-flex align-items-center justify-content-between text-color">
-                                                                <span>
-                                                                    <i class="la la-play-circle mr-1"></i>
-                                                                    @groupContent.NameLT
-                                                                </span>
-                                                                <span> @groupContent.Duration دقيقة </span>
-                                                            </a>
-                                                            <div class="embed-responsive embed-responsive-16by9">
-                                                                @Html.Raw(groupContent.Path)
-                                                            </div>
-                                                        }
-                                                        else
-                                                        {
-                                                            <a class="d-flex align-items-center justify-content-between">
-                                                                <span>
-                                                                    <i class="la la-lock mr-1"></i>
-                                                                    @groupContent.NameLT
-                                                                </span>
-                                                                <span>@groupContent.Duration دقيقة</span>
-                                                            </a>
-                                                        }
-                                                    </li>
+                                                            <li>
+                                                                @if (Model.IsCurrentStudentSubscribedToCourse)
+                                                                {
+                                                                    <a class="d-flex align-items-center justify-content-between text-color courseVideo" href="/">
+                                                                        <span>
+                                                                            <i class="la la-play-circle mr-1"></i>
+                                                                            @groupContent.NameLT
+                                                                        </span>
+                                                                        <span> @groupContent.Duration دقيقة </span>
+                                                                    </a>
+                                                                    <div class="embed-responsive embed-responsive-16by9 contentVideo">
+                                                                        @Html.Raw(groupContent.Path)
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a class="d-flex align-items-center justify-content-between">
+                                                                        <span>
+                                                                            <i class="la la-lock mr-1"></i>
+                                                                            @groupContent.NameLT
+                                                                        </span>
+                                                                        <span>@groupContent.Duration دقيقة</span>
+                                                                    </a>
+                                                                }
+                                                            </li>
 
                                                         }
                                                         else if (groupContent.ContentTypeId == 2)
@@ -262,3 +273,18 @@
 <!--======================================
         END COURSE DETAILS AREA
 ======================================-->
+
+
+@section Scripts
+{
+    <script>
+
+        //#region Uploading user profile photo
+
+        $(document).on("click", ".courseVideo", function (event) {
+            event.preventDefault()
+            $(this).next().toggle();
+        });
+
+    </script>
+}

@@ -344,11 +344,16 @@
             $('#deleteModal').modal('toggle')
 
             var subCategoryId = $(this).data('id');
-            $("#deleteBtn").click(function (e) {
+
+            $(document).on("click", "#deleteBtn", function () {
+            //$("#deleteBtn").click(function (e) {
                 $.get("/DeleteInterestyBysubCategoryId?subCategoryId=" + subCategoryId,
                     function (data, success, errors) {
                         if (data == "deleted Successfully") {
                             location.reload();
+                        }
+                        else {
+                            $('#deleteModal').modal('toggle');
                         }
                     });
             });
