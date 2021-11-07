@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Options;
+using Tolab.Common;
 
 namespace TolabPortal.DataAccess.Services.Payment
 {
@@ -18,16 +20,16 @@ namespace TolabPortal.DataAccess.Services.Payment
     }
     public class MyFatoorahClient : IMyFatoorahClient
     {
-        private readonly IConfiguration _config;
+     
         private readonly IHttpClientFactory _httpClient;
 
         private string _apiKey;
         private string _apiUrl;
-        public MyFatoorahClient(IConfiguration config, IHttpClientFactory httpClient)
+        public MyFatoorahClient(IOptions<ApplicationConfig> config, IHttpClientFactory httpClient)
         {
-            _config = config;
-            _apiKey = _config[$"MyFatoorahApiKey"];
-            _apiUrl = _config[$"MyFatooraApiUrl"];
+             
+            _apiKey =config.Value.MyFatoorahApiKey;
+            _apiUrl = config.Value.MyFatooraApiUrl;
             _httpClient = httpClient;
         }
         public async Task<string> PerformRequest(string requestJSON, string url = "", string endPoint = "")
