@@ -55,6 +55,8 @@ namespace TolabPortal.Controllers
         [Route("~/login")]
         public IActionResult Login()
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Subjects");
             return View("Login");
         }
 
@@ -158,6 +160,8 @@ namespace TolabPortal.Controllers
         [Route("~/Register")]
         public IActionResult Register()
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Subjects");
             return View("Register");
         }
 
@@ -292,7 +296,6 @@ namespace TolabPortal.Controllers
             return claims;
         }
 
-
         public int GetCountryIdByCode(string code)
         {
             //kuwait
@@ -423,7 +426,6 @@ namespace TolabPortal.Controllers
             {
                 return Json("no photo");
             }
-
         }
 
         #region Used by Modals in user profile page
