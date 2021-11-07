@@ -68,15 +68,13 @@
 
         $(function () {
             $('input[type=radio][name=subCategoryId]').change(function () {
-                console.log("selected");
-
                 var firstDepartment = $(this).parent().next().children().find('input[type=checkbox][name=departmentIds]').first();
+
                 $('input[type=checkbox]').prop('checked', false).change();
 
                 if (firstDepartment != null) {
                     $(firstDepartment).prop("checked", true).change();
                 }
-
             });
         });
     </script>

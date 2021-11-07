@@ -35,7 +35,7 @@
                                 <div class="custom-control custom-radio mb-3 ml-0 pl-0">
                                     <input type="radio" class="custom-control-input" id="@(category.Id)" name="categoryId" value="@(category.Id)">
                                     <label class="custom-control-label custom--control-label custom--control-label-boxed noshadbord" for="@(category.Id)">
-                                        <span class="font-weight-semi-bold text-black d-block"> @(category.NameLT)</span>
+                                        <span class="font-weight-semi-bold text-black d-block"> @(category.NameLT) @(category.NameLT.Contains("جامعه الكويت") ? $" - {category.SubCategories.FirstOrDefault().NameLT}" : "")</span>
                                     </label>
                                     <input asp-for="Categories[i].Id" value="@(category.Id)" hidden />
                                     <input asp-for="Categories[i].Name" value="@(category.Name)" hidden />
