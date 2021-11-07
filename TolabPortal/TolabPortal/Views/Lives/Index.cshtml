@@ -63,20 +63,24 @@
 }
 
 
-<div class="text-center pt-3">
-    <nav aria-label="Page navigation example" class="pagination-box">
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="@(Model.StudentLives.Count < 4 ?  null : $"Lives?page={Model.PageIndex + 1}")" aria-label="Next">
-                    <span aria-hidden="true"> التالي</span>
-                </a>
-            </li>
-            <li class="page-item active"><a class="page-link"> @Model.PageIndex </a></li>
-            <li class="page-item">
-                <a class="page-link" href="@(Model.PageIndex > 1 ? $"Lives?page={Model.PageIndex - 1}" : null)" aria-label="Previous">
-                    <span aria-hidden="true"> السابق </span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</div>
+
+@if (Model.StudentLives.Count > 0)
+{
+    <div class="text-center pt-3">
+        <nav aria-label="Page navigation example" class="pagination-box">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" href="@(Model.StudentLives.Count < 4 ? null : $"Lives?page={Model.PageIndex + 1}")" aria-label="Next">
+                        <span aria-hidden="true"> التالي</span>
+                    </a>
+                </li>
+                <li class="page-item active"><a class="page-link"> @Model.PageIndex </a></li>
+                <li class="page-item">
+                    <a class="page-link" href="@(Model.PageIndex > 1 ? $"Lives?page={Model.PageIndex - 1}" : null)" aria-label="Previous">
+                        <span aria-hidden="true"> السابق </span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+}
