@@ -19,7 +19,7 @@ namespace TolabPortal.Controllers.Utils
             try
             {
                 var client = new HttpClient();
-                string uri = $"https://vimeo.com/api/oembed.json?url={videoUrl}&width={width}&height={height}";
+                string uri = $"https://vimeo.com/api/oembed.json?url={videoUrl}&width={width}&height={height}&byline=0&background=0&portrait=0";
                 client.DefaultRequestHeaders.Authorization
                 = new AuthenticationHeaderValue("Bearer", VimeoToken);
                 client.DefaultRequestHeaders.Add("Accept", "application/vnd.vimeo.*+json;version=3.4");
