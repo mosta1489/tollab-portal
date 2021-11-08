@@ -153,9 +153,9 @@ namespace TolabPortal.Controllers
                         {
                             if (g.Contents.Any())
                             {
-                                g.Contents.ForEach(async c =>
+                                g.Contents.ForEach(  c =>
                                 {
-                                    c.Path = (!string.IsNullOrEmpty(c.Path)) ? await VimeoConnector.GenerateEmbed(c.Path, "900", "600") : "";
+                                    c.Path = (!string.IsNullOrEmpty(c.Path)) ?  VimeoConnector.GenerateEmbed(c.Path, "900", "600").Result: "";
                                 });
                             }
 

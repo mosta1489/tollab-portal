@@ -23,43 +23,18 @@ namespace TolabPortal.Controllers.Utils
                 client.DefaultRequestHeaders.Authorization
                 = new AuthenticationHeaderValue("Bearer", VimeoToken);
                 client.DefaultRequestHeaders.Add("Accept", "application/vnd.vimeo.*+json;version=3.4");
-                var response = await client.GetAsync(uri);
+                var response = await client.GetAsync(uri).ConfigureAwait(false);
                 var responseString = await response.Content.ReadAsStringAsync();
                 var serialized = JsonConvert.DeserializeObject<VimeoResponse>(responseString);
                 return serialized.html ?? "";
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return "";
             }
         }
 
-        public static async Task<VimeoResponse> GetEmbededVideo(string videoUrl, string height, string width)
-        {
-
-            try
-            {
-                var client = new HttpClient();
-                string uri = $"https://vimeo.com/api/oembed.json?url={videoUrl}&width={width}&height={height}";
-                client.DefaultRequestHeaders.Authorization
-                = new AuthenticationHeaderValue("Bearer", VimeoToken);
-                client.DefaultRequestHeaders.Add("Accept", "application/vnd.vimeo.*+json;version=3.4");
-                var response = await client.GetAsync(uri);
-                var responseString = await response.Content.ReadAsStringAsync();
-                var serialized = JsonConvert.DeserializeObject<VimeoResponse>(responseString);
-
-                HtmlDocument htmlDoc = new HtmlDocument();
-                htmlDoc.LoadHtml(serialized.html);
-
-                serialized.PlayerVideoUrl = ((HtmlNode)htmlDoc.DocumentNode.SelectNodes("iframe").ToList().FirstOrDefault()).Attributes.FirstOrDefault(a => a.Name == "src").Value ?? "";
-                return serialized;
-
-            }
-            catch (Exception)
-            {
-                return new VimeoResponse();
-            }
-        }
+     
     }
 }
