@@ -32,7 +32,7 @@
         <div class="breadcrumb-content text-left">
             <div class="media media-card align-items-center">
                 <div class="media-img media--img media-img-md rounded-full">
-                    <img id="profileImage" class="rounded-full lazy" src="/images/img-loading-ar.png" data-src="@config.ApiUrl/ws/Images/StudentImages/@Model.Photo">
+                    <img id="profileImage" class="rounded-full lazy" src="/images/img-loading-ar.png" data-src="@config.MediaBaseUrl/ws/Images/StudentImages/@Model.Photo">
                     <input id="imageUpload" type="file" name="profile_photo" placeholder="Photo" accept="image/*">
                 </div>
                 <div class="media-body">
@@ -70,21 +70,21 @@
                 <div class="teacher-bar">
                     @foreach (var category in Model.Categories)
                     {
-                        <div class="actdiv justify-content-between d-flex align-items-center">
-                            <div class="text-left">
-                                <p class="txtbold text-darbl"> @category.NameLT </p>
-                                <p> @category.SubCategories.FirstOrDefault().NameLT </p>
-                                @foreach (var department in category.SubCategories.FirstOrDefault().Departments)
+                    <div class="actdiv justify-content-between d-flex align-items-center">
+                        <div class="text-left">
+                            <p class="txtbold text-darbl"> @category.NameLT </p>
+                            <p> @category.SubCategories.FirstOrDefault().NameLT </p>
+                            @foreach (var department in category.SubCategories.FirstOrDefault().Departments)
                                 {
-                                    <p> @department.NameLT </p>
+                            <p> @department.NameLT </p>
                                 }
-                            </div>
-                            <input id="category@(category.Id)" value="@category.Id" hidden />
-                            <div class="my-course-info-action ml-2">
-                                @*<span id="editInterest" class="la la-edit icon-element icon-element-xs cursor-pointer shadow-sm mb-1 mr-1" data-target="#editactModal" data-id="@(category.Id)"></span>*@
-                                <span id="deleteInterest" class="la la-trash icon-element icon-element-xs cursor-pointer shadow-sm text-color-6" data-target="#deleteModal" data-id="@(category.SubCategories.FirstOrDefault().Id)" title="Delete"></span>
-                            </div>
                         </div>
+                        <input id="category@(category.Id)" value="@category.Id" hidden />
+                        <div class="my-course-info-action ml-2">
+                            @*<span id="editInterest" class="la la-edit icon-element icon-element-xs cursor-pointer shadow-sm mb-1 mr-1" data-target="#editactModal" data-id="@(category.Id)"></span>*@
+                            <span id="deleteInterest" class="la la-trash icon-element icon-element-xs cursor-pointer shadow-sm text-color-6" data-target="#deleteModal" data-id="@(category.SubCategories.FirstOrDefault().Id)" title="Delete"></span>
+                        </div>
+                    </div>
                     }
                 </div>
             </div>
@@ -163,15 +163,15 @@
                     <div class="row">
                         @foreach (var interest in Model.Interests)
                         {
-                            <div class="col-lg-12 responsive-column-half">
-                                <div class="custom-control custom-radio mb-3 ml-0 pl-0">
-                                    <input type="radio" class="custom-control-input" id="school" name="radio-stacked">
-                                    <label class="custom-control-label custom--control-label custom--control-label-boxed noshadbord" for="school">
-                                        <img src="@config.MediaBaseUrl/ws/Images/SectionImages/@(interest.SectionImage)" class="chosimg">
-                                        <span class="font-weight-semi-bold text-black d-block">@interest.SectionNameLT</span>
-                                    </label>
-                                </div>
-                            </div><!-- end col-lg-2 -->
+                        <div class="col-lg-12 responsive-column-half">
+                            <div class="custom-control custom-radio mb-3 ml-0 pl-0">
+                                <input type="radio" class="custom-control-input" id="school" name="radio-stacked">
+                                <label class="custom-control-label custom--control-label custom--control-label-boxed noshadbord" for="school">
+                                    <img src="@config.MediaBaseUrl/ws/Images/SectionImages/@(interest.SectionImage)" class="chosimg">
+                                    <span class="font-weight-semi-bold text-black d-block">@interest.SectionNameLT</span>
+                                </label>
+                            </div>
+                        </div><!-- end col-lg-2 -->
                         }
                     </div>
                     <div class="btn-box text-right pt-2">
@@ -224,7 +224,6 @@
     </div><!-- end modal-dialog -->
 </div><!-- end modal -->
 
-
 @section Scripts
 {
     <script>
@@ -267,7 +266,7 @@
                             processData: false,
                             success: function (imageFileName) {
                                 if (imageFileName != "no photo") {
-                                    var imageFullPath = "https://tollaptestapi.azurewebsites.net/ws/Images/StudentImages/" + imageFileName;
+                                    var imageFullPath = "https://tollab.azurewebsites.net/ws/Images/StudentImages/" + imageFileName;
                                     console.log("image path: " + imageFullPath);
                                     $('#profileImage').attr('src', imageFullPath);
                                 } else {
@@ -285,7 +284,6 @@
                         alert('Image dimensions must be less than 900 X 900');
                     }
                 };
-
 
             }
         });
@@ -307,7 +305,6 @@
             return true;
         }
         //#endregion
-
 
         //triggered when modal is about to be shown
         // $('span[data-toggle="modal"]').click(function (event) {
@@ -358,6 +355,5 @@
                     });
             });
         });
-
     </script>
 }
