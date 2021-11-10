@@ -307,6 +307,8 @@ namespace TolabPortal.Controllers
             //jordan
             else if (code == "+962")
                 return 20012;
+            else if (code == "+974")
+                return 20013;
 
             return 0;
         }

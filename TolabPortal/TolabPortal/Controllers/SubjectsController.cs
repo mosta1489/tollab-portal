@@ -67,7 +67,7 @@ namespace TolabPortal.Controllers
                 if (studentCoursesResponse.IsSuccessStatusCode)
                 {
                     var studentCourses = await CommonUtilities.GetResponseModelFromJson<MyCourseResponse>(studentCoursesResponse);
-                    var allStudentCourses = studentCourses.MyCourses.SelectMany(c => c.Courses).Select(c => c.Id).ToList();
+                    var allStudentCourses = studentCourses.MyCourses.Where(c=>c.Courses!=null).SelectMany(c => c.Courses).Select(c => c.Id).ToList();
 
                     // update which course are paid for current student
                     foreach (var course in trackDetails.CoursesByTrackId.Courses)
@@ -134,7 +134,7 @@ namespace TolabPortal.Controllers
                 if (studentCoursesResponse.IsSuccessStatusCode)
                 {
                     var studentCourses = await CommonUtilities.GetResponseModelFromJson<MyCourseResponse>(studentCoursesResponse);
-                    var allStudentCourses = studentCourses.MyCourses.SelectMany(c => c.Courses).Select(c => c.Id).ToList();
+                    var allStudentCourses = studentCourses.MyCourses.Where(c=>c.Courses!=null).SelectMany(c => c.Courses).Select(c => c.Id).ToList();
                     courseDetails.Course.IsCurrentStudentSubscribedToCourse = allStudentCourses.Contains(courseDetails.Course.Id);
                 }
 
