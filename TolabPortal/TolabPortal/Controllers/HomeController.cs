@@ -291,6 +291,9 @@ namespace TolabPortal.Controllers
                 new Claim("CountryCode", user.model.CountryCode ?? string.Empty),
                 new Claim("UserName", user.model.Name),
                 new Claim("UserPhoto", user.model.Photo?.ToString() ?? string.Empty),
+                new Claim("Email", user.model.Email?.ToString() ?? string.Empty),
+                new Claim("Phone", user.model.Phone?.ToString() ?? string.Empty),
+                new Claim("IdentityId", user.model.IdentityId?.ToString() ?? string.Empty),
             };
 
             return claims;
@@ -338,7 +341,7 @@ namespace TolabPortal.Controllers
             if (studentProfileResponse.IsSuccessStatusCode)
             {
                 var studentProfile = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentProfileResponse);
-
+                 
                 StudentProfileViewModel studentProfileViewModel = _mapper.Map<StudentProfileViewModel>(studentProfile.Student);
 
                 var interestsResponse = await _interestService.GetInterestsBeforeEdit();

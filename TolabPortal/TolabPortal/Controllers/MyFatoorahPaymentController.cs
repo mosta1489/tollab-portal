@@ -70,11 +70,14 @@ namespace TolabPortal.Controllers
                     InvoiceValue = paymentVm.InvoiceValue == 0 ? 1 : paymentVm.InvoiceValue,
                     CustomerReference = paymentVm.CustomerReference,
                     CustomerName = _sessionManager.UserId ?? "",
-                    UserDefinedField = $"{paymentVm.TransactionType},{paymentVm.ReturnUrl}",
+                    UserDefinedField = $"{paymentVm.TransactionType},{paymentVm.ReturnUrl},{_sessionManager.IdentityId}",
                     CallBackUrl = $"{_config.CallBackPayemntRoot}/CompletePayment",
                     ErrorUrl = $"{_config.CallBackPayemntRoot}/ErrorPayment",
                     Language = "AR",
-                    ExpiryDate = DateTime.Now.AddYears(1)
+                    CustomerMobile= _sessionManager.CountryCode+_sessionManager.Phone,
+                    CustomerEmail=_sessionManager.Email,
+                    ExpiryDate = DateTime.Now.AddYears(1),
+                 
                 }).ConfigureAwait(false);
                 if (response.IsSuccess)
                 {
@@ -172,5 +175,7 @@ namespace TolabPortal.Controllers
                 return View("ErrorPayment");
             }
         }
+
+        
     }
 }

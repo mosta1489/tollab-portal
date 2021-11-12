@@ -101,6 +101,7 @@ namespace TolabPortal.Controllers
         [Route("Track/Course")]
         public async Task<IActionResult> GetCourseDetails(long courseId, string trackNameLT)
         {
+            
             var courseDetailsResponse = await _courseService.GetCourseByIdForCurrentStudent(courseId);
             if (courseDetailsResponse.IsSuccessStatusCode)
             {
@@ -155,7 +156,7 @@ namespace TolabPortal.Controllers
                             {
                                 g.Contents.ForEach(  c =>
                                 {
-                                    c.Path = (!string.IsNullOrEmpty(c.Path)) ?  VimeoConnector.GenerateEmbed(c.Path, "900", "600").Result: "";
+                                    c.Path = (!string.IsNullOrEmpty(c.Path)) ?  VimeoConnector.GenerateEmbed(c.Path, "900", "600", User.Claims.First(c => c.Type == "UserName").Value ?? "").Result: "";
                                 });
                             }
 
@@ -183,7 +184,7 @@ namespace TolabPortal.Controllers
                 //var vimeoResponse = await VimeoConnector.GenerateEmbed(courseDetails.Course.IntroVideo, "400", "300");
                 //courseDetails.Course.vimeoResponse = new VimeoResponseModel(vimeoResponse.PlayerVideoUrl, vimeoResponse.width, vimeoResponse.height, vimeoResponse.title);
 
-                courseDetails.Course.IntroVideo = (!string.IsNullOrEmpty(courseDetails.Course.IntroVideo)) ? await VimeoConnector.GenerateEmbed(courseDetails.Course.IntroVideo, "400", "300") : "";
+                courseDetails.Course.IntroVideo = (!string.IsNullOrEmpty(courseDetails.Course.IntroVideo)) ? await VimeoConnector.GenerateEmbed(courseDetails.Course.IntroVideo, "400", "300", User.Claims.First(c => c.Type == "UserName").Value??"") : "";
                 return View("CourseDetails", courseDetails.Course);
             }
             else

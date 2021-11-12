@@ -177,7 +177,11 @@ namespace TolabPortal.Controllers
                 new Claim("CountryId", User.FindFirstValue("CountryId")),
                 new Claim("CountryCode", User.FindFirstValue("CountryCode")),
                 new Claim("UserPhoto", User.FindFirstValue("UserPhoto")),
-                new Claim("HasInterests", true.ToString())
+                new Claim("HasInterests", true.ToString()),
+                new Claim("Email", User.FindFirstValue("Email")),
+                new Claim("Phone", User.FindFirstValue("Phone")),
+                new Claim("IdentityId", User.FindFirstValue("IdentityId")),
+
             };
 
             return claims;

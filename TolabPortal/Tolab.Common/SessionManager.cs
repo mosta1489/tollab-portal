@@ -14,6 +14,9 @@ namespace Tolab.Common
         public bool? HasInterests { get; }
         public string UserPhoto { get; }
         public string UserName { get; }
+        public string Email { get; }
+        public string Phone { get; }
+        public string IdentityId { get; }
     }
 
     public class SessionManager : ISessionManager
@@ -122,6 +125,48 @@ namespace Tolab.Common
                         return false;
 
                     return bool.Parse(hasInterests);
+                }
+
+                return null;
+            }
+        }
+
+        public string Email
+        {
+            get
+            {
+                if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User != null
+                    && _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
+                }
+
+                return null;
+            }
+        }
+
+        public string Phone
+        {
+            get
+            {
+                if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User != null
+                    && _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Phone")?.Value;
+                }
+
+                return null;
+            }
+        }
+
+        public string IdentityId
+        {
+            get
+            {
+                if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User != null
+                    && _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "IdentityId")?.Value;
                 }
 
                 return null;
