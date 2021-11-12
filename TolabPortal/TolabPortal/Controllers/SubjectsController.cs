@@ -156,7 +156,7 @@ namespace TolabPortal.Controllers
                             {
                                 g.Contents.ForEach(  c =>
                                 {
-                                    c.Path = (!string.IsNullOrEmpty(c.Path)) ?  VimeoConnector.GenerateEmbed(c.Path, "900", "600", User.Claims.First(c => c.Type == "UserName").Value ?? "").Result: "";
+                                    c.Path = (!string.IsNullOrEmpty(c.Path)) ?  VimeoConnector.GenerateEmbed(c.Path, "900", "600").Result: "";
                                 });
                             }
 
@@ -184,7 +184,7 @@ namespace TolabPortal.Controllers
                 //var vimeoResponse = await VimeoConnector.GenerateEmbed(courseDetails.Course.IntroVideo, "400", "300");
                 //courseDetails.Course.vimeoResponse = new VimeoResponseModel(vimeoResponse.PlayerVideoUrl, vimeoResponse.width, vimeoResponse.height, vimeoResponse.title);
 
-                courseDetails.Course.IntroVideo = (!string.IsNullOrEmpty(courseDetails.Course.IntroVideo)) ? await VimeoConnector.GenerateEmbed(courseDetails.Course.IntroVideo, "400", "300", User.Claims.First(c => c.Type == "UserName").Value??"") : "";
+                courseDetails.Course.IntroVideo = (!string.IsNullOrEmpty(courseDetails.Course.IntroVideo)) ? await VimeoConnector.GenerateEmbed(courseDetails.Course.IntroVideo, "400", "300") : "";
                 return View("CourseDetails", courseDetails.Course);
             }
             else
