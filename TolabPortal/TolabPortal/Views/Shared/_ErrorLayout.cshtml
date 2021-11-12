@@ -80,63 +80,63 @@
                                 </nav><!-- end main-menu -->
                                 @if (!User.Identity.IsAuthenticated)
                                 {
-                                <div class="nav-right-button border-right border-right-gray pl-4 mr-3">
-                                    <ul class="generic-list-item">
-                                        <li><a href="~/login">تسجيل الدخول</a></li>
-                                        <li>أو</li>
-                                        <li><a href="~/registerphone" class="btn theme-btn theme-btn-sm text-white"><i class="la la-user-plus mr-1"></i> انشاء حساب جديد</a></li>
-                                    </ul>
-                                </div>
+                                    <div class="nav-right-button border-right border-right-gray pl-4 mr-3">
+                                        <ul class="generic-list-item">
+                                            <li><a href="~/login">تسجيل الدخول</a></li>
+                                            <li>أو</li>
+                                            <li><a href="~/registerphone" class="btn theme-btn theme-btn-sm text-white"><i class="la la-user-plus mr-1"></i> انشاء حساب جديد</a></li>
+                                        </ul>
+                                    </div>
                                 }
                                 else
                                 {
-                                <div class="nav-right-button border-right border-right-gray pl-4">
-                                    <div class="shop-cart user-profile-cart">
-                                        <ul>
-                                            <li>
-                                                <div class="shop-cart-btn pt-0 pb-0 d-flex align-items-center">
-                                                    <div class="avatar-sm">
-                                                        @if (string.IsNullOrEmpty(User.Claims.First(c => c.Type == "UserPhoto").Value))
+                                    <div class="nav-right-button border-right border-right-gray pl-4">
+                                        <div class="shop-cart user-profile-cart">
+                                            <ul>
+                                                <li>
+                                                    <div class="shop-cart-btn pt-0 pb-0 d-flex align-items-center">
+                                                        <div class="avatar-sm">
+                                                            @if (string.IsNullOrEmpty(User.Claims.First(c => c.Type == "UserPhoto").Value))
                                                             {
-                                                        <img class="rounded-full img-fluid" src="/images/defaultUser.png" alt="Avatar image">
+                                                                <img class="rounded-full img-fluid" src="/images/defaultUser.png" alt="Avatar image">
                                                             }
                                                             else
                                                             {
-                                                        <img class="rounded-full img-fluid" src="@config.MediaBaseUrl/ws/Images/StudentImages/@(User.Claims.First(c => c.Type == "UserPhoto").Value)" alt="Avatar image">
+                                                                <img class="rounded-full img-fluid" src="@config.MediaBaseUrl/ws/Images/StudentImages/@(User.Claims.First(c => c.Type == "UserPhoto").Value)" alt="Avatar image">
                                                             }
+                                                        </div>
+                                                        <div class="fs-14 lh-18 text-left ml-2">
+                                                            مرحبا ,<br />
+                                                            <b>
+                                                                @User.Claims.First(c => c.Type == "UserName").Value
+                                                            </b>
+                                                        </div>
                                                     </div>
-                                                    <div class="fs-14 lh-18 text-left ml-2">
-                                                        مرحبا ,<br />
-                                                        <b>
-                                                            @User.Claims.First(c => c.Type == "UserName").Value
-                                                        </b>
-                                                    </div>
-                                                </div>
-                                                <ul class="cart-dropdown-menu after-none px-0 notification-dropdown-menu" style="right:-24px">
-                                                    <li>
-                                                        <ul class="generic-list-item">
-                                                            <li>
-                                                                <a href="/Subjects/MyCourses" class="font-weight-bold">
-                                                                    <i class="la la-file-video-o mr-1 la-lg"></i>دوراتي
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a class="d-block" href="~/Profile/Edit?userId=@User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value">
-                                                                    <i class="la la-user mr-1"></i>الملف الشحصي
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="~/logout" class="font-weight-bold">
-                                                                    <i class="la la-power-off mr-1 la-lg"></i>تسجيل خروج
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </div><!-- end shop-cart -->
-                                </div><!-- end nav-right-button -->
+                                                    <ul class="cart-dropdown-menu after-none px-0 notification-dropdown-menu" style="right:-24px">
+                                                        <li>
+                                                            <ul class="generic-list-item">
+                                                                <li>
+                                                                    <a href="/Subjects/MyCourses" class="font-weight-bold">
+                                                                        <i class="la la-file-video-o mr-1 la-lg"></i>دوراتي
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a class="d-block" href="~/Profile/Edit?userId=@User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value">
+                                                                        <i class="la la-user mr-1"></i>الملف الشحصي
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="~/logout" class="font-weight-bold">
+                                                                        <i class="la la-power-off mr-1 la-lg"></i>تسجيل خروج
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div><!-- end shop-cart -->
+                                    </div><!-- end nav-right-button -->
                                 }
                             </div><!-- end menu-wrapper -->
                         </div><!-- end col-lg-10 -->
@@ -148,19 +148,53 @@
             <div class="off-canvas-menu-close main-menu-close icon-element icon-element-sm shadow-sm" data-toggle="tooltip" data-placement="left">
                 <i class="la la-times"></i>
             </div><!-- end off-canvas-menu-close -->
-            <ul class="generic-list-item off-canvas-menu-list pt-90px">
-                <li>
-                    <a href="~/Home">الرئيسية</a>
-                </li>
-                <li>
-                    <a href="/lives">البث المباشر</a>
-                </li>
-                <li>
-                    <a class="d-block" href="#">
-                        <i class="la la-power-off mr-1"></i>تسجيل خروج
-                    </a>
-                </li>
-            </ul>
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <div class="btn-box px-4 pt-5 text-center">
+                    <a href="~/login" class="btn theme-btn theme-btn-sm theme-btn-transparent"><i class="la la-sign-in mr-1"></i> تسجيل الدخول</a>
+                    <span class="fs-15 font-weight-medium d-inline-block mx-2">أو</span>
+                    <a href="~/register" class="btn theme-btn theme-btn-sm shadow-none"><i class="la la-user-plus mr-1"></i> انشاء حساب جديد</a>
+                </div>
+            }
+            else
+            {
+                <ul class="generic-list-item off-canvas-menu-list pt-90px">
+                    <li>
+                        <a class="d-block" href="@Url.Action("EditProfile", "Home")">
+                            مرحبا @(User.Claims.First(c => c.Type == "UserName").Value)
+                        </a>
+                    </li>
+                    <li>
+                        <div class="section-block mt-2 mb-2"></div>
+                    </li>
+                    <li>
+                        <a href="~/Home">الرئيسية</a>
+                    </li>
+                    <li>
+                        <a href="/lives">البث المباشر</a>
+                    </li>
+                    <li>
+                        <div class="section-block mt-2 mb-2"></div>
+                    </li>
+
+                    <li>
+                        <a class="d-block" href="/Subjects/MyCourses">
+                            <i class="la la-file-video-o mr-1"></i>دوراتي
+                        </a>
+                    </li>
+                    <li>
+                        <a class="d-block" href="@Url.Action("EditProfile", "Home")">
+                            <i class="la la-user mr-1"></i>الملف الشحصي
+                        </a>
+                    </li>
+                    <li>
+                        <a class="d-block" href="~/logout">
+                            <i class="la la-power-off mr-1"></i>تسجيل خروج
+                        </a>
+                    </li>
+                </ul>
+            }
+
         </div><!-- end off-canvas-menu -->
         <div class="body-overlay"></div>
     </header><!-- end header-menu-area -->
