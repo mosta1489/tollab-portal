@@ -65,7 +65,7 @@ namespace TolabPortal.Models
             public string Phone { get; set; }
             public bool Gender { get; set; }
             public object Photo { get; set; }
-            public object Bio { get; set; }
+            public string Bio { get; set; }
             public DateTime CreationDate { get; set; }
             public string IdentityId { get; set; }
             public int CountryId { get; set; }
