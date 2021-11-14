@@ -12,7 +12,7 @@ namespace TolabPortal.DataAccess.Services
 {
     public interface IAccountService
     {
-        Task<HttpResponseMessage> StudentLogin(string loginPhone);
+        Task<HttpResponseMessage> StudentLogin(string loginPhone, string email);
 
         Task<HttpResponseMessage> VerifyStudentLogin(string phoneKey, string phone, string verificationCode, string password);
 
@@ -47,11 +47,11 @@ namespace TolabPortal.DataAccess.Services
             _httpClient?.Dispose();
         }
 
-        public async Task<HttpResponseMessage> StudentLogin(string loginPhone)
+        public async Task<HttpResponseMessage> StudentLogin(string loginPhone, string email)
         {
             try
             {
-                var studentLoginResponse = await _httpClient.GetAsync($"/api/login-web?PhoneNumberWithKey={loginPhone}");
+                var studentLoginResponse = await _httpClient.GetAsync($"/api/login-web?PhoneNumberWithKey={loginPhone}&email={email}");
                 return studentLoginResponse;
             }
             catch (Exception ex)

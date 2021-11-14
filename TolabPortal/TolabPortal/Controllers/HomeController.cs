@@ -74,8 +74,11 @@ namespace TolabPortal.Controllers
 
                 if (!studentInfo.model.Verified)
                 {
-                    ViewBag.ErrorMessage = "Your account is Not Verified, Please verify it from Mob App";
-                    return View(loginModel);
+                    TempData["RegisterModel"] = JsonConvert.SerializeObject(studentInfo.model);
+                    await ReSendVerificationCode(studentInfo.model.PhoneKey, studentInfo.model.Phone, studentInfo.model.Email);
+                    return View("RegisterVerification", new RegisterVerification(studentInfo.model.Name, studentInfo.model.Email, studentInfo.model.Phone, loginModel.Password, true, studentInfo.model.PhoneKey, studentInfo.model.Gender.ToString(), studentInfo.model.Bio));
+                    //ViewBag.ErrorMessage = "Your account is Not Verified, Please verify it from Mob App";
+                    //return View(loginModel);
                 }
 
                 await LoginUser(studentInfo);
@@ -97,7 +100,7 @@ namespace TolabPortal.Controllers
         }
 
         [Route("~/register/ReSendVerificationCode")]
-        public async Task<IActionResult> ReSendVerificationCode(string phoneKey, string phoneNumber)
+        public async Task<IActionResult> ReSendVerificationCode(string phoneKey, string phoneNumber, string email)
         {
             TempData.TryGetValue("RegisterModel", out var registerModelJson);
             if (registerModelJson == null)
@@ -107,7 +110,7 @@ namespace TolabPortal.Controllers
             }
 
             var registerModel = JsonConvert.DeserializeObject<RegisterModel>(registerModelJson.ToString());
-            await _accountService.StudentLogin(phoneKey + phoneNumber);
+            await _accountService.StudentLogin(phoneKey + phoneNumber, email);
             return View("RegisterVerification", new RegisterVerification(registerModel));
         }
 
@@ -343,7 +346,7 @@ namespace TolabPortal.Controllers
             if (studentProfileResponse.IsSuccessStatusCode)
             {
                 var studentProfile = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentProfileResponse);
-                 
+
                 StudentProfileViewModel studentProfileViewModel = _mapper.Map<StudentProfileViewModel>(studentProfile.Student);
 
                 var interestsResponse = await _interestService.GetInterestsBeforeEdit();
