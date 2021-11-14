@@ -17,6 +17,8 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> SubscribeLive(string message, long liveId, string promoCode = "", string userId = "", bool isWebHook = false);
         Task<HttpResponseMessage> SubscribeTrack(long trackId, string promoCode = "", string userId = "", bool isWebHook = false);
         Task<HttpResponseMessage> GetAllStudentTransactions(int page = 0);
+        Task<HttpResponseMessage> InsertInvoiceLog(long invoiceId);
+        Task<HttpResponseMessage> UpdateInvoiceLog(long invoiceId);
     }
 
     public class SubscribeService : IDisposable, ISubscribeService
@@ -66,6 +68,36 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
+        public async Task<HttpResponseMessage> InsertInvoiceLog(long invoiceId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/insert-invoice-log?invoiceId={invoiceId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
+        public async Task<HttpResponseMessage> UpdateInvoiceLog(long invoiceId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/update-invoice-log?invoiceId={invoiceId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+
 
         public async Task<HttpResponseMessage> SubscribeTrack(long trackId, string promoCode = "", string userId = "", bool isWebHook = false)
         {

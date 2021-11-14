@@ -81,6 +81,7 @@ namespace TolabPortal.Controllers
                 }).ConfigureAwait(false);
                 if (response.IsSuccess)
                 {
+                    _ = await _subscribeService.InsertInvoiceLog(response.Data.InvoiceId);
                     return Redirect(response.Data.PaymentURL);
                 }
             }
@@ -98,6 +99,7 @@ namespace TolabPortal.Controllers
         public async Task<IActionResult> CompletePayment(string paymentId)
         {
             try
+            
             {
                 var message = await _paymentService.LogTransaction(new GetPaymentStatusRequest
                 {
@@ -109,6 +111,7 @@ namespace TolabPortal.Controllers
                 {
                     if (response.Data.InvoiceStatus.ToLower() == "paid")
                     {
+                        _ = await _subscribeService.UpdateInvoiceLog(response.Data.InvoiceId);
                         var computedFiled = response.Data.UserDefinedField.Split(",", StringSplitOptions.RemoveEmptyEntries);
                         switch (computedFiled[0])
                         {

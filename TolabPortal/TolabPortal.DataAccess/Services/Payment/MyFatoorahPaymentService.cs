@@ -83,8 +83,6 @@ namespace TolabPortal.DataAccess.Services.Payment
             var GetPaymentStatusRequestJSON = JsonConvert.SerializeObject(getPaymentStatusRequest);
             return await _client.PerformRequest(GetPaymentStatusRequestJSON, endPoint: "GetPaymentStatus").ConfigureAwait(false);
            
-            
-
         }
 
     }
