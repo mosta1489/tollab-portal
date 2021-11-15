@@ -111,7 +111,7 @@ namespace TolabPortal.Controllers
                 {
                     if (response.Data.InvoiceStatus.ToLower() == "paid")
                     {
-                        _ = await _subscribeService.UpdateInvoiceLog(response.Data.InvoiceId);
+                      
                         var computedFiled = response.Data.UserDefinedField.Split(",", StringSplitOptions.RemoveEmptyEntries);
                         switch (computedFiled[0])
                         {
@@ -129,7 +129,11 @@ namespace TolabPortal.Controllers
                         }
 
                         if (!string.IsNullOrEmpty(computedFiled[1]))
+                        {
+                            _ = await _subscribeService.UpdateInvoiceLog(response.Data.InvoiceId);
                             return Redirect(computedFiled[1]);
+
+                        }
                         return RedirectToAction("Index", "Home");
                     }
                 }
