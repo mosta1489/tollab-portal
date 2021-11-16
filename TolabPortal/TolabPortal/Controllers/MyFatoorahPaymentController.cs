@@ -173,8 +173,7 @@ namespace TolabPortal.Controllers
                     return Redirect(redirectUrl);
                 return RedirectToAction("Index", "Home");
 
-
-                return View("ErrorPayment");
+                 
             }
             catch (Exception ex)
             {
