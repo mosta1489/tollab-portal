@@ -109,7 +109,7 @@ namespace TolabPortal.Controllers
                 var response = JsonConvert.DeserializeObject<GenericResponse<GetPaymentStatusResponse>>(message);
                 if (response.IsSuccess)
                 {
-                    if (response.Data.InvoiceStatus.ToLower() == "paid")
+                    if (response.Data.InvoiceStatus.ToLower() != "canceled")
                     {
                       
                         var computedFiled = response.Data.UserDefinedField.Split(",", StringSplitOptions.RemoveEmptyEntries);
