@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Tolab.Common;
 using TolabPortal.DataAccess.Models.Payment;
@@ -111,26 +113,29 @@ namespace TolabPortal.Controllers
                 {
                     if (response.Data.InvoiceStatus.ToLower() != "canceled")
                     {
-                      
+                        var subscribeResult = new HttpResponseMessage();
                         var computedFiled = response.Data.UserDefinedField.Split(",", StringSplitOptions.RemoveEmptyEntries);
                         switch (computedFiled[0])
                         {
                             case string transaction when int.Parse(transaction) == (int)TransactionType.Course:
-                                await _subscribeService.SubscribeCourse(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                subscribeResult= await _subscribeService.SubscribeCourse(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
                                 break;
 
                             case string transaction when int.Parse(transaction) == (int)TransactionType.Live:
-                                await _subscribeService.SubscribeLive(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                subscribeResult= await _subscribeService.SubscribeLive(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
                                 break;
 
                             case string transaction when int.Parse(transaction) == (int)TransactionType.Track:
-                                await _subscribeService.SubscribeTrack(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                subscribeResult= await _subscribeService.SubscribeTrack(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
                                 break;
                         }
 
                         if (!string.IsNullOrEmpty(computedFiled[1]))
                         {
-                            _ = await _subscribeService.UpdateInvoiceLog(response.Data.InvoiceId);
+                            if (subscribeResult.StatusCode== HttpStatusCode.OK)
+                            {
+                                _ = await _subscribeService.UpdateInvoiceLog(response.Data.InvoiceId);
+                            }
                             return Redirect(computedFiled[1]);
 
                         }
