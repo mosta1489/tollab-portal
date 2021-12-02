@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Tolab.Common;
+using TolabPortal.DataAccess.Models;
 using TolabPortal.DataAccess.Models.Payment;
 using TolabPortal.DataAccess.Services;
 using TolabPortal.DataAccess.Services.Payment;
@@ -23,11 +24,13 @@ namespace TolabPortal.Controllers
     {
         private readonly IMyFatoorahPaymentService _paymentService;
         private readonly ISubscribeService _subscribeService;
+        private readonly IAccountService accountService;
 
-        public MyFatoorahWebHookController(IMyFatoorahPaymentService paymentService, ISubscribeService subscribeService)
+        public MyFatoorahWebHookController(IMyFatoorahPaymentService paymentService, ISubscribeService subscribeService, IAccountService accountService)
         {
             _paymentService = paymentService;
             _subscribeService = subscribeService;
+            this.accountService = accountService;
         }
 
         [AllowAnonymous]
@@ -50,51 +53,56 @@ namespace TolabPortal.Controllers
                 var model = JsonConvert.DeserializeObject<GenericWebhookModel<object>>(json);
                 if (model != null)
                 {
-                    switch (model.EventType)
+
+                    var transactionModel = JsonConvert.DeserializeObject<GenericWebhookModel<WebhookTransactionStatus>>(json);
+                    if (!isValidSignature)
                     {
-                        case WebhookEvents.TrnasactionsStatusChanged:
-                            var transactionModel = JsonConvert.DeserializeObject<GenericWebhookModel<WebhookTransactionStatus>>(json);
-                            if (!isValidSignature)
+                        isValidSignature = CheckMyFatoorahSignature(transactionModel, secretKey, headerSignature);
+                        if (!isValidSignature) return BadRequest("Invalid Signature");
+                        if (!string.IsNullOrEmpty(transactionModel.Data.PaymentId))
+                        {
+                            var message = await _paymentService.LogTransaction(new GetPaymentStatusRequest
                             {
-                                isValidSignature = CheckMyFatoorahSignature(transactionModel, secretKey, headerSignature);
-                                if (!isValidSignature) return BadRequest("Invalid Signature");
-                                if (!string.IsNullOrEmpty(transactionModel.Data.PaymentId))
+                                Key = transactionModel.Data.PaymentId,
+                                KeyType = "paymentId"
+                            }).ConfigureAwait(false);
+                            var response = JsonConvert.DeserializeObject<GenericResponse<GetPaymentStatusResponse>>(message);
+                            if (response.IsSuccess)
+                            {
+                                if (response.Data.InvoiceStatus.ToLower() != "canceled")
                                 {
-                                    var message = await _paymentService.LogTransaction(new GetPaymentStatusRequest
+                                    if (!string.IsNullOrEmpty(response.Data.CustomerName))
                                     {
-                                        Key = transactionModel.Data.PaymentId,
-                                        KeyType = "paymentId"
-                                    }).ConfigureAwait(false);
-                                    var response = JsonConvert.DeserializeObject<GenericResponse<GetPaymentStatusResponse>>(message);
-                                    if (response.IsSuccess)
-                                    {
-                                        if (response.Data.InvoiceStatus.ToLower() == "paid")
+                                        var studentDataResponse = await accountService.GetStudentById(response.Data.CustomerName);
+                                        if (studentDataResponse.IsSuccessStatusCode)
                                         {
+                                            var student = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentDataResponse);
                                             var computedFiled = response.Data.UserDefinedField.Split(",", StringSplitOptions.RemoveEmptyEntries);
                                             switch (computedFiled[0])
                                             {
                                                 case string transaction when int.Parse(transaction) == (int)TransactionType.Course:
-                                                    await _subscribeService.SubscribeCourse(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0, "", computedFiled[2], true);
+                                                    await _subscribeService.SubscribeCourse(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0, "", student.Student.IdentityId, true);
                                                     break;
 
                                                 case string transaction when int.Parse(transaction) == (int)TransactionType.Live:
-                                                    await _subscribeService.SubscribeLive(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0, "", computedFiled[2], true);
+                                                    await _subscribeService.SubscribeLive(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0, "", student.Student.IdentityId, true);
                                                     break;
 
                                                 case string transaction when int.Parse(transaction) == (int)TransactionType.Track:
-                                                    await _subscribeService.SubscribeTrack(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0, "", computedFiled[2], true);
+                                                    await _subscribeService.SubscribeTrack(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0, "", student.Student.IdentityId, true);
                                                     break;
                                             }
-
                                         }
+
                                     }
+
+
                                 }
                             }
-
-                            break;
-                           
-
+                        }
                     }
+
+
 
                 }
                 else
@@ -107,6 +115,14 @@ namespace TolabPortal.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+
+        [Route("~/fix-failed-invoices")]
+        public async Task<string> FixFailedInvoices()
+        {
+            await _subscribeService.FixFailedInvoices();
+            return "Done";
         }
 
         public bool CheckMyFatoorahSignature<T>(GenericWebhookModel<T> model, string secretKey, string headerSignature)

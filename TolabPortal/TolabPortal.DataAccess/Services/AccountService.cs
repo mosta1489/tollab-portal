@@ -26,6 +26,7 @@ namespace TolabPortal.DataAccess.Services
 
         Task<HttpResponseMessage> LogoutStudent();
         Task<HttpResponseMessage> ChangeStudentProfilePhoto(Student student);
+        Task<HttpResponseMessage> GetStudentById(string userId);
     }
 
     public class AccountService : IAccountService, IDisposable
@@ -61,6 +62,22 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
+
+        public async Task<HttpResponseMessage> GetStudentById(string userId)
+        {
+            try
+            {
+                var studentLoginResponse = await _httpClient.GetAsync($"/api/get-student-by-Id/{userId}");
+                return studentLoginResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        
 
         public async Task<HttpResponseMessage> VerifyStudentLogin(string phoneKey, string phone, string verificationCode, string password)
         {
