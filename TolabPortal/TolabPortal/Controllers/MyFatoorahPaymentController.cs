@@ -56,6 +56,7 @@ namespace TolabPortal.Controllers
                     TransactionType = payViewmodel.TransactionType,
                     ReturnUrl = $"{_config.CallBackPayemntRoot}{payViewmodel.ReturnRoute}"
                 });
+            _ = _subscribeService.InsertExcptionLog(response.Message,"", _sessionManager.UserId, "", "InitiatePayment");
             return View("ErrorPayment");
         }
 
@@ -86,7 +87,12 @@ namespace TolabPortal.Controllers
                     _ = await _subscribeService.InsertInvoiceLog(response.Data.InvoiceId);
                     return Redirect(response.Data.PaymentURL);
                 }
+                else
+                {
+                    _ = _subscribeService.InsertExcptionLog(response.Message, "", _sessionManager.UserId, "", "ExecutePayment");
+                }
             }
+            _ = _subscribeService.InsertExcptionLog("Model Is Invalid", "", _sessionManager.UserId, "", "ExecutePayment");
             return View("ErrorPayment");
         }
 
@@ -142,12 +148,16 @@ namespace TolabPortal.Controllers
                         return RedirectToAction("Index", "Home");
                     }
                 }
+                else
+                {
+                    _ = _subscribeService.InsertExcptionLog("Model is invalid",response.Message, , _sessionManager.UserId, "", "Complete Payment");
+                }
 
                 return View("ErrorPayment");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Complete payment :{ex.Message} ||StackTrace : {ex.StackTrace} ");
+                _ = _subscribeService.InsertExcptionLog(ex.Message,ex.StackTrace, _sessionManager.UserId, "", "Complete Payment");
                 return View("ErrorPayment");
             }
         }

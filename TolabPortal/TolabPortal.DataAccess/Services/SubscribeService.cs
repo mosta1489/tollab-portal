@@ -13,13 +13,16 @@ namespace TolabPortal.DataAccess.Services
     public interface ISubscribeService
     {
 
-        Task<HttpResponseMessage> SubscribeCourse(string message, long courseId, string promoCode = "",string userId="", bool isWebHook = false);
+        Task<HttpResponseMessage> SubscribeCourse(string message, long courseId, string promoCode = "", string userId = "", bool isWebHook = false);
         Task<HttpResponseMessage> SubscribeLive(string message, long liveId, string promoCode = "", string userId = "", bool isWebHook = false);
         Task<HttpResponseMessage> SubscribeTrack(long trackId, string promoCode = "", string userId = "", bool isWebHook = false);
         Task<HttpResponseMessage> GetAllStudentTransactions(int page = 0);
         Task<HttpResponseMessage> InsertInvoiceLog(long invoiceId);
         Task<HttpResponseMessage> UpdateInvoiceLog(long invoiceId);
         Task<HttpResponseMessage> FixFailedInvoices();
+        Task InsertExcptionLog(string exception, string trace = "", string userId = "", string comment = "", string endPoint = "");
+
+
     }
 
     public class SubscribeService : IDisposable, ISubscribeService
@@ -41,7 +44,7 @@ namespace TolabPortal.DataAccess.Services
             _httpClient?.Dispose();
         }
 
-        public async Task<HttpResponseMessage> SubscribeCourse(string message, long courseId, string promoCode = "", string userId = "",bool isWebHook=false)
+        public async Task<HttpResponseMessage> SubscribeCourse(string message, long courseId, string promoCode = "", string userId = "", bool isWebHook = false)
         {
             try
             {
@@ -144,6 +147,14 @@ namespace TolabPortal.DataAccess.Services
                 errorResponse.ReasonPhrase = ex.Message;
                 return errorResponse;
             }
+        }
+
+        public async Task InsertExcptionLog(string exception, string trace = "", string userId = "", string comment = "", string endPoint = "")
+        {
+
+            _ = await _httpClient.GetAsync($"/api/log-payment-exception?" +
+                $"exception={exception}&trace={trace}&userId={userId}&comment={comment}&endPoint={endPoint}");
+
         }
 
 
