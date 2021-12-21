@@ -150,7 +150,7 @@ namespace TolabPortal.Controllers
                 }
                 else
                 {
-                    _ = _subscribeService.InsertExcptionLog("Model is invalid",response.Message, , _sessionManager.UserId, "", "Complete Payment");
+                    _ = _subscribeService.InsertExcptionLog("Model is invalid",response.Message, _sessionManager.UserId, "", "Complete Payment");
                 }
 
                 return View("ErrorPayment");
