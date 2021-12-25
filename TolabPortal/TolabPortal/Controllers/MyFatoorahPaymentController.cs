@@ -117,7 +117,7 @@ namespace TolabPortal.Controllers
                 var response = JsonConvert.DeserializeObject<GenericResponse<GetPaymentStatusResponse>>(message);
                 if (response.IsSuccess)
                 {
-                    if (response.Data.InvoiceStatus.ToLower() != "canceled" || response.Data.InvoiceStatus.ToLower() != "unpaid")
+                    if (response.Data.InvoiceStatus.ToLower()=="paid")
                     {
                         var subscribeResult = new HttpResponseMessage();
                         var computedFiled = response.Data.UserDefinedField.Split(",", StringSplitOptions.RemoveEmptyEntries);
@@ -146,6 +146,10 @@ namespace TolabPortal.Controllers
 
                         }
                         return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return View("NotCompletedPayment");
                     }
                 }
                 else
@@ -197,6 +201,11 @@ namespace TolabPortal.Controllers
             }
         }
 
-        
+        [AllowAnonymous]
+        [Route("~/NotCompletedPayment")]
+        public IActionResult NotCompletedPayment()
+        {
+            return View();
+        }
     }
 }
