@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Tolab.Common;
 using TolabPortal.DataAccess.Models;
+using TolabPortal.DataAccess.Models.Payment;
 using TolabPortal.DataAccess.Services;
 using TolabPortal.Models;
 using TolabPortal.ViewModels;
@@ -37,7 +38,9 @@ namespace TolabPortal.Controllers
         public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Subjects");
+            {
+                return RedirectToAction("HomeCoursesNew", "Subjects");
+            }
             //return RedirectToAction("RegisterSection", "Interest");
             return View();
         }
@@ -49,14 +52,22 @@ namespace TolabPortal.Controllers
         }
 
         #endregion Home and Terms
+        #region Wallet
+        [Route("~/Wallet")]
+        public async Task<IActionResult> Wallet()
+        {
+            //await SetCurrentTotalWalletAmount();
+            return View("MyWallet");
+        }
 
+        #endregion
         #region Login
 
         [Route("~/login")]
         public IActionResult Login()
         {
             if (User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Subjects");
+                return RedirectToAction("HomeCoursesNew", "Subjects");
             return View("Login");
         }
 
@@ -71,7 +82,11 @@ namespace TolabPortal.Controllers
             {
                 var responseString = await loginResponse.Content.ReadAsStringAsync();
                 var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
-
+                if (studentInfo.model.CountryId == 20011)
+                {
+                    ViewBag.ErrorMessage = "غير مسموح فى الوقت الحالى يمكنك الدخول عبر التطبيق";
+                    return View();
+                }
                 if (!studentInfo.model.Verified)
                 {
                     TempData["RegisterModel"] = JsonConvert.SerializeObject(studentInfo.model);
@@ -80,9 +95,12 @@ namespace TolabPortal.Controllers
                     //ViewBag.ErrorMessage = "Your account is Not Verified, Please verify it from Mob App";
                     //return View(loginModel);
                 }
-
-                await LoginUser(studentInfo);
-                return RedirectToAction("Index", "Subjects");
+              
+                else {
+                    await LoginUser(studentInfo);
+                    return RedirectToAction("HomeCoursesNew", "Subjects");
+                }
+                
             }
             else
             {
@@ -92,6 +110,8 @@ namespace TolabPortal.Controllers
                 return View(loginModel);
             }
         }
+
+        
 
         [Route("~/login/Verification")]
         public IActionResult LoginVerification()
@@ -158,13 +178,86 @@ namespace TolabPortal.Controllers
 
         #endregion Login
 
+        #region Forgot Password
+        [Route("~/ForgotPassword")]
+        public IActionResult ForgotPassword()
+        {
+            return View("ForgotPassword");
+        }
+        [HttpPost]
+        [Route("~/ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel forgotPasswordModel)
+        {
+            var studentData = await _accountService.GetStudentByPhoneNumber(forgotPasswordModel.PhoneKey+ forgotPasswordModel.PhoneNumber,forgotPasswordModel.Email);
+            if (studentData.IsSuccessStatusCode==true)
+            {
+                var student = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentData);
+                return View("ForgotPasswordVerification", new ForgotPasswordModel(student.Student.IdentityId, student.Student.Email, student.Student.Phone, student.Student.PhoneKey));
+            }
+
+            ViewBag.ErrorMessage = "حدث خطأ أثناء العمليه";
+            return View();
+        }
+        [Route("~/ForgotPasswordVerification")]
+        public IActionResult ForgotPasswordVerification(ForgotPasswordModel forgotPasswordModel)
+        {   
+            return View("ForgotPasswordVerification", forgotPasswordModel);
+        }
+        [HttpPost]
+        [Route("~/ForgotPasswordVerificationPost")]
+        public async Task<IActionResult> ForgotPasswordVerificationPost(ForgotPasswordModel forgotPasswordModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var loginVerificationResponse = await _accountService.VerifyVerificationCode(forgotPasswordModel.IdentityId, forgotPasswordModel.ActivationCode.Value);
+                if (loginVerificationResponse.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("ResetNewPassword", forgotPasswordModel);
+                }
+
+                ViewBag.ErrorMessage = "كود التفعيل غير صحيح";
+                return View("ForgotPasswordVerification", forgotPasswordModel);
+            }
+
+            ViewBag.ErrorMessage = "حدث خطا اثناء العمليه ";
+            return View();
+        }
+        [HttpPost]
+        [Route("~/ResetNewPasswordPost")]
+        public async Task<IActionResult> ResetNewPasswordPost(ForgotPasswordModel forgotPasswordModel)
+        {
+            if (forgotPasswordModel.Password != forgotPasswordModel.RePassword)
+            {
+                ViewBag.ErrorMessage = "كلمتى المرور غير متطابقتين";
+                return View("ForgotPassword");
+            }
+            else if (ModelState.IsValid)
+            {
+                var loginVerificationResponse = await _accountService.ResetPassword(forgotPasswordModel.Email,forgotPasswordModel.Password);
+                if (loginVerificationResponse.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Login");
+                }
+                 
+            }
+
+            ViewBag.ErrorMessage = "حدث خطا اثناء العمليه ";
+            return View();
+        }
+         [Route("~/ResetNewPassword")]
+        public IActionResult ResetNewPassword(ForgotPasswordModel forgotPasswordModel)
+        {
+            return View("ResetNewPassword", forgotPasswordModel);
+        }
+        #endregion
+
         #region Register
 
         [Route("~/Register")]
         public IActionResult Register()
         {
             if (User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Subjects");
+                return RedirectToAction("HomeCoursesNew", "Subjects");
             return View("Register");
         }
 
@@ -284,22 +377,33 @@ namespace TolabPortal.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
         }
 
-        private IEnumerable<Claim> GetUserClaims(LoginVerificationSuccessResponseModel user)
+        private   IEnumerable<Claim> GetUserClaims(LoginVerificationSuccessResponseModel user)
         {
+            //var walletTransactions = await _accountService.CurrentWalletTransactions();
+            //decimal? totalBalance = 0;
+            //if (walletTransactions.IsSuccessStatusCode)
+            //{
+            //    var responseStringWallet = walletTransactions.Content.ReadAsStringAsync().Result;
+            //    var studentTransactions = JsonConvert.DeserializeObject<StudentTransactionsResponse>(responseStringWallet);
+            //    if (studentTransactions.Model.TotalBalance != null) totalBalance = studentTransactions.Model.TotalBalance;
+            //}
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.model.Id.ToString()),
-                new Claim("AccessToken", user.model.Token.First().access_token),
+                new Claim("AccessToken", user.model.Token?.First().access_token),
                 new Claim("CountryId", user.model.CountryId.ToString()),
                 new Claim("CountryCode", user.model.CountryCode ?? string.Empty),
-                new Claim("UserName", user.model.Name),
+                new Claim("UserName", user.model?.Name),
                 new Claim("UserPhoto", user.model.Photo?.ToString() ?? string.Empty),
                 new Claim("Email", user.model.Email?.ToString() ?? string.Empty),
                 new Claim("Phone", user.model.Phone?.ToString() ?? string.Empty),
                 new Claim("IdentityId", user.model.IdentityId?.ToString() ?? string.Empty),
+                new Claim("UserId",user.model.Id.ToString() ?? string.Empty),
+                new Claim("WalletAmount",user.model.Id.ToString() ?? string.Empty)
             };
 
-            return claims;
+            return  claims;
         }
 
         public int GetCountryIdByCode(string code)

@@ -14,6 +14,7 @@ namespace TolabPortal.DataAccess.Models
         public long TrackId { get; set; }
 
         public IEnumerable<SubjectCourse> SubjectCourses { get; set; } = new List<SubjectCourse>();
+        public IEnumerable<Subject> Subjects { get; set; } = new List<Subject>();
     }
 
     public class StudentHomeCourseResponse

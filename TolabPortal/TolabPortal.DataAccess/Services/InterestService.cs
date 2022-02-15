@@ -13,7 +13,7 @@ namespace TolabPortal.DataAccess.Services
 {
     public interface IInterestService
     {
-        Task<HttpResponseMessage> GetSections();
+        Task<HttpResponseMessage> GetSections(bool isIncludeSubCategory = false);
 
         Task<HttpResponseMessage> GetCategoriesBySectionId(long sectionId);
 
@@ -45,11 +45,11 @@ namespace TolabPortal.DataAccess.Services
             _httpClient?.Dispose();
         }
 
-        public async Task<HttpResponseMessage> GetSections()
+        public async Task<HttpResponseMessage> GetSections( bool isIncludeSubCategory = false)
         {
             try
             {
-                var sectionsResponse = await _httpClient.GetAsync($"/api/GetSections");
+                var sectionsResponse = await _httpClient.GetAsync($"/api/GetSections?isIncludeSubCategory={isIncludeSubCategory}");
                 return sectionsResponse;
             }
             catch (Exception ex)

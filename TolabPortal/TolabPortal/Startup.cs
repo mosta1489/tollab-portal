@@ -24,6 +24,10 @@ namespace TolabPortal
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc().AddSessionStateTempDataProvider();
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+
             services.ConfigureBundles();
             services.ConfigureDependencyInjection();
             services.Configure<ApplicationConfig>(Configuration.GetSection("ApplicationConfig"));
@@ -64,7 +68,7 @@ namespace TolabPortal
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseWebOptimizer();
 
             app.UseRouting();

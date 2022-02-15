@@ -19,6 +19,18 @@
 ================================= -->
 <section class="course-area section--padding  pt-60px pb-40px bg-grligh">
     <div class="container">
+        @if (ViewBag.SuccessMessage != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show course-alert-info">
+                <div class="d-flex align-items-center">
+                    <i class="la la-info-circle fs-30 mr-2"></i> @ViewBag.SuccessMessage
+                </div>
+                <button type="button" class="close fs-20 pd-16" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true" class="la la-times"></span>
+                </button>
+            </div>
+        }
+
 
         @foreach (var homeCourse in Model)
         {
@@ -44,8 +56,8 @@
                                             <img class="card-img-top lazy catimg" src="/images/img-loading-ar.png" data-src="@config.MediaBaseUrl/ws/Images/TeacherSubjectImages/@subject.TrackImage">
                                         </a>
                                         @*<div class="course-badge-labels">
-                                                <div class="course-badge">لغة عربية</div>
-                                            </div>*@
+                                            <div class="course-badge">لغة عربية</div>
+                                        </div>*@
                                         <div class="teachername">
                                             <img class="card-img-top lazy" src="/images/img-loading-ar.png" data-src="@config.MediaBaseUrl/ws/Images/TeacherImages/@subject.TeacherPhoto">
                                             <p class="card-text txtbold">@subject.TeacherName</p>

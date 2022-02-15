@@ -1,10 +1,57 @@
 ﻿@model PayVm
-<form asp-action="InitiatePayment" asp-controller="MyFatoorahPayment" method="post">
-    @Html.HiddenFor(a => a.TransactionId)
-    @Html.HiddenFor(a => a.InvoiceAmount)
-    @Html.HiddenFor(a => a.TransactionType)
-    @Html.HiddenFor(a => a.ReturnRoute)
+<a   href="#" class="btn theme-btn @Model.CssClassName" data-toggle="modal" data-target="#paymentModal-@Model.TransactionId" title="Pay Now" >اشترك</a>
+ 
 
-    @*<a ty href="#" class="btn theme-btn">اشترك</a>*@
-    <input type="submit" class="btn theme-btn @Model.CssClassName" value="اشترك" />
-</form>
+ <!-- Modal -->
+<div class="modal fade modal-container" id="paymentModal-@Model.TransactionId" tabindex="-1" role="dialog" aria-labelledby="paymentModalTitle"  aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-gray">
+                <div class="pr-2">
+                    <h5 class="modal-title fs-19 lh-24 txtbold" id="paymentModalTitle">اختر طريقة الدفع</h5>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="la la-times"></span>
+                </button>
+            </div><!-- end modal-header -->
+            <div class="modal-body">
+                <form asp-action="InitiatePayment" asp-controller="MyFatoorahPayment" method="post">
+                    @Html.HiddenFor(a => a.TransactionId)
+                    @Html.HiddenFor(a => a.InvoiceAmount)
+                    @Html.HiddenFor(a => a.TransactionType)
+                    @Html.HiddenFor(a => a.ReturnRoute)
+                    @Html.HiddenFor(a => a.Balance)
+                    <div class="input-box">
+                        <div class="col-lg-12 responsive-column-half" style="display:none;">
+                            <div class="custom-control custom-radio mb-3 ml-0 pl-0">
+                                <input type="radio" class="custom-control-input" checked id="walletpay" asp-for="PaymentMethodId" value="1">
+                                <label class="custom-control-label custom--control-label custom--control-label-boxed noshadbord" for="walletpay">
+                                     <span class="font-weight-semi-bold text-black d-block">
+                                        الدفع من رصيد المحفظة 
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 responsive-column-half">
+                            <div class="custom-control custom-radio mb-3 ml-0 pl-0">
+                                <input type="radio" class="custom-control-input" id="evisapay" asp-for="PaymentMethodId" value="2" checked="checked" >
+                                <label class="custom-control-label custom--control-label custom--control-label-boxed noshadbord" for="evisapay">
+                                    <span class="font-weight-semi-bold text-black d-block">
+                                        الدفع الالكترونى (فيزا/ماستر كارد)
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="btn-box text-right pt-2">
+                        <button type="button" class="btn font-weight-medium mr-3" data-dismiss="modal">الغاء</button>
+                        <button type="submit" class="btn theme-btn theme-btn-sm lh-30">ادفع الان <i class="la la-arrow-right icon ml-1"></i></button>
+                    </div>
+                </form>
+            </div><!-- end modal-body -->
+        </div><!-- end modal-content -->
+    </div><!-- end modal-dialog -->
+</div><!-- end modal -->
+<!-- Modal -->

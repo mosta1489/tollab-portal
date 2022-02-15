@@ -13,9 +13,10 @@ namespace TolabPortal.DataAccess.Services
     public interface ISubscribeService
     {
 
-        Task<HttpResponseMessage> SubscribeCourse(string message, long courseId, string promoCode = "",string userId="", bool isWebHook = false);
-        Task<HttpResponseMessage> SubscribeLive(string message, long liveId, string promoCode = "", string userId = "", bool isWebHook = false);
-        Task<HttpResponseMessage> SubscribeTrack(long trackId, string promoCode = "", string userId = "", bool isWebHook = false);
+        Task<HttpResponseMessage> SubscribeCourse(string message, long courseId, string promoCode = "",string userId="", bool isWebHook = false, bool isPayFromWallet = false);
+        Task<HttpResponseMessage> SubscribeLive(string message, long liveId, string promoCode = "", string userId = "", bool isWebHook = false, bool isPayFromWallet = false);
+        Task<HttpResponseMessage> SubscribeTrack(long trackId, string promoCode = "", string userId = "", bool isWebHook = false, bool isPayFromWallet = false);
+        Task<HttpResponseMessage> ChargeWallet(string message, long userId, string promoCode = "",  bool isWebHook = false);
         Task<HttpResponseMessage> GetAllStudentTransactions(int page = 0);
         Task<HttpResponseMessage> InsertInvoiceLog(long invoiceId);
         Task<HttpResponseMessage> UpdateInvoiceLog(long invoiceId);
@@ -41,11 +42,11 @@ namespace TolabPortal.DataAccess.Services
             _httpClient?.Dispose();
         }
 
-        public async Task<HttpResponseMessage> SubscribeCourse(string message, long courseId, string promoCode = "", string userId = "",bool isWebHook=false)
+        public async Task<HttpResponseMessage> SubscribeCourse(string message, long courseId, string promoCode = "", string userId = "",bool isWebHook=false, bool isPayFromWallet = false)
         {
             try
             {
-                var result = await _httpClient.GetAsync($"/api/buy-course-from-web?message={message}&CourseId={courseId}&PromocodeText={promoCode}&userId={userId}&isWebHook={isWebHook}");
+                var result = await _httpClient.GetAsync($"/api/buy-course-from-web?message={message}&CourseId={courseId}&PromocodeText={promoCode}&userId={userId}&isWebHook={isWebHook}&isPayFromWallet={isPayFromWallet}");
                 return result;
             }
             catch (Exception ex)
@@ -55,11 +56,11 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
-        public async Task<HttpResponseMessage> SubscribeLive(string message, long liveId, string promoCode = "", string userId = "", bool isWebHook = false)
+        public async Task<HttpResponseMessage> SubscribeLive(string message, long liveId, string promoCode = "", string userId = "", bool isWebHook = false, bool isPayFromWallet = false)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/buy-live-from-web?message={message}&liveId={liveId}&PromocodeText={promoCode}&userId={userId}&isWebHook={isWebHook}");
+                var response = await _httpClient.GetAsync($"/api/buy-live-from-web?message={message}&liveId={liveId}&PromocodeText={promoCode}&userId={userId}&isWebHook={isWebHook}&isPayFromWallet={isPayFromWallet}");
                 return response;
             }
             catch (Exception ex)
@@ -100,11 +101,25 @@ namespace TolabPortal.DataAccess.Services
         }
 
 
-        public async Task<HttpResponseMessage> SubscribeTrack(long trackId, string promoCode = "", string userId = "", bool isWebHook = false)
+        public async Task<HttpResponseMessage> SubscribeTrack(long trackId, string promoCode = "", string userId = "", bool isWebHook = false, bool isPayFromWallet = false)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/TrackSubscription?TrackId={trackId}&PromocodeText={promoCode}&userId={userId}&isWebHook={isWebHook}");
+                var response = await _httpClient.GetAsync($"/api/TrackSubscription?TrackId={trackId}&PromocodeText={promoCode}&userId={userId}&isWebHook={isWebHook}&isPayFromWallet={isPayFromWallet}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> ChargeWallet(string message, long userId , string promoCode = "", bool isWebHook = false)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/WalletSubscription?message={message}&PromocodeText={promoCode}&userId={userId}&isWebHook={isWebHook}");
                 return response;
             }
             catch (Exception ex)

@@ -1,0 +1,76 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@model PayVm
+@{
+    ViewBag.CurrentPageTitle = "المحفظة";
+    var items = new string[] { "الرئيسية", "المحفظة" };
+    ViewBag.MenuItems = items;
+}
+<div class="col-md-12">
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger2 alert-dismissible fade show course-alert-info">
+            <div class="d-flex align-items-center">
+                <i class="la la-info-circle fs-30 mr-2"></i> @ViewBag.ErrorMessage
+            </div>
+            <button type="button" class="close fs-20 pd-16" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true" class="la la-times"></span>
+            </button>
+        </div>
+    }
+
+    <section >
+        <div class="container">
+            <div class="teacher-bar">
+                <div class="d-flex flex-wrap align-items-center justify-content-between">
+                    <div class="d-flex flex-wrap align-items-center mgautsm">
+                        <div class="icoimg">
+                            <img class="card-img-top" src="images/wallet.svg">
+                        </div>
+                        <div class="walletinfo">
+                            <h2>الحساب الكلي</h2>
+                            <span>@HttpContextAccessor.HttpContext.Session.GetString("currentWalletAmount")</span>
+                        </div>
+                    </div>
+                    <div class="aboutbar mr-3">
+                        <a href="#" class="btn theme-btn" data-toggle="modal" data-target="#addtowalletModal">شحن الرصيد </a>
+                    </div>
+                </div><!-- end filter-bar-inner -->
+            </div>
+
+        </div><!-- end container -->
+    </section>
+</div>
+<!-- Modal -->
+<div class="modal fade modal-container" id="addtowalletModal" tabindex="-1" role="dialog" aria-labelledby="addtowalletModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-gray">
+                <div class="pr-2">
+                    <h5 class="modal-title fs-19 lh-24 txtbold" id="addtowalletModalTitle">شحن الرصيد</h5>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="la la-times"></span>
+                </button>
+            </div><!-- end modal-header -->
+            <div class="modal-body">
+
+                <form asp-action="InitiatePayment" asp-controller="MyFatoorahPayment" method="post">
+                    <div class="input-box">
+                        <label class="label-text fs-13 txtbold">ادخل قيمة الشحن</label>
+                        <div class="form-group">
+                            <input class="form-control form--control pl-3" type="text" asp-for="InvoiceAmount" value="@Model?.InvoiceAmount">
+                        </div>
+                    </div>
+                    <input hidden asp-for="TransactionId" value="00112233" />
+                    <input hidden asp-for="TransactionType" value="4" />
+                    <input hidden asp-for="ReturnRoute" value="/wallet" />
+                    <div class="btn-box text-right pt-2">
+                        <button type="button" class="btn font-weight-medium mr-3" data-dismiss="modal">الغاء</button>
+                        <button type="submit" class="btn theme-btn theme-btn-sm lh-30">شحن <i class="la la-arrow-right icon ml-1"></i></button>
+                    </div>
+                </form>
+            </div><!-- end modal-body -->
+        </div><!-- end modal-content -->
+    </div><!-- end modal-dialog -->
+</div><!-- end modal -->

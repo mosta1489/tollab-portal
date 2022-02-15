@@ -14,6 +14,8 @@ namespace TolabPortal.DataAccess.Models
         public string NameLT { get; set; }
         public string Image { get; set; }
         public long? DepartmentId { get; set; }
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public long?  TeacherCount { get; set; }
         public List<Track> Tracks { get; set; }
     }
 

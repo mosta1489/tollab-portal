@@ -17,8 +17,8 @@ namespace TolabPortal.DataAccess.Services
     {
         Task<HttpResponseMessage> GetCoursesByDepartmentId(long departmentId, int page = 0);
         Task<HttpResponseMessage> GetSubjectsWithTracksByDepartmentId(long departmentId, int page = 0);
-        Task<HttpResponseMessage> GetHomeCourses(int page = 0);
-
+        Task<HttpResponseMessage> GetHomeCourses(int page = 0, long categoryId = 0, long subCategoryId = 0, long subjectId = 0);
+        Task<HttpResponseMessage> GetHomeCoursesClassifiedBySubCategory(int page = 0, long categoryId = 0, long subCategoryId = 0, long subjectId = 0);
         Task<HttpResponseMessage> GetTopLives();
         Task<HttpResponseMessage> GetLives(int page = 0);
         Task<HttpResponseMessage> GetLiveDetails(int liveId);
@@ -145,11 +145,25 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
-        public async Task<HttpResponseMessage> GetHomeCourses(int page = 0)
+        public async Task<HttpResponseMessage>  GetHomeCoursesClassifiedBySubCategory(int page = 0, long categoryId = 0, long subCategoryId = 0, long subjectId = 0)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/GetHomeCourses?Page={page}");
+                var response = await _httpClient.GetAsync($"/api/GetHomeCoursesClassifiedBySubCategory?Page={page}&categoryId={categoryId}&subCategoryId={subCategoryId}&subjectId={subjectId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> GetHomeCourses(int page = 0, long categoryId = 0, long subCategoryId = 0, long subjectId = 0)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/GetHomeCourses?Page={page}&categoryId={categoryId}&subCategoryId={subCategoryId}&subjectId={subjectId}");
                 return response;
             }
             catch (Exception ex)

@@ -1,8 +1,10 @@
-﻿@using System.Net;
+﻿@using Microsoft.AspNetCore.Http
+@using System.Net;
 @using System.Web
 @using Microsoft.Extensions.Options
 @using Tolab.Common
 @model TolabPortal.DataAccess.Models.CoursesByTrackIdModel
+@inject IHttpContextAccessor HttpContextAccessor
 @inject IOptions<ApplicationConfig> options;
 
 @{
@@ -15,7 +17,7 @@
     ViewBag.MenuItems = items;
 }
 
-<section class="course-area section--padding  pt-60px pb-40px bg-grligh">
+<section style="width: 100%;">
     <div class="container">
         <div class="teacher-bar">
             <div class="d-flex flex-wrap align-items-center justify-content-between">
@@ -56,19 +58,7 @@
                                     <h6 class="ribbon ribbon-purpl-bg fs-14 mb-3"> @($"{course.VideoCount} فيديوهات ")</h6>
                                     <h5 class="card-title"><a href="@courseDetailsEndPoint"> @course.NameLT </a></h5>
                                     <p class="card-text"> @Model.TeacherName </p>
-
-                                    <!--<div class="rating-wrap d-flex align-items-center py-2">
-                                        <div class="review-stars">
-                                            <span class="rating-number">4.4</span>
-                                            <span class="la la-star"></span>
-                                            <span class="la la-star"></span>
-                                            <span class="la la-star"></span>
-                                            <span class="la la-star"></span>
-                                            <span class="la la-star-o"></span>
-                                        </div>
-                                        <span class="rating-total pl-1">(20,230)</span>
-                                    </div>-->
-                                    <!-- end rating-wrap -->
+                                 
 
                                     <div class="d-flex justify-content-between align-items-center">
                                         @if (course.PreviousCost > course.CurrentCost)
@@ -97,6 +87,7 @@
                                             @await Component.InvokeAsync("MyFatoorahPayment",
                                             new PayVm
                                             {
+                                                Balance = Convert.ToDecimal(@HttpContextAccessor.HttpContext.Session.GetString("currentWalletAmount")),
                                                 InvoiceAmount = (decimal)course.CurrentCost,
                                                 TransactionId = course.Id.ToString(),
                                                 TransactionType = (int)TransactionType.Course,

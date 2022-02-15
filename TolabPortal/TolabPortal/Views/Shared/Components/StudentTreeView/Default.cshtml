@@ -1,0 +1,72 @@
+﻿@using TolabPortal.DataAccess.Models;
+@model List<Section>
+<div class="col-lg-3">
+    <div class="newfilter">
+        <h3 class="fs-20 pb-1 txtbold color-blk">اختيار المرحلة </h3>
+        <div class="divider"><span></span></div>
+
+        <div id="treeview_container" class="hummingbird-treeview">
+            @foreach (var itemSection in Model)
+            {
+                @if (itemSection.Categories.Count() > 0)
+                {
+                    <ul id=@($"treeview{@itemSection.Name}") class="hummingbird-base mb-2">
+
+                        <li data-id="@itemSection.Id">
+                            <i class="fa fa-plus"></i>
+
+                            <img src=@($"/images/{@itemSection.Name}.svg") width="22">
+
+                            <label class="onelab">
+                                <a href="javascript:void(0)" class="hrefTreeMaster" id="xnode-@itemSection.Id" data-id="custom-@itemSection.Id">@itemSection.NameLT</a>
+                                @*<input id="xnode-@itemSection.Id" data-id="custom-@itemSection.Id" type="checkbox" /> @itemSection.NameLT*@
+                            </label>
+                            @if (itemSection.Categories.Count() > 0)
+                            {
+                        <ul>
+                            @foreach (var itemCategory in itemSection.Categories)
+                            {
+
+
+                                @if (itemCategory.SubCategories.Count > 0)
+                                {
+                                    <li data-id="@itemCategory.Id">
+                                        <i class="fa fa-plus"></i>
+                                        <label>
+                                            <a href="/Subjects/HomeCoursesNew?categoryId=@itemCategory.Id" class="hrefTree" id="xnode-@itemSection.Id-@itemCategory.Id" data-id="custom-@itemSection.Id-@itemCategory.Id">@itemCategory.NameLT</a>
+                                            @*<input id="xnode-@itemSection.Id-@itemCategory.Id" data-id="custom-@itemSection.Id-@itemCategory.Id" type="checkbox" /> @itemCategory.NameLT*@
+                                        </label>
+                                        @if (itemCategory.SubCategories.Count() > 0)
+                                        {
+                                            <ul>
+                                                @foreach (var itemSubCategory in itemCategory.SubCategories)
+                                                {
+                                                    <li>
+                                                        <label>
+                                                            <a href="/Subjects/HomeCoursesNew?categoryId=@itemCategory.Id&subCategoryId=@itemSubCategory.Id" class="hrefTree hummingbird-end-node" id="xnode-@itemSection.Id-@itemCategory.Id-@itemSubCategory.Id" data-id="custom-@itemSection.Id-@itemCategory.Id-@itemSubCategory.Id">@itemSubCategory.NameLT</a>
+                                                            @*<input class="hummingbird-end-node" id="xnode-@itemSection.Id-@itemCategory.Id-@itemSubCategory.Id" data-id="custom-@itemSection.Id-@itemCategory.Id-@itemSubCategory.Id" type="checkbox" /> @itemSubCategory.NameLT*@
+                                                        </label>
+                                                    </li>
+
+                                                }
+                                            </ul>
+                                        }
+                                    </li>
+                                }
+
+                            }
+
+                        </ul>
+                            }
+
+                        </li>
+                    </ul>
+                }
+
+            }
+
+
+        </div>
+
+    </div>
+</div>

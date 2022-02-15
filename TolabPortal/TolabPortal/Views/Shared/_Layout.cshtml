@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="icon" sizes="16x16" href="images/favicon.png">
+    <link rel="icon" sizes="16x16" href="/images/favicon.png">
 
     <link rel="stylesheet" href="/css/commonBundle.css" />
 </head>
@@ -59,8 +59,11 @@
                                 <nav class="main-menu">
                                     <ul>
                                         <li>
-                                            <a href="/Home">الرئيسية</a>
+                                            <a href="/Subjects/HomeCoursesNew">الرئيسية</a>
                                         </li>
+                                        @*<li>
+                                            <a href="/subjects">الرئيسية الجديدة</a>
+                                        </li>*@
                                         <li>
                                             <a href="/lives">البث المباشر</a>
                                         </li>
@@ -110,9 +113,18 @@
                                                                 </li>
                                                                 <li>
                                                                     <a class="d-block" href="@Url.Action("EditProfile", "Home")">
-                                                                        <i class="la la-user mr-1"></i>الملف الشحصي
+                                                                        <i class="la la-user mr-1"></i>الملف الشخصى
                                                                     </a>
                                                                 </li>
+                                                                @if (User.Claims.First(c => c.Type == "CountryId").Value == "3")
+                                                                {
+                                                                    <li>
+                                                                        <a class="d-block" href="~/Wallet">
+                                                                            <i class="la la-wallet mr-1"></i>محفظتى
+                                                                        </a>
+                                                                    </li>
+                                                                }
+
                                                                 <li>
                                                                     <a href="~/logout" class="font-weight-bold">
                                                                         <i class="la la-power-off mr-1 la-lg"></i>تسجيل خروج
@@ -170,41 +182,49 @@
             }
             else
             {
-                <ul class="generic-list-item off-canvas-menu-list pt-90px">
-                    <li>
-                        <a class="d-block" href="@Url.Action("EditProfile", "Home")">
-                            مرحبا @(User.Claims.First(c => c.Type == "UserName").Value)
-                        </a>
-                    </li>
-                    <li>
-                        <div class="section-block mt-2 mb-2"></div>
-                    </li>
-                    <li>
-                        <a href="~/Home">الرئيسية</a>
-                    </li>
-                    <li>
-                        <a href="/lives">البث المباشر</a>
-                    </li>
-                    <li>
-                        <div class="section-block mt-2 mb-2"></div>
-                    </li>
+        <ul class="generic-list-item off-canvas-menu-list pt-90px">
+            <li>
+                <a class="d-block" href="@Url.Action("EditProfile", "Home")">
+                    مرحبا @(User.Claims.First(c => c.Type == "UserName").Value)
+                </a>
+            </li>
+            <li>
+                <div class="section-block mt-2 mb-2"></div>
+            </li>
+            <li>
+                <a href="~/Home">الرئيسية</a>
+            </li>
+            <li>
+                <a href="/lives">البث المباشر</a>
+            </li>
+            <li>
+                <div class="section-block mt-2 mb-2"></div>
+            </li>
 
-                    <li>
-                        <a class="d-block" href="/Subjects/MyCourses">
-                            <i class="la la-file-video-o mr-1"></i>دوراتي
-                        </a>
-                    </li>
-                    <li>
-                        <a class="d-block" href="@Url.Action("EditProfile", "Home")">
-                            <i class="la la-user mr-1"></i>الملف الشحصي
-                        </a>
-                    </li>
-                    <li>
-                        <a class="d-block" href="~/logout">
-                            <i class="la la-power-off mr-1"></i>تسجيل خروج
-                        </a>
-                    </li>
-                </ul>
+            <li>
+                <a class="d-block" href="/Subjects/MyCourses">
+                    <i class="la la-file-video-o mr-1"></i>دوراتي
+                </a>
+            </li>
+            <li>
+                <a class="d-block" href="@Url.Action("EditProfile", "Home")">
+                    <i class="la la-user mr-1"></i>الملف الشخصى
+                </a>
+            </li>
+            @if (User.Claims.First(c => c.Type == "CountryId").Value == "3")
+            {
+                <li>
+                    <a class="d-block" href="~/Wallet">
+                        <i class="la la-wallet mr-1"></i>محفظتى
+                    </a>
+                </li>
+            }
+            <li>
+                <a class="d-block" href="~/logout">
+                    <i class="la la-power-off mr-1"></i>تسجيل خروج
+                </a>
+            </li>
+        </ul>
             }
 
         </div><!-- end off-canvas-menu -->
@@ -252,7 +272,7 @@
     {
         @RenderBody()
     }
-    else if (ViewBag.CurrentPageTitle == "الملف الشحصي")
+    else if (ViewBag.CurrentPageTitle == "الملف الشخصى")
     {
         @RenderBody()
     }
@@ -318,7 +338,7 @@
                         <h3 class="fs-20 font-weight-semi-bold pb-2">روابط</h3>
                         <div class="divider border-bottom-0"><span></span></div>
                         <ul class="generic-list-item">
-                            <li><a href="/subjects">الرئيسية</a></li>
+                            <li><a href="/subjects/HomeCoursesNew">الرئيسية</a></li>
                             <li><a href="/lives">البث المباشر</a></li>
                         </ul>
                     </div><!-- end footer-item -->

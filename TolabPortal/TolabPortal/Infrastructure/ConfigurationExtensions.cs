@@ -38,7 +38,7 @@ namespace TolabPortal.Infrastructure
                      "css/fancybox.css",
                      "css/tooltipster.bundle.css",
                      "css/intlTelInput.min.css",
-                     "css/leaflet.css",
+                     "css/leaflet.css", "css/font-awesome.min.css",
                      "css/style-rtl.css",
                      "css/site.css");
 

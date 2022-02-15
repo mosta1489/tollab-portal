@@ -13,9 +13,10 @@ namespace TolabPortal.DataAccess.Services
     public interface IAccountService
     {
         Task<HttpResponseMessage> StudentLogin(string loginPhone, string email);
-
+        Task<HttpResponseMessage> CurrentWalletTransactions();
         Task<HttpResponseMessage> VerifyStudentLogin(string phoneKey, string phone, string verificationCode, string password);
-
+        Task<HttpResponseMessage> VerifyVerificationCode(string identityId, int verificationCode);
+        Task<HttpResponseMessage> ResetPassword(string email, string secret);
         Task<HttpResponseMessage> RegisterStudent(Student student);
 
         Task<HttpResponseMessage> GetStudentProfile();
@@ -27,6 +28,7 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> LogoutStudent();
         Task<HttpResponseMessage> ChangeStudentProfilePhoto(Student student);
         Task<HttpResponseMessage> GetStudentById(string userId);
+        Task<HttpResponseMessage> GetStudentByPhoneNumber(string phoneNumber,string email);
     }
 
     public class AccountService : IAccountService, IDisposable
@@ -62,7 +64,20 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
-
+        public async Task<HttpResponseMessage> GetStudentByPhoneNumber(string phoneNumber,string email)
+        {
+            try
+            {
+                var studentLoginResponse = await _httpClient.GetAsync($"/api/get-student-by-Phone?PhoneNumberWithKey={phoneNumber}&Email={email}");
+                return studentLoginResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
         public async Task<HttpResponseMessage> GetStudentById(string userId)
         {
             try
@@ -77,13 +92,53 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
-        
+        public async Task<HttpResponseMessage> CurrentWalletTransactions()
+        {
+            try
+            {
+                var walletTransactions = await _httpClient.GetAsync($"/api/GetAllStudentTransactions");
+                return walletTransactions;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
 
         public async Task<HttpResponseMessage> VerifyStudentLogin(string phoneKey, string phone, string verificationCode, string password)
         {
             try
             {
                 var studentLoginVerificationResponse = await _httpClient.GetAsync($"/api/VerifyWeb?PhoneKey={phoneKey}&Phone={phone}&vcode={verificationCode}&password={password}");
+                return studentLoginVerificationResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> ResetPassword(string email, string password) {
+            try
+            {
+                var studentResetPasswordResponse = await _httpClient.GetAsync($"/api/ResetUserPassword?email={email}&password={password}");
+                return studentResetPasswordResponse;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> VerifyVerificationCode(string identityId, int verificationCode)
+        {
+            try
+            {
+                var studentLoginVerificationResponse = await _httpClient.GetAsync($"/api/VerifyVerificationCode?IdentityId={identityId}&vcode={verificationCode}");
                 return studentLoginVerificationResponse;
             }
             catch (Exception ex)

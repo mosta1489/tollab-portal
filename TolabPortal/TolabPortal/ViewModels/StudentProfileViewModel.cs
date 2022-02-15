@@ -28,6 +28,9 @@ namespace TolabPortal.ViewModels
         public long CountryId { get; set; }
         public string CountryCode { get; set; }
         public int NumberOfCourses { get; set; }
+        public string Password{ get; set; }
+        public string RePassword { get; set; }
+        public string IdentityId { get; set; }
         public List<InterestViewModel> Interests { get; set; }
         public List<Category> Categories { get; set; }
     }

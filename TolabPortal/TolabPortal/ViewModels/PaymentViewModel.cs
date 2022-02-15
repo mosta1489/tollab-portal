@@ -32,6 +32,7 @@ namespace TolabPortal.ViewModels
     {
         Track=1,
         Course,
-        Live
+        Live,
+        Wallet=4
     }
 }

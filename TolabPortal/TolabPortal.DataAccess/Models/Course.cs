@@ -32,7 +32,7 @@ namespace TolabPortal.DataAccess.Models
         public bool? BySubscription { get; set; }
         public bool? ShowWaterMark { get; set; }
         public bool? NeedParent { get; set; }
-
+        public bool?  IsShowInWeb { get; set; }
         public bool? TrackShowWaterMark { get; set; }
 
         public int? OrderNumber { get; set; }

@@ -37,26 +37,60 @@ namespace TolabPortal.Controllers
         [HttpPost]
         public async Task<IActionResult> InitiatePayment(PayVm payViewmodel)
         {
-            if (payViewmodel.InvoiceAmount == 0)
-                return RedirectToAction("CompleteFreePayment", new { TransactionType = payViewmodel.TransactionType, tranactionId = payViewmodel.TransactionId,
-                    redirectUrl= $"{_config.CallBackPayemntRoot}{payViewmodel.ReturnRoute}"
-                });
-            var response = await _paymentService.InitiatePayment(new InitiatePaymentRequest
+            //دفع بالمحفظة
+            if (payViewmodel.PaymentMethodId == 1)
             {
-                InvoiceAmount = payViewmodel.InvoiceAmount,
-                CurrencyIso = "kwd"
-            }).ConfigureAwait(false);
-            if (response.IsSuccess)
-                return View(new PaymentViewModel()
+                if (payViewmodel.InvoiceAmount >=0)
                 {
-                    InvoiceValue = payViewmodel.InvoiceAmount,
-                    PaymentMethods = response.Data.PaymentMethods,
-                    CustomerName = _sessionManager.UserId ?? "",
-                    CustomerReference = payViewmodel.TransactionId,
-                    TransactionType = payViewmodel.TransactionType,
-                    ReturnUrl = $"{_config.CallBackPayemntRoot}{payViewmodel.ReturnRoute}"
-                });
-            return View("ErrorPayment");
+                    
+                    if (payViewmodel.InvoiceAmount >  _sessionManager.WalletAmount)
+                    {
+                        ViewBag.ErrorMessage = "عذرا الرصيد لا يكفى برجاء شحن المحفظة و المحاولة مرة أخرى";
+                        return RedirectToAction("Index","Wallet");
+                    }
+                    else
+                    {
+                        var invoiceObj = new PaymentViewModel()
+                        {
+                            InvoiceValue = payViewmodel.InvoiceAmount,
+                            CustomerName = _sessionManager.UserId ?? "",
+                            CustomerReference = payViewmodel.TransactionId,
+                            TransactionType = payViewmodel.TransactionType
+                        };
+                         await CompletePayment(payViewmodel.PaymentMethodId.ToString(), true, invoiceObj);
+                        ViewBag.SuccessMessage = "تم الاشتراك بنجاح";
+                        return RedirectToAction("MyCourses", "Subjects");
+                    }
+                }
+                return View("ErrorPayment");
+            }
+            //دفع الكترونى
+            else
+            {
+                if (payViewmodel.InvoiceAmount == 0)
+                    return RedirectToAction("CompleteFreePayment", new
+                    {
+                        TransactionType = payViewmodel.TransactionType,
+                        tranactionId = payViewmodel.TransactionId,
+                        redirectUrl = $"{_config.CallBackPayemntRoot}{payViewmodel.ReturnRoute}"
+                    });
+                var response = await _paymentService.InitiatePayment(new InitiatePaymentRequest
+                {
+                    InvoiceAmount = payViewmodel.InvoiceAmount,
+                    CurrencyIso = "kwd"
+                }).ConfigureAwait(false);
+                if (response.IsSuccess)
+                    return View(new PaymentViewModel()
+                    {
+                        InvoiceValue = payViewmodel.InvoiceAmount,
+                        PaymentMethods = response.Data.PaymentMethods,
+                        CustomerName = _sessionManager.UserId ?? "",
+                        CustomerReference = payViewmodel.TransactionId,
+                        TransactionType = payViewmodel.TransactionType,
+                        ReturnUrl = $"{_config.CallBackPayemntRoot}{payViewmodel.ReturnRoute}"
+                    });
+                return View("ErrorPayment");
+            }
         }
 
         [HttpPost("executePayment")]
@@ -98,52 +132,77 @@ namespace TolabPortal.Controllers
         }
 
         [Route("~/CompletePayment")]
-        public async Task<IActionResult> CompletePayment(string paymentId)
+        public async Task<IActionResult> CompletePayment(string paymentId,bool isPaidFromWallet = false, PaymentViewModel paymentViewModel=null)
         {
             try
             
             {
-                var message = await _paymentService.LogTransaction(new GetPaymentStatusRequest
+                if(isPaidFromWallet == false)
                 {
-                    Key = paymentId,
-                    KeyType = "paymentId"
-                }).ConfigureAwait(false);
-                var response = JsonConvert.DeserializeObject<GenericResponse<GetPaymentStatusResponse>>(message);
-                if (response.IsSuccess)
-                {
-                    if (response.Data.InvoiceStatus.ToLower() != "canceled")
+                    var message = await _paymentService.LogTransaction(new GetPaymentStatusRequest
                     {
-                        var subscribeResult = new HttpResponseMessage();
-                        var computedFiled = response.Data.UserDefinedField.Split(",", StringSplitOptions.RemoveEmptyEntries);
-                        switch (computedFiled[0])
+                        Key = paymentId,
+                        KeyType = "paymentId"
+                    }).ConfigureAwait(false);
+                    var response = JsonConvert.DeserializeObject<GenericResponse<GetPaymentStatusResponse>>(message);
+                    if (response.IsSuccess)
+                    {
+                        if (response.Data.InvoiceStatus.ToLower() != "canceled")
                         {
-                            case string transaction when int.Parse(transaction) == (int)TransactionType.Course:
-                                subscribeResult= await _subscribeService.SubscribeCourse(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
-                                break;
-
-                            case string transaction when int.Parse(transaction) == (int)TransactionType.Live:
-                                subscribeResult= await _subscribeService.SubscribeLive(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
-                                break;
-
-                            case string transaction when int.Parse(transaction) == (int)TransactionType.Track:
-                                subscribeResult= await _subscribeService.SubscribeTrack(!string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
-                                break;
-                        }
-
-                        if (!string.IsNullOrEmpty(computedFiled[1]))
-                        {
-                            if (subscribeResult.StatusCode== HttpStatusCode.OK)
+                            var subscribeResult = new HttpResponseMessage();
+                            var computedFiled = response.Data.UserDefinedField.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                            switch (computedFiled[0])
                             {
-                                _ = await _subscribeService.UpdateInvoiceLog(response.Data.InvoiceId);
+                                case string transaction when int.Parse(transaction) == (int)TransactionType.Course:
+                                    subscribeResult = await _subscribeService.SubscribeCourse(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                    break;
+
+                                case string transaction when int.Parse(transaction) == (int)TransactionType.Live:
+                                    subscribeResult = await _subscribeService.SubscribeLive(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                    break;
+
+                                case string transaction when int.Parse(transaction) == (int)TransactionType.Track:
+                                    subscribeResult = await _subscribeService.SubscribeTrack(string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                    break;
+                                case string transaction when int.Parse(transaction) == (int)TransactionType.Wallet:
+                                    subscribeResult = await _subscribeService.ChargeWallet(message, !string.IsNullOrEmpty(response.Data.CustomerReference) ? long.Parse(response.Data.CustomerReference) : 0);
+                                    break;
                             }
-                            return Redirect(computedFiled[1]);
 
+                            if (!string.IsNullOrEmpty(computedFiled[1]))
+                            {
+                                if (subscribeResult.StatusCode == HttpStatusCode.OK)
+                                {
+                                    _ = await _subscribeService.UpdateInvoiceLog(response.Data.InvoiceId);
+                                }
+                                return Redirect(computedFiled[1]);
+
+                            }
+                            return RedirectToAction("Index", "Home");
                         }
-                        return RedirectToAction("Index", "Home");
                     }
-                }
 
-                return View("ErrorPayment");
+                    return View("ErrorPayment");
+                }
+                else
+                {
+                    var subscribeResult = new HttpResponseMessage();
+                    switch (paymentViewModel.TransactionType)
+                    {
+                        case   (int)TransactionType.Course:
+                            subscribeResult = await _subscribeService.SubscribeCourse("",Convert.ToInt32(paymentViewModel.CustomerReference),"",paymentViewModel.CustomerName, isPayFromWallet: true);
+                            break;
+
+                        case (int)TransactionType.Live:
+                            subscribeResult = await _subscribeService.SubscribeLive("", Convert.ToInt32(paymentViewModel.CustomerReference),"",paymentViewModel.CustomerName, isPayFromWallet: true);
+                            break;
+
+                        case (int)TransactionType.Track:
+                            subscribeResult = await _subscribeService.SubscribeTrack(Convert.ToInt32(paymentViewModel.CustomerReference),"",paymentViewModel.CustomerName, isPayFromWallet: true);
+                               break;                       
+                    }
+                    return RedirectToAction("Index", "Home");
+                }
             }
             catch (Exception ex)
             {

@@ -7,5 +7,7 @@
         public int TransactionType { get; set; }
         public string ReturnRoute { get; set; }
         public string CssClassName { get; set; }
+        public decimal? Balance { get; set; }
+        public int PaymentMethodId { get; set; }
     }
 }

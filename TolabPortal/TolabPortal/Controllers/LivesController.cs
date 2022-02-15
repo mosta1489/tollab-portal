@@ -64,8 +64,8 @@ namespace TolabPortal.Controllers
                 var studentTransactionsResponse = await _subscribeService.GetAllStudentTransactions();
                 if (studentTransactionsResponse.IsSuccessStatusCode)
                 {
-                    var studentTransactions = await CommonUtilities.GetResponseModelFromJson<StudentTransactionsResponse>(studentTransactionsResponse);
-                    var IsCurrentStudentSubscribedToLive = studentTransactions.studentTransactionsVM.studentTransactions.Any(t => t.LiveId == liveDetails.LiveDetails.Id);
+                    var studentTransactions = await CommonUtilities.GetResponseModelFromJson<StudentTransactionVM>(studentTransactionsResponse);
+                    var IsCurrentStudentSubscribedToLive = studentTransactions.studentTransactions.Any(t => t.LiveId == liveDetails.LiveDetails.Id);
                     liveDetails.LiveDetails.IsCurrentStudentSubscribedToLive = IsCurrentStudentSubscribedToLive;
                 }
 

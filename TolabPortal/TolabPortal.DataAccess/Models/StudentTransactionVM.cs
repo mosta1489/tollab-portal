@@ -9,15 +9,20 @@ namespace TolabPortal.DataAccess.Models
 {
     public class StudentTransactionVM
     {
-        public float? TotalBalance { get; set; }
+        public decimal? TotalBalance { get; set; }
         public IEnumerable<StudentTransaction> studentTransactions { get; set; }
 
     }
 
+   public class model
+    {
+        public decimal? TotalBalance { get; set; }
+        public IEnumerable<StudentTransaction> studentTransactions { get; set; }
+    }
+
     public class StudentTransactionsResponse
     {
-        [JsonProperty("model")]
-        public StudentTransactionVM studentTransactionsVM { get; set; }
+        public model Model { get; set; }
         public Metas Metas { get; set; }
         public Errors Errors { get; set; }
     }

@@ -17,6 +17,7 @@ namespace Tolab.Common
         public string Email { get; }
         public string Phone { get; }
         public string IdentityId { get; }
+        public decimal WalletAmount { get; }
     }
 
     public class SessionManager : ISessionManager
@@ -172,5 +173,19 @@ namespace Tolab.Common
                 return null;
             }
         }
-    }
+        public decimal WalletAmount
+        {
+            get
+            {
+                if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User != null
+                    && _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return Convert.ToDecimal( _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "WalletAmount")?.Value);
+                }
+
+                return 0;
+            }
+        }
+
+     }
 }

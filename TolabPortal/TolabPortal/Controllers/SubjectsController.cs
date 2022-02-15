@@ -8,6 +8,7 @@ using TolabPortal.Controllers.Utils;
 using TolabPortal.DataAccess.Models;
 using TolabPortal.DataAccess.Services;
 using TolabPortal.Models;
+using TolabPortal.ViewModels;
 
 namespace TolabPortal.Controllers
 {
@@ -31,9 +32,9 @@ namespace TolabPortal.Controllers
             _subscribeService = subscribeService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index( long categoryId = 0, long subCategoryId = 0, long subjectId = 0)
         {
-            var homeCoursesResponse = await _courseService.GetHomeCourses();
+            var homeCoursesResponse = await _courseService.GetHomeCourses(categoryId:categoryId,subCategoryId:subCategoryId,subjectId:subjectId);
             if (homeCoursesResponse.IsSuccessStatusCode)
             {
                 var homeCourses = await CommonUtilities.GetResponseModelFromJson<StudentHomeCourseResponse>(homeCoursesResponse);
@@ -46,6 +47,34 @@ namespace TolabPortal.Controllers
             else
             {
                 return View("Index", new List<StudentHomeCourse>());
+            }
+        }
+        
+        [HttpGet("HomeCoursesNew")]
+        public async Task<IActionResult> HomeCoursesNew(long categoryId = 0, long subCategoryId = 0, long subjectId = 0)
+        {
+            var sectionsResponse = await _interestService.GetSections(true);
+            var responseResult =new SectionResponse();
+            if (sectionsResponse.IsSuccessStatusCode)
+            {
+                responseResult = await CommonUtilities.GetResponseModelFromJson<SectionResponse>(sectionsResponse);
+            }
+            var homeCoursesResponse = await _courseService.GetHomeCoursesClassifiedBySubCategory(categoryId:categoryId,subCategoryId:subCategoryId,subjectId:subjectId);
+            if (homeCoursesResponse.IsSuccessStatusCode)
+            {
+                var homeCourses = await CommonUtilities.GetResponseModelFromJson<StudentHomeCourseResponse>(homeCoursesResponse);
+
+                SubjectsViewModel vm = new SubjectsViewModel();
+                vm.Sections = responseResult.Sections;
+                vm.StudentHomeCourses = homeCourses.StudentHomeCourses;
+                return View("IndexNew", vm);
+
+
+
+            }
+            else
+            {
+                return View("IndexNew", new List<Subject>());
             }
         }
 

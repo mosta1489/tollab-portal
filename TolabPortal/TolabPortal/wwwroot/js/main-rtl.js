@@ -412,7 +412,7 @@
 				F.classList.remove("active")
 			}, 2e3)
 		}), e(L).length && e(L).intlTelInput({
-			onlyCountries:['eg','kw','qa'],
+			onlyCountries:['kw','qa'],
 			separateDialCode: !0,
 			utilsScript: "js/utils.js"
 		}), e(I).length && e(I).MultiFile({

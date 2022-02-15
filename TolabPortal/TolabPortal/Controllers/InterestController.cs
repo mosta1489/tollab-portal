@@ -152,7 +152,7 @@ namespace TolabPortal.Controllers
             if (redirectToMyProfile)
                 return RedirectToAction("EditProfile", "Home");
 
-            return RedirectToAction("Index", "Subjects");
+            return RedirectToAction("HomeCoursesNew", "Subjects");
         }
 
         [Route("RegisterDepartment")]
