@@ -21,9 +21,10 @@
             <div class="row">
                 @foreach (var method in Model.PaymentMethods)
                 {
+
                     <div class="col-lg-12 responsive-column-half">
                         <div class="custom-control custom-radio mb-3 ml-0 pl-0">
-                            <input type="radio" class="custom-control-input" id="@method.PaymentMethodId" asp-for="PaymentMethodId" value="@method.PaymentMethodId">
+                            <input type="radio" class="custom-control-input" id="@method.PaymentMethodId" asp-for="PaymentMethodId" value="@method.PaymentMethodId" required>
                             <label class="custom-control-label custom--control-label custom--control-label-boxed noshadbord" for="@method.PaymentMethodId">
                                 <span class="payvalue">@method.TotalAmount @method.CurrencyIso</span>
 
