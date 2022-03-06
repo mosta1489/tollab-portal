@@ -62,7 +62,9 @@ namespace TolabPortal.Controllers
                         return RedirectToAction("MyCourses", "Subjects");
                     }
                 }
-                return View("ErrorPayment");
+               
+                    return View("ErrorPayment");
+
             }
             //دفع الكترونى
             else
@@ -80,6 +82,7 @@ namespace TolabPortal.Controllers
                     CurrencyIso = "kwd"
                 }).ConfigureAwait(false);
                 if (response.IsSuccess)
+                { 
                     return View(new PaymentViewModel()
                     {
                         InvoiceValue = payViewmodel.InvoiceAmount,
@@ -89,7 +92,23 @@ namespace TolabPortal.Controllers
                         TransactionType = payViewmodel.TransactionType,
                         ReturnUrl = $"{_config.CallBackPayemntRoot}{payViewmodel.ReturnRoute}"
                     });
-                return View("ErrorPayment");
+                }
+                else
+                {
+                    var errors = "";
+                    if (response.ValidationErrors!=null)
+                    {
+                        foreach (var item in response.ValidationErrors)
+                        {
+                            errors += $" {item.Name} : {item.Error}   ||||||";
+                        }
+                    }
+                    await _subscribeService.InsertError(payViewmodel.TransactionId,
+
+                        $"Response State is :{response.IsSuccess} ||Errors :{response.ValidationErrors} |||| response Message : {response.Message}");
+                    return View("ErrorPayment");
+
+                }
             }
         }
 

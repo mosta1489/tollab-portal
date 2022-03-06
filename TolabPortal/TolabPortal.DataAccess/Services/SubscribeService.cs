@@ -21,6 +21,7 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> InsertInvoiceLog(long invoiceId);
         Task<HttpResponseMessage> UpdateInvoiceLog(long invoiceId);
         Task<HttpResponseMessage> FixFailedInvoices();
+        Task<HttpResponseMessage> InsertError(string id,string error);
     }
 
     public class SubscribeService : IDisposable, ISubscribeService
@@ -151,6 +152,20 @@ namespace TolabPortal.DataAccess.Services
             try
             {
                 var response = await _httpClient.GetAsync($"/api/fix-failed-invoices");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.ReasonPhrase = ex.Message;
+                return errorResponse;
+            }
+        }
+        public async Task<HttpResponseMessage> InsertError(string id,string error)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/insert-error?id={id}&error={error}");
                 return response;
             }
             catch (Exception ex)
