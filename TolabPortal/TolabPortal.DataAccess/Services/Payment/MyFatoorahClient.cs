@@ -38,6 +38,7 @@ namespace TolabPortal.DataAccess.Services.Payment
                 url = _apiUrl + $"/v2/{endPoint}";
             var httpContent = new StringContent(requestJSON, System.Text.Encoding.UTF8, "application/json");
             var client = _httpClient.CreateClient();
+            client.DefaultRequestHeaders.Add("User-Agent", "Other");
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
             var responseMessage = await client.PostAsync(url, httpContent).ConfigureAwait(false);

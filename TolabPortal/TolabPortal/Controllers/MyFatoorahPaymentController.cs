@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace TolabPortal.Controllers
         }
 
         // [Route("~/InitiatePayment/{amount}")]
-        [HttpPost]
+         [HttpPost]
         public async Task<IActionResult> InitiatePayment(PayVm payViewmodel)
         {
             //دفع بالمحفظة
@@ -76,24 +77,27 @@ namespace TolabPortal.Controllers
                         tranactionId = payViewmodel.TransactionId,
                         redirectUrl = $"{_config.CallBackPayemntRoot}{payViewmodel.ReturnRoute}"
                     });
-                var response = await _paymentService.InitiatePayment(new InitiatePaymentRequest
-                {
-                    InvoiceAmount = payViewmodel.InvoiceAmount,
-                    CurrencyIso = "kwd"
-                }).ConfigureAwait(false);
-                if (response.IsSuccess)
-                { 
-                    return View(new PaymentViewModel()
+                //var response = await _paymentService.InitiatePayment(new InitiatePaymentRequest
+                //{
+                //    InvoiceAmount = payViewmodel.InvoiceAmount,
+                //    CurrencyIso = "kwd"
+                //}).ConfigureAwait(false);
+                //if (response.IsSuccess)
+                //{ 
+                List<InitiatePaymentMethodsModel> paymentMethods = new List<InitiatePaymentMethodsModel>();
+                paymentMethods.Add(new InitiatePaymentMethodsModel() { CurrencyIso = "KWD", ImageUrl = "https://portal.myfatoorah.com/imgs/payment-methods/kn.png", PaymentMethodAr = "كى نت", TotalAmount = payViewmodel.InvoiceAmount, PaymentMethodId = 1 });
+                paymentMethods.Add(new InitiatePaymentMethodsModel() { CurrencyIso = "KWD", ImageUrl = "https://portal.myfatoorah.com/imgs/payment-methods/vm.png",PaymentMethodAr= "فيزا / ماستر",TotalAmount=payViewmodel.InvoiceAmount,PaymentMethodId=2 });
+                        return View(new PaymentViewModel()
                     {
                         InvoiceValue = payViewmodel.InvoiceAmount,
-                        PaymentMethods = response.Data.PaymentMethods,
+                        PaymentMethods = paymentMethods,
                         CustomerName = _sessionManager.UserId ?? "",
                         CustomerReference = payViewmodel.TransactionId,
                         TransactionType = payViewmodel.TransactionType,
                         ReturnUrl = $"{_config.CallBackPayemntRoot}{payViewmodel.ReturnRoute}"
                     });
-                }
-                else
+                //}
+              /*  else
                 {
                     var errors = "";
                     if (response.ValidationErrors!=null)
@@ -108,7 +112,7 @@ namespace TolabPortal.Controllers
                         $"Response State is :{response.IsSuccess} ||Errors :{response.ValidationErrors} |||| response Message : {response.Message}");
                     return View("ErrorPayment");
 
-                }
+                }*/
             }
         }
 
@@ -142,6 +146,7 @@ namespace TolabPortal.Controllers
             }
             return View("ErrorPayment");
         }
+
 
         [AllowAnonymous]
         [Route("~/ErrorPayment")]
