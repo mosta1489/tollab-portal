@@ -143,6 +143,20 @@ namespace TolabPortal.Controllers
                     _ = await _subscribeService.InsertInvoiceLog(response.Data.InvoiceId);
                     return Redirect(response.Data.PaymentURL);
                 }
+                else
+                {
+                        var errors = "";
+                        if (response.ValidationErrors != null)
+                        {
+                            foreach (var item in response.ValidationErrors)
+                            {
+                                errors += $" {item.Name} : {item.Error}   ||||||";
+                            }
+                        }
+                        await _subscribeService.InsertError(response.Message,
+                            $"Response State is :{response.IsSuccess} ||Errors :{response.ValidationErrors} |||| response Message : {response.Message}");
+                        return View("ErrorPayment");
+                }
             }
             return View("ErrorPayment");
         }
