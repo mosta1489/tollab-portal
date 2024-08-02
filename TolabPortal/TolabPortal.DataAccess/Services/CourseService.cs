@@ -233,7 +233,7 @@ namespace TolabPortal.DataAccess.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/GetStudentCourses?Page={page}");
+                var response = await _httpClient.GetAsync($"/api/GetStudentCourses/Refactoring?Page={page}");
                 return response;
             }
             catch (Exception ex)
