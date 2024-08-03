@@ -63,7 +63,7 @@ namespace TolabPortal.Controllers
         #endregion
         #region Login
 
-        [Route("~/StudentLogin")]
+        [Route("~/Login")]
         public IActionResult Login()
         {
             if (User.Identity.IsAuthenticated)
@@ -72,7 +72,7 @@ namespace TolabPortal.Controllers
         }
 
         [HttpPost]
-        [Route("~/StudentLogin")]
+        [Route("~/Login")]
         public async Task<IActionResult> Login(Login loginModel)
         {
             if (!ModelState.IsValid) return View(loginModel);

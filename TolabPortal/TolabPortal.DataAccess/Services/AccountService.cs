@@ -54,7 +54,7 @@ namespace TolabPortal.DataAccess.Services
         {
             try
             {
-                var studentLoginResponse = await _httpClient.GetAsync($"/api/login-web?PhoneNumberWithKey={loginPhone}&email={email}");
+                var studentLoginResponse = await _httpClient.GetAsync($"/api/StudentLogin?PhoneNumberWithKey={loginPhone}");
                 return studentLoginResponse;
             }
             catch (Exception ex)
@@ -111,7 +111,7 @@ namespace TolabPortal.DataAccess.Services
         {
             try
             {
-                var studentLoginVerificationResponse = await _httpClient.GetAsync($"/api/VerifyWeb?PhoneKey={phoneKey}&Phone={phone}&vcode={verificationCode}&password={password}");
+                var studentLoginVerificationResponse = await _httpClient.GetAsync($"/api/Verify?PhoneKey={phoneKey}&Phone={phone}&vcode={verificationCode}&password={password}");
                 return studentLoginVerificationResponse;
             }
             catch (Exception ex)
@@ -186,7 +186,7 @@ namespace TolabPortal.DataAccess.Services
         {
             try
             {
-                return await _httpClient.PostAsync("api/students/credentials/login", new StringContent(JsonConvert.SerializeObject(new { userName, password, rememberMe }), Encoding.UTF8, "application/json"));
+                return await _httpClient.PostAsync("api/StudentLoginNew", new StringContent(JsonConvert.SerializeObject(new { userName, password }), Encoding.UTF8, "application/json"));
             }
             catch (Exception ex)
             {

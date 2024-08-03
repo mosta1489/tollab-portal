@@ -47,7 +47,7 @@ namespace TolabPortal.DataAccess.Services
         {
             try
             {
-                var result = await _httpClient.GetAsync($"/api/buy-course-from-web?message={message}&CourseId={courseId}&PromocodeText={promoCode}&userId={userId}&isWebHook={isWebHook}&isPayFromWallet={isPayFromWallet}");
+                var result = await _httpClient.GetAsync($"/api/BuyNow?CourseId={courseId}&PromocodeText={promoCode}");
                 return result;
             }
             catch (Exception ex)
@@ -61,7 +61,7 @@ namespace TolabPortal.DataAccess.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/buy-live-from-web?message={message}&liveId={liveId}&PromocodeText={promoCode}&userId={userId}&isWebHook={isWebHook}&isPayFromWallet={isPayFromWallet}");
+                var response = await _httpClient.GetAsync($"/api/BuyNowb?liveId={liveId}&PromocodeText={promoCode}");
                 return response;
             }
             catch (Exception ex)
@@ -106,7 +106,7 @@ namespace TolabPortal.DataAccess.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/TrackSubscription?TrackId={trackId}&PromocodeText={promoCode}&userId={userId}&isWebHook={isWebHook}&isPayFromWallet={isPayFromWallet}");
+                var response = await _httpClient.GetAsync($"/api/TrackSubscription?TrackId={trackId}&PromocodeText={promoCode}");
                 return response;
             }
             catch (Exception ex)
