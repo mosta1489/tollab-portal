@@ -82,11 +82,11 @@ namespace TolabPortal.Controllers
             {
                 var responseString = await loginResponse.Content.ReadAsStringAsync();
                 var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
-                if (studentInfo.model.CountryId == 20011)
-                {
-                    ViewBag.ErrorMessage = "غير مسموح فى الوقت الحالى يمكنك الدخول عبر التطبيق";
-                    return View();
-                }
+                //if (studentInfo.model.CountryId == 20011)
+                //{
+                //    ViewBag.ErrorMessage = "غير مسموح فى الوقت الحالى يمكنك الدخول عبر التطبيق";
+                //    return View();
+                //}
                 if (!studentInfo.model.Verified)
                 {
                     TempData["RegisterModel"] = JsonConvert.SerializeObject(studentInfo.model);

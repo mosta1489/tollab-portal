@@ -23,40 +23,39 @@
                             </label>
                             @if (itemSection.Categories.Count() > 0)
                             {
-                        <ul>
-                            @foreach (var itemCategory in itemSection.Categories)
-                            {
+                                <ul>
+                                    @foreach (var itemCategory in itemSection.Categories)
+                                    {
 
-
-                                @if (itemCategory.SubCategories.Count > 0)
-                                {
-                                    <li data-id="@itemCategory.Id">
-                                        <i class="fa fa-plus"></i>
-                                        <label>
-                                            <a href="/Subjects/HomeCoursesNew?categoryId=@itemCategory.Id" class="hrefTree" id="xnode-@itemSection.Id-@itemCategory.Id" data-id="custom-@itemSection.Id-@itemCategory.Id">@itemCategory.NameLT</a>
-                                            @*<input id="xnode-@itemSection.Id-@itemCategory.Id" data-id="custom-@itemSection.Id-@itemCategory.Id" type="checkbox" /> @itemCategory.NameLT*@
-                                        </label>
-                                        @if (itemCategory.SubCategories.Count() > 0)
+                                        @if (itemCategory != null && itemCategory.SubCategories != null && itemCategory.SubCategories.Count > 0)
                                         {
-                                            <ul>
-                                                @foreach (var itemSubCategory in itemCategory.SubCategories)
+                                            <li data-id="@itemCategory.Id">
+                                                <i class="fa fa-plus"></i>
+                                                <label>
+                                                    <a href="/Subjects/HomeCoursesNew?categoryId=@itemCategory.Id" class="hrefTree" id="xnode-@itemSection.Id-@itemCategory.Id" data-id="custom-@itemSection.Id-@itemCategory.Id">@itemCategory.NameLT</a>
+                                                    @*<input id="xnode-@itemSection.Id-@itemCategory.Id" data-id="custom-@itemSection.Id-@itemCategory.Id" type="checkbox" /> @itemCategory.NameLT*@
+                                                </label>
+                                                @if (itemCategory.SubCategories.Count() > 0)
                                                 {
-                                                    <li>
-                                                        <label>
-                                                            <a href="/Subjects/HomeCoursesNew?categoryId=@itemCategory.Id&subCategoryId=@itemSubCategory.Id" class="hrefTree hummingbird-end-node" id="xnode-@itemSection.Id-@itemCategory.Id-@itemSubCategory.Id" data-id="custom-@itemSection.Id-@itemCategory.Id-@itemSubCategory.Id">@itemSubCategory.NameLT</a>
-                                                            @*<input class="hummingbird-end-node" id="xnode-@itemSection.Id-@itemCategory.Id-@itemSubCategory.Id" data-id="custom-@itemSection.Id-@itemCategory.Id-@itemSubCategory.Id" type="checkbox" /> @itemSubCategory.NameLT*@
-                                                        </label>
-                                                    </li>
+                                                    <ul>
+                                                        @foreach (var itemSubCategory in itemCategory.SubCategories)
+                                                        {
+                                                            <li>
+                                                                <label>
+                                                                    <a href="/Subjects/HomeCoursesNew?categoryId=@itemCategory.Id&subCategoryId=@itemSubCategory.Id" class="hrefTree hummingbird-end-node" id="xnode-@itemSection.Id-@itemCategory.Id-@itemSubCategory.Id" data-id="custom-@itemSection.Id-@itemCategory.Id-@itemSubCategory.Id">@itemSubCategory.NameLT</a>
+                                                                    @*<input class="hummingbird-end-node" id="xnode-@itemSection.Id-@itemCategory.Id-@itemSubCategory.Id" data-id="custom-@itemSection.Id-@itemCategory.Id-@itemSubCategory.Id" type="checkbox" /> @itemSubCategory.NameLT*@
+                                                                </label>
+                                                            </li>
 
+                                                        }
+                                                    </ul>
                                                 }
-                                            </ul>
+                                            </li>
                                         }
-                                    </li>
-                                }
 
-                            }
+                                    }
 
-                        </ul>
+                                </ul>
                             }
 
                         </li>

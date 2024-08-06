@@ -28,7 +28,7 @@ namespace TolabPortal.DataAccess.Services
         Task<HttpResponseMessage> LogoutStudent();
         Task<HttpResponseMessage> ChangeStudentProfilePhoto(Student student);
         Task<HttpResponseMessage> GetStudentById(string userId);
-        Task<HttpResponseMessage> GetStudentByPhoneNumber(string phoneNumber,string email);
+        Task<HttpResponseMessage> GetStudentByPhoneNumber(string phoneNumber, string email);
     }
 
     public class AccountService : IAccountService, IDisposable
@@ -64,7 +64,7 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
-        public async Task<HttpResponseMessage> GetStudentByPhoneNumber(string phoneNumber,string email)
+        public async Task<HttpResponseMessage> GetStudentByPhoneNumber(string phoneNumber, string email)
         {
             try
             {
@@ -121,7 +121,8 @@ namespace TolabPortal.DataAccess.Services
                 return errorResponse;
             }
         }
-        public async Task<HttpResponseMessage> ResetPassword(string email, string password) {
+        public async Task<HttpResponseMessage> ResetPassword(string email, string password)
+        {
             try
             {
                 var studentResetPasswordResponse = await _httpClient.GetAsync($"/api/ResetUserPassword?email={email}&password={password}");
@@ -186,7 +187,7 @@ namespace TolabPortal.DataAccess.Services
         {
             try
             {
-                return await _httpClient.PostAsync("api/StudentLoginNew", new StringContent(JsonConvert.SerializeObject(new { userName, password }), Encoding.UTF8, "application/json"));
+                return await _httpClient.PostAsync("api/StudentLoginNew", new StringContent(JsonConvert.SerializeObject(new { Email = userName, password }), Encoding.UTF8, "application/json"));
             }
             catch (Exception ex)
             {

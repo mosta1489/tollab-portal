@@ -32,9 +32,9 @@ namespace TolabPortal.Controllers
             _subscribeService = subscribeService;
         }
 
-        public async Task<IActionResult> Index( long categoryId = 0, long subCategoryId = 0, long subjectId = 0)
+        public async Task<IActionResult> Index(long categoryId = 0, long subCategoryId = 0, long subjectId = 0)
         {
-            var homeCoursesResponse = await _courseService.GetHomeCourses(categoryId:categoryId,subCategoryId:subCategoryId,subjectId:subjectId);
+            var homeCoursesResponse = await _courseService.GetHomeCourses(categoryId: categoryId, subCategoryId: subCategoryId, subjectId: subjectId);
             if (homeCoursesResponse.IsSuccessStatusCode)
             {
                 var homeCourses = await CommonUtilities.GetResponseModelFromJson<StudentHomeCourseResponse>(homeCoursesResponse);
@@ -49,17 +49,17 @@ namespace TolabPortal.Controllers
                 return View("Index", new List<StudentHomeCourse>());
             }
         }
-        
+
         [HttpGet("HomeCoursesNew")]
         public async Task<IActionResult> HomeCoursesNew(long categoryId = 0, long subCategoryId = 0, long subjectId = 0)
         {
             var sectionsResponse = await _interestService.GetSections(true);
-            var responseResult =new SectionResponse();
+            var responseResult = new SectionResponse();
             if (sectionsResponse.IsSuccessStatusCode)
             {
                 responseResult = await CommonUtilities.GetResponseModelFromJson<SectionResponse>(sectionsResponse);
             }
-            var homeCoursesResponse = await _courseService.GetHomeCoursesClassifiedBySubCategory(categoryId:categoryId,subCategoryId:subCategoryId,subjectId:subjectId);
+            var homeCoursesResponse = await _courseService.GetHomeCourses();
             if (homeCoursesResponse.IsSuccessStatusCode)
             {
                 var homeCourses = await CommonUtilities.GetResponseModelFromJson<StudentHomeCourseResponse>(homeCoursesResponse);
@@ -74,7 +74,7 @@ namespace TolabPortal.Controllers
             }
             else
             {
-                return View("IndexNew", new List<Subject>());
+                return View("IndexNew", new SubjectsViewModel());
             }
         }
 
@@ -88,7 +88,7 @@ namespace TolabPortal.Controllers
 
                 var interest = new GetStudentProfileModel.Interest();
                 interest.CategoryNameLT = trackDetails.CoursesByTrackId.CategoryNameLT.Replace("\t", "");
-                interest.SubCategoryNameLT = trackDetails.CoursesByTrackId.SubCategoryNameLT.Replace("\t","");
+                interest.SubCategoryNameLT = trackDetails.CoursesByTrackId.SubCategoryNameLT.Replace("\t", "");
                 ViewBag.Interest = interest;
 
                 // getting student courses to know which courses to mark as paid
@@ -96,7 +96,7 @@ namespace TolabPortal.Controllers
                 if (studentCoursesResponse.IsSuccessStatusCode)
                 {
                     var studentCourses = await CommonUtilities.GetResponseModelFromJson<MyCourseResponse>(studentCoursesResponse);
-                    var allStudentCourses = studentCourses.MyCourses.Where(c=>c.Courses!=null).SelectMany(c => c.Courses).Select(c => c.Id).ToList();
+                    var allStudentCourses = studentCourses.MyCourses.Where(c => c.Courses != null).SelectMany(c => c.Courses).Select(c => c.Id).ToList();
 
                     // update which course are paid for current student
                     foreach (var course in trackDetails.CoursesByTrackId.Courses)
@@ -130,7 +130,7 @@ namespace TolabPortal.Controllers
         [Route("Track/Course")]
         public async Task<IActionResult> GetCourseDetails(long courseId, string trackNameLT)
         {
-            
+
             var courseDetailsResponse = await _courseService.GetCourseByIdForCurrentStudent(courseId);
             if (courseDetailsResponse.IsSuccessStatusCode)
             {
@@ -164,7 +164,7 @@ namespace TolabPortal.Controllers
                 if (studentCoursesResponse.IsSuccessStatusCode)
                 {
                     var studentCourses = await CommonUtilities.GetResponseModelFromJson<MyCourseResponse>(studentCoursesResponse);
-                    var allStudentCourses = studentCourses.MyCourses.Where(c=>c.Courses!=null).SelectMany(c => c.Courses).Select(c => c.Id).ToList();
+                    var allStudentCourses = studentCourses.MyCourses.Where(c => c.Courses != null).SelectMany(c => c.Courses).Select(c => c.Id).ToList();
                     courseDetails.Course.IsCurrentStudentSubscribedToCourse = allStudentCourses.Contains(courseDetails.Course.Id);
                 }
 
@@ -183,9 +183,9 @@ namespace TolabPortal.Controllers
                         {
                             if (g.Contents.Any())
                             {
-                                g.Contents.Where(a=>a.ContentTypeId!=2).ToList().ForEach(  c =>
+                                g.Contents.Where(a => a.ContentTypeId != 2).ToList().ForEach(c =>
                                 {
-                                    c.Path = (!string.IsNullOrEmpty(c.Path)) ?  VimeoConnector.GenerateEmbed(c.Path, "900", "600").Result: "";
+                                    c.Path = (!string.IsNullOrEmpty(c.Path)) ? VimeoConnector.GenerateEmbed(c.Path, "900", "600").Result : "";
                                 });
                             }
 
