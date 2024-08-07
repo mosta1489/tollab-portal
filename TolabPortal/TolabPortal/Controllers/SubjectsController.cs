@@ -53,26 +53,30 @@ namespace TolabPortal.Controllers
         [HttpGet("HomeCoursesNew")]
         public async Task<IActionResult> HomeCoursesNew(long categoryId = 0, long subCategoryId = 0, long subjectId = 0)
         {
-            var sectionsResponse = await _interestService.GetSections(true);
-            var responseResult = new SectionResponse();
-            if (sectionsResponse.IsSuccessStatusCode)
+            try
             {
-                responseResult = await CommonUtilities.GetResponseModelFromJson<SectionResponse>(sectionsResponse);
+                var sectionsResponse = await _interestService.GetSections(true);
+                var responseResult = new SectionResponse();
+                if (sectionsResponse.IsSuccessStatusCode)
+                {
+                    responseResult = await CommonUtilities.GetResponseModelFromJson<SectionResponse>(sectionsResponse);
+                }
+                var homeCoursesResponse = await _courseService.GetHomeCourses();
+                if (homeCoursesResponse.IsSuccessStatusCode)
+                {
+                    var homeCourses = await CommonUtilities.GetResponseModelFromJson<StudentHomeCourseResponse>(homeCoursesResponse);
+
+                    SubjectsViewModel vm = new SubjectsViewModel();
+                    vm.Sections = responseResult.Sections;
+                    vm.StudentHomeCourses = homeCourses.StudentHomeCourses;
+                    return View("IndexNew", vm);
+                }
+                else
+                {
+                    return View("IndexNew", new SubjectsViewModel());
+                }
             }
-            var homeCoursesResponse = await _courseService.GetHomeCourses();
-            if (homeCoursesResponse.IsSuccessStatusCode)
-            {
-                var homeCourses = await CommonUtilities.GetResponseModelFromJson<StudentHomeCourseResponse>(homeCoursesResponse);
-
-                SubjectsViewModel vm = new SubjectsViewModel();
-                vm.Sections = responseResult.Sections;
-                vm.StudentHomeCourses = homeCourses.StudentHomeCourses;
-                return View("IndexNew", vm);
-
-
-
-            }
-            else
+            catch (System.Exception ex)
             {
                 return View("IndexNew", new SubjectsViewModel());
             }

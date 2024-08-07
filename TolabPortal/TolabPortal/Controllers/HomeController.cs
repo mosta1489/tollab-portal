@@ -77,41 +77,51 @@ namespace TolabPortal.Controllers
         {
             if (!ModelState.IsValid) return View(loginModel);
 
-            var loginResponse = await _accountService.StudentCredentialsLogin(loginModel.UserName, loginModel.Password, loginModel.RememberMe);
-            if (loginResponse.IsSuccessStatusCode)
+            try
             {
-                var responseString = await loginResponse.Content.ReadAsStringAsync();
-                var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
-                //if (studentInfo.model.CountryId == 20011)
-                //{
-                //    ViewBag.ErrorMessage = "غير مسموح فى الوقت الحالى يمكنك الدخول عبر التطبيق";
-                //    return View();
-                //}
-                if (!studentInfo.model.Verified)
+
+                var loginResponse = await _accountService.StudentCredentialsLogin(loginModel.UserName, loginModel.Password, loginModel.RememberMe);
+                if (loginResponse.IsSuccessStatusCode)
                 {
-                    TempData["RegisterModel"] = JsonConvert.SerializeObject(studentInfo.model);
-                    await ReSendVerificationCode(studentInfo.model.PhoneKey, studentInfo.model.Phone, studentInfo.model.Email);
-                    return View("RegisterVerification", new RegisterVerification(studentInfo.model.Name, studentInfo.model.Email, studentInfo.model.Phone, loginModel.Password, true, studentInfo.model.PhoneKey, studentInfo.model.Gender.ToString(), studentInfo.model.Bio));
-                    //ViewBag.ErrorMessage = "Your account is Not Verified, Please verify it from Mob App";
-                    //return View(loginModel);
+                    var responseString = await loginResponse.Content.ReadAsStringAsync();
+                    var studentInfo = JsonConvert.DeserializeObject<LoginVerificationSuccessResponseModel>(responseString);
+                    //if (studentInfo.model.CountryId == 20011)
+                    //{
+                    //    ViewBag.ErrorMessage = "غير مسموح فى الوقت الحالى يمكنك الدخول عبر التطبيق";
+                    //    return View();
+                    //}
+                    if (!studentInfo.model.Verified)
+                    {
+                        TempData["RegisterModel"] = JsonConvert.SerializeObject(studentInfo.model);
+                        await ReSendVerificationCode(studentInfo.model.PhoneKey, studentInfo.model.Phone, studentInfo.model.Email);
+                        return View("RegisterVerification", new RegisterVerification(studentInfo.model.Name, studentInfo.model.Email, studentInfo.model.Phone, loginModel.Password, true, studentInfo.model.PhoneKey, studentInfo.model.Gender.ToString(), studentInfo.model.Bio));
+                        //ViewBag.ErrorMessage = "Your account is Not Verified, Please verify it from Mob App";
+                        //return View(loginModel);
+                    }
+
+                    else
+                    {
+                        await LoginUser(studentInfo);
+                        return RedirectToAction("HomeCoursesNew", "Subjects");
+                    }
+
                 }
-              
-                else {
-                    await LoginUser(studentInfo);
-                    return RedirectToAction("HomeCoursesNew", "Subjects");
+                else
+                {
+                    var responseString = await loginResponse.Content.ReadAsStringAsync();
+                    var errorModel = JsonConvert.DeserializeObject<ApiErrorModel>(responseString);
+                    ViewBag.ErrorMessage = errorModel.errors.message;
+                    return View(loginModel);
                 }
-                
             }
-            else
+            catch (Exception ex)
             {
-                var responseString = await loginResponse.Content.ReadAsStringAsync();
-                var errorModel = JsonConvert.DeserializeObject<ApiErrorModel>(responseString);
-                ViewBag.ErrorMessage = errorModel.errors.message;
+                ViewBag.ErrorMessage = ex.Message;
                 return View(loginModel);
             }
         }
 
-        
+
 
         [Route("~/login/Verification")]
         public IActionResult LoginVerification()
@@ -188,8 +198,8 @@ namespace TolabPortal.Controllers
         [Route("~/ForgotPassword")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordModel forgotPasswordModel)
         {
-            var studentData = await _accountService.GetStudentByPhoneNumber(forgotPasswordModel.PhoneKey+ forgotPasswordModel.PhoneNumber,forgotPasswordModel.Email);
-            if (studentData.IsSuccessStatusCode==true)
+            var studentData = await _accountService.GetStudentByPhoneNumber(forgotPasswordModel.PhoneKey + forgotPasswordModel.PhoneNumber, forgotPasswordModel.Email);
+            if (studentData.IsSuccessStatusCode == true)
             {
                 var student = await CommonUtilities.GetResponseModelFromJson<StudentResponse>(studentData);
                 return View("ForgotPasswordVerification", new ForgotPasswordModel(student.Student.IdentityId, student.Student.Email, student.Student.Phone, student.Student.PhoneKey));
@@ -200,7 +210,7 @@ namespace TolabPortal.Controllers
         }
         [Route("~/ForgotPasswordVerification")]
         public IActionResult ForgotPasswordVerification(ForgotPasswordModel forgotPasswordModel)
-        {   
+        {
             return View("ForgotPasswordVerification", forgotPasswordModel);
         }
         [HttpPost]
@@ -233,18 +243,18 @@ namespace TolabPortal.Controllers
             }
             else if (ModelState.IsValid)
             {
-                var loginVerificationResponse = await _accountService.ResetPassword(forgotPasswordModel.Email,forgotPasswordModel.Password);
+                var loginVerificationResponse = await _accountService.ResetPassword(forgotPasswordModel.Email, forgotPasswordModel.Password);
                 if (loginVerificationResponse.IsSuccessStatusCode)
                 {
                     return RedirectToAction("Login");
                 }
-                 
+
             }
 
             ViewBag.ErrorMessage = "حدث خطا اثناء العمليه ";
             return View();
         }
-         [Route("~/ResetNewPassword")]
+        [Route("~/ResetNewPassword")]
         public IActionResult ResetNewPassword(ForgotPasswordModel forgotPasswordModel)
         {
             return View("ResetNewPassword", forgotPasswordModel);
@@ -377,7 +387,7 @@ namespace TolabPortal.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties() { IsPersistent = true });
         }
 
-        private   IEnumerable<Claim> GetUserClaims(LoginVerificationSuccessResponseModel user)
+        private IEnumerable<Claim> GetUserClaims(LoginVerificationSuccessResponseModel user)
         {
             //var walletTransactions = await _accountService.CurrentWalletTransactions();
             //decimal? totalBalance = 0;
@@ -403,7 +413,7 @@ namespace TolabPortal.Controllers
                 new Claim("WalletAmount",user.model.Id.ToString() ?? string.Empty)
             };
 
-            return  claims;
+            return claims;
         }
 
         public int GetCountryIdByCode(string code)
